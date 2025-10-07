@@ -18,7 +18,7 @@ const connectors = connectorsForWallets(
   ],
   {
     appName: "IQlify",
-    projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID!,
+    projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || "demo-project-id",
   }
 );
 
@@ -39,7 +39,7 @@ function WalletProviderInner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check if the app is running inside MiniPay
-    if (window.ethereum && window.ethereum.isMiniPay) {
+    if (typeof window !== 'undefined' && window.ethereum && window.ethereum.isMiniPay) {
       // Find the injected connector, which is what MiniPay uses
       const injectedConnector = connectors.find((c) => c.id === "injected");
       if (injectedConnector) {
@@ -54,6 +54,10 @@ function WalletProviderInner({ children }: { children: React.ReactNode }) {
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <>{children}</>;
+  }
 
   return (
     <WagmiProvider config={wagmiConfig}>
