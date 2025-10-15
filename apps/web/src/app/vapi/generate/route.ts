@@ -1,40 +1,84 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { NextRequest, NextResponse } from 'next/server';
+import { GeminiService } from '../services/GeminiService';
+import { Validators, ValidationError } from '../utils/validators';
+import { InterviewRequest } from '../types';
 
+/**
+ * Interview Question Generation Endpoint
+ * Uses GeminiService to generate interview questions based on job requirements
+ */
+
+/**
+ * GET handler - Health check and documentation
+ */
 export async function GET() {
-    return new Response(JSON.stringify({ message: "Hello from VAPI generate endpoint!" }), {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json',
+    return NextResponse.json({
+        message: "Interview Question Generation API",
+        status: "active",
+        version: "2.0",
+        endpoints: {
+            POST: "Generate interview questions",
         },
+        requiredFields: [
+            "role",
+            "level",
+            "techstack",
+            "skills",
+            "platform",
+            "userId",
+        ],
+        optionalFields: [
+            "prompt",
+            "amount",
+            "temperature",
+        ],
     });
 }
 
-export async function POST(request: Request) {
-    const { prompt, role, model, temperature, level, techstack, skills, amount, platform, userId } = await request.json();
-    const response = await fetch(`https://api.vapi.ai/generate`, {
-        method: "POST",
-        body: JSON.stringify({ prompt, role, model, temperature, level, techstack, skills, amount, platform, userId }),
-    });
-
+/**
+ * POST handler - Generate interview questions
+ */
+export async function POST(request: NextRequest) {
     try {
-        const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-001" });
+        // Parse and validate request body
+        const body = await request.json();
 
-        const fullPrompt = `Prepare questions for a job interview for ${role}
-          The questions should be based on the ${techstack} technology stack
-          The questions should be based on the ${level} level
-          The questions should be based on the ${amount} amount
-          The questions should be based on the ${platform} platform
-          The questions should be based on the ${userId} user id
-          The questions should be based on the ${skills} skills
-          The questions should be based on the ${prompt} prompt
-          `;
+        let validatedRequest: InterviewRequest;
+        try {
+            validatedRequest = Validators.validateInterviewRequest(body);
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        error: error.message,
+                    },
+                    { status: 400 }
+                );
+            }
+            throw error;
+        }
 
-        const result = await model.generateContent(fullPrompt);
-        const text = result.response.text();
+        // Initialize Gemini service
+        const geminiService = new GeminiService();
 
-        return new Response(JSON.stringify({ success: true, text }), { status: 200 });
+        // Generate interview questions
+        const response = await geminiService.generateInterviewQuestions(validatedRequest);
+
+        if (!response.success) {
+            return NextResponse.json(response, { status: 500 });
+        }
+
+        return NextResponse.json(response, { status: 200 });
     } catch (error) {
-        return new Response(JSON.stringify({ success: false, error: error }), { status: 500 });
+        console.error('Error in generate endpoint:', error);
+
+        return NextResponse.json(
+            {
+                success: false,
+                error: error instanceof Error ? error.message : 'Internal server error',
+            },
+            { status: 500 }
+        );
     }
 }
