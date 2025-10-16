@@ -4,6 +4,7 @@ import './globals.css';
 
 import { WalletProvider } from "@/components/wallet-provider";
 import { AppProvider } from "@/hooks/use-app-state";
+import { Navbar } from '@/components/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         <WalletProvider>
           <AppProvider>
             <div className="relative flex min-h-screen flex-col">
+              <Navbar />
               <main className="flex-1 pb-20">
                 {children}
               </main>

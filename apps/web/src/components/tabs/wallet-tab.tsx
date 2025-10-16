@@ -43,9 +43,21 @@ export function WalletTab() {
                     <p className="text-muted-foreground">Manage your earnings and rewards</p>
                 </motion.div>
 
-                {/* Balance Card */}
+                {/* Wallet Info */}
                 <motion.div variants={itemVariants}>
-                    <UserBalance />
+                    <Card className="iqlify-card border-gold-400/30">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <Wallet className="h-5 w-5 text-gold-400" />
+                                <CardTitle className="text-gold-400">Wallet Overview</CardTitle>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground text-sm">
+                                Manage your earnings and track your progress
+                            </p>
+                        </CardContent>
+                    </Card>
                 </motion.div>
 
                 {/* Quick Actions */}

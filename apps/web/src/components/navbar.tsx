@@ -78,10 +78,15 @@ export function Navbar() {
               height={32}
               className="w-8 h-8"
             />
-            <span className="hidden font-bold text-xl sm:inline-block iqlify-gold-text -ml-2">
+            <span className="font-bold text-lg sm:text-xl iqlify-gold-text -ml-2">
               IQlify
             </span>
           </Link>
+        </div>
+
+        {/* Mobile Connect Wallet Button */}
+        <div className="flex md:hidden">
+          <ConnectButton />
         </div>
 
         {/* Desktop navigation */}
