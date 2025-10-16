@@ -56,7 +56,14 @@ export function WalletProvider({ children }: { children: React.ReactNode; }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider
+          appInfo={{
+            appName: "IQlify",
+            learnMoreUrl: "https://docs.celo.org",
+          }}
+          initialChain={celo}
+          showRecentTransactions={true}
+        >
           <WalletProviderInner>{children}</WalletProviderInner>
         </RainbowKitProvider>
       </QueryClientProvider>

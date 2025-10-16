@@ -116,51 +116,92 @@
     box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
   }
 
-  /* RainbowKit Custom Styling */
-  .rainbowkit-custom [data-rk] {
-    --rk-colors-accentColor: #D4AF37 !important;
-    --rk-colors-accentColorForeground: #1A1A1A !important;
-    --rk-colors-actionButtonBorder: rgba(212, 175, 55, 0.3) !important;
-    --rk-colors-actionButtonBorderMobile: rgba(212, 175, 55, 0.3) !important;
-    --rk-colors-actionButtonSecondaryBackground: rgba(212, 175, 55, 0.1) !important;
-    --rk-colors-closeButton: #F9F9F9 !important;
-    --rk-colors-closeButtonBackground: rgba(45, 45, 45, 0.8) !important;
-    --rk-colors-connectButtonBackground: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
-    --rk-colors-connectButtonBackgroundError: #EF4444 !important;
-    --rk-colors-connectButtonInnerBackground: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
-    --rk-colors-connectButtonText: #1A1A1A !important;
-    --rk-colors-connectionIndicator: #10B981 !important;
-    --rk-colors-error: #EF4444 !important;
-    --rk-colors-generalBorder: rgba(212, 175, 55, 0.2) !important;
-    --rk-colors-generalBorderDim: rgba(212, 175, 55, 0.1) !important;
-    --rk-colors-menuItemBackground: rgba(45, 45, 45, 0.8) !important;
-    --rk-colors-menuItemBackgroundHover: rgba(212, 175, 55, 0.1) !important;
-    --rk-colors-modalBackdrop: rgba(0, 0, 0, 0.8) !important;
-    --rk-colors-modalBackground: #2D2D2D !important;
-    --rk-colors-modalBorder: rgba(212, 175, 55, 0.2) !important;
-    --rk-colors-modalText: #F9F9F9 !important;
-    --rk-colors-modalTextDim: #CCCCCC !important;
-    --rk-colors-modalTextSecondary: #999999 !important;
-    --rk-colors-profileAction: #F9F9F9 !important;
-    --rk-colors-profileActionHover: rgba(212, 175, 55, 0.1) !important;
-    --rk-colors-profileForeground: #2D2D2D !important;
-    --rk-colors-selectedOptionBorder: #D4AF37 !important;
-    --rk-colors-standby: #999999 !important;
-  }
-
-  /* Custom button styling */
+  /* RainbowKit Custom Styling - IQlify Theme - AGGRESSIVE OVERRIDE */
+  
+  /* Target ALL RainbowKit buttons with maximum specificity */
+  [data-rk] button,
+  [data-rk] button[data-testid="rk-connect-button"],
+  [data-rk] button[data-testid="rk-account-button"],
+  [data-rk] button[data-testid="rk-wallet-option"],
+  .rainbowkit-custom button,
   .rainbowkit-custom [data-rk] button {
     background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    background-color: #D4AF37 !important;
     color: #1A1A1A !important;
     border: 1px solid rgba(212, 175, 55, 0.3) !important;
-    border-radius: 8px !important;
+    border-radius: 12px !important;
     font-weight: 600 !important;
-    transition: all 0.2s ease !important;
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2) !important;
+    position: relative !important;
+    overflow: hidden !important;
   }
 
+  [data-rk] button:hover,
+  [data-rk] button[data-testid="rk-connect-button"]:hover,
+  [data-rk] button[data-testid="rk-account-button"]:hover,
+  [data-rk] button[data-testid="rk-wallet-option"]:hover,
+  .rainbowkit-custom button:hover,
   .rainbowkit-custom [data-rk] button:hover {
     background: linear-gradient(135deg, #B8961F 0%, #D4AF37 100%) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3) !important;
+    background-color: #B8961F !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
+    border-color: rgba(212, 175, 55, 0.5) !important;
+  }
+
+  [data-rk] button:active,
+  [data-rk] button[data-testid="rk-connect-button"]:active,
+  [data-rk] button[data-testid="rk-account-button"]:active,
+  [data-rk] button[data-testid="rk-wallet-option"]:active,
+  .rainbowkit-custom button:active,
+  .rainbowkit-custom [data-rk] button:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3) !important;
+  }
+
+  /* Override any inline styles */
+  [data-rk] button[style*="background"],
+  [data-rk] button[style*="background-color"],
+  .rainbowkit-custom button[style*="background"],
+  .rainbowkit-custom button[style*="background-color"] {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    background-color: #D4AF37 !important;
+  }
+
+  /* Target specific RainbowKit elements */
+  [data-rk] div[role="button"],
+  [data-rk] div[data-testid="rk-connect-button"],
+  .rainbowkit-custom div[role="button"],
+  .rainbowkit-custom div[data-testid="rk-connect-button"] {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    background-color: #D4AF37 !important;
+    color: #1A1A1A !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+  }
+
+  /* Modal and overlay styling */
+  [data-rk] div[data-testid="rk-modal"],
+  .rainbowkit-custom div[data-testid="rk-modal"] {
+    backdrop-filter: blur(10px) !important;
+    background: rgba(45, 45, 45, 0.95) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* Text styling */
+  [data-rk] h1, [data-rk] h2, [data-rk] h3,
+  .rainbowkit-custom h1, .rainbowkit-custom h2, .rainbowkit-custom h3 {
+    color: #F9F9F9 !important;
+  }
+
+  [data-rk] p,
+  .rainbowkit-custom p {
+    color: #CCCCCC !important;
   }
 }
