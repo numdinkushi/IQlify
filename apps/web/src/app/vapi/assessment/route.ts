@@ -106,5 +106,3 @@ Return ONLY the JSON.`;
         );
     }
 }
-
-

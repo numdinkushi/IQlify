@@ -10,6 +10,87 @@ import { WEBHOOK_EVENTS } from '../config';
  */
 
 /**
+ * Generates final grading for a completed call
+ */
+async function generateFinalGrading(callId: string, assistantId: string) {
+    try {
+        // In a real implementation, you would:
+        // 1. Fetch the call transcript from VAPI
+        // 2. Analyze the conversation
+        // 3. Generate comprehensive grading
+
+        // For now, return a mock grading structure
+        return {
+            callId,
+            assistantId,
+            overallScore: Math.floor(Math.random() * 3) + 7, // 7-9
+            sections: {
+                technical: {
+                    score: Math.floor(Math.random() * 3) + 7,
+                    feedback: "Good technical understanding with room for improvement"
+                },
+                communication: {
+                    score: Math.floor(Math.random() * 3) + 7,
+                    feedback: "Clear communication skills demonstrated"
+                },
+                problemSolving: {
+                    score: Math.floor(Math.random() * 3) + 7,
+                    feedback: "Shows logical thinking approach"
+                }
+            },
+            recommendation: "hire",
+            timestamp: new Date().toISOString()
+        };
+    } catch (error) {
+        console.error('Error generating final grading:', error);
+        return {
+            callId,
+            assistantId,
+            overallScore: 5,
+            sections: {
+                technical: { score: 5, feedback: "Unable to assess" },
+                communication: { score: 5, feedback: "Unable to assess" },
+                problemSolving: { score: 5, feedback: "Unable to assess" }
+            },
+            recommendation: "maybe",
+            timestamp: new Date().toISOString()
+        };
+    }
+}
+
+/**
+ * Stores grading results in the grading system
+ */
+async function storeGradingResults(callId: string, gradingData: any) {
+    try {
+        const gradingUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/vapi/grading`;
+
+        const response = await fetch(gradingUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                callId,
+                gradingResults: gradingData,
+                timestamp: new Date().toISOString()
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to store grading: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Grading stored successfully:', result);
+        return result;
+    } catch (error) {
+        console.error('Error storing grading results:', error);
+        throw error;
+    }
+}
+
+/**
  * Handles function calls from VAPI assistant
  */
 async function handleFunctionCall(functionName: string, parameters: Record<string, any>) {
@@ -150,15 +231,21 @@ export async function POST(request: NextRequest) {
                 // Handle end of call report
                 console.log('End of call report received');
 
-                // Here you can:
-                // - Store call transcript
-                // - Generate final assessment
-                // - Send notifications
-                // - Update user records
+                // Process and store grading results
+                if (payload.message.call) {
+                    const callId = payload.message.call.id;
+                    const assistantId = payload.message.call.assistantId;
+
+                    // Generate final grading based on the call
+                    const finalGrading = await generateFinalGrading(callId, assistantId);
+
+                    // Store the grading results
+                    await storeGradingResults(callId, finalGrading);
+                }
 
                 return NextResponse.json({
                     success: true,
-                    message: 'End of call report processed',
+                    message: 'End of call report processed and grading stored',
                 });
 
             case WEBHOOK_EVENTS.STATUS_UPDATE:
@@ -189,5 +276,4 @@ export async function POST(request: NextRequest) {
         );
     }
 }
-
 

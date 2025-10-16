@@ -93,6 +93,18 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Validate webhook URL for external access
+        if (webhookUrl.includes('localhost') || webhookUrl.includes('127.0.0.1')) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: 'Webhook URL must be externally accessible (not localhost)',
+                    suggestion: 'Use a tunneling service like ngrok, cloudflare tunnel, or deploy to a public server',
+                },
+                { status: 400 }
+            );
+        }
+
         const vapiService = new VapiService();
         const updatedAssistant = await vapiService.setupWebhook(
             assistantId,
@@ -116,5 +128,3 @@ export async function POST(request: NextRequest) {
         );
     }
 }
-
-

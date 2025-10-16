@@ -4,7 +4,7 @@ export const VAPI_CONFIG = {
     baseUrl: 'https://api.vapi.ai',
     apiKey: process.env.VAPI_API_KEY || '',
     webhookSecret: process.env.VAPI_WEBHOOK_SECRET || '',
-    webhookBaseUrl: 'https://deaths-montreal-citizens-springfield.trycloudflare.com',
+    webhookUrl: process.env.NEXT_PUBLIC_WEBHOOK_URL || '',
     defaultModel: 'gpt-4o',
     defaultVoice: {
         voiceId: 'Elliot',
@@ -44,5 +44,4 @@ export const WEBHOOK_EVENTS = {
     END_OF_CALL: 'end-of-call-report',
     STATUS_UPDATE: 'status-update',
 } as const;
-
 
