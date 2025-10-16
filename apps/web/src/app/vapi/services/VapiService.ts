@@ -6,7 +6,6 @@ import {
     WorkflowTriggerRequest,
     WorkflowResponse,
 } from '../types';
-import { WORKFLOW_REGISTRY, WorkflowConfig, FunctionConfig } from '../workflows';
 
 /**
  * Service class for interacting with VAPI API
@@ -143,39 +142,23 @@ export class VapiService {
     }
 
     /**
-     * Triggers a workflow for the assistant using readable workflow definitions
+     * Triggers a workflow for the assistant
      */
     async triggerWorkflow(request: WorkflowTriggerRequest): Promise<WorkflowResponse> {
         try {
             const { assistantId, workflowType, parameters } = request;
 
-            // Get workflow configuration from registry
-            const workflowConfig = WORKFLOW_REGISTRY[workflowType];
-            if (!workflowConfig) {
-                return {
-                    success: false,
-                    error: `Workflow type '${workflowType}' not found in registry`,
-                };
-            }
+            // Create tools for the workflow
+            const tools = this.createWorkflowTools(workflowType, parameters);
 
-            // Create tools from workflow configuration
-            const tools = this.createToolsFromConfig(workflowConfig);
-
-            // Update assistant with workflow tools and configuration
+            // Update assistant with workflow tools
             await this.addToolsToAssistant(assistantId, tools);
-
-            // Update assistant with workflow-specific system prompt and first message
-            await this.updateAssistantConfig(assistantId, workflowConfig);
 
             return {
                 success: true,
                 workflowId: `workflow_${Date.now()}`,
                 status: 'active',
-                data: {
-                    tools,
-                    workflow: workflowConfig.name,
-                    description: workflowConfig.description
-                },
+                data: { tools },
             };
         } catch (error) {
             console.error('Error triggering workflow:', error);
@@ -187,71 +170,7 @@ export class VapiService {
     }
 
     /**
-     * Creates tools from workflow configuration
-     */
-    private createToolsFromConfig(workflowConfig: WorkflowConfig): VapiTool[] {
-        return workflowConfig.functions.map((funcConfig: FunctionConfig) => ({
-            type: 'function',
-            function: {
-                name: funcConfig.name,
-                description: funcConfig.description,
-                parameters: this.buildParametersSchema(funcConfig.parameters),
-            },
-        }));
-    }
-
-    /**
-     * Builds parameter schema from function configuration
-     */
-    private buildParametersSchema(parameters: any[]): any {
-        const properties: Record<string, any> = {};
-        const required: string[] = [];
-
-        parameters.forEach(param => {
-            properties[param.name] = {
-                type: param.type,
-                description: param.description,
-            };
-
-            if (param.enum) {
-                properties[param.name].enum = param.enum;
-            }
-
-            if (param.required) {
-                required.push(param.name);
-            }
-        });
-
-        return {
-            type: 'object',
-            properties,
-            required,
-        };
-    }
-
-    /**
-     * Updates assistant configuration with workflow-specific settings
-     */
-    private async updateAssistantConfig(assistantId: string, workflowConfig: WorkflowConfig): Promise<void> {
-        const updates = {
-            model: {
-                model: 'gpt-4o',
-                messages: [
-                    {
-                        role: 'system',
-                        content: workflowConfig.systemPrompt,
-                    },
-                ],
-                provider: 'openai',
-            },
-            firstMessage: workflowConfig.firstMessage,
-        };
-
-        await this.updateAssistant(assistantId, updates);
-    }
-
-    /**
-     * Creates workflow tools based on workflow type (DEPRECATED - use createToolsFromConfig instead)
+     * Creates workflow tools based on workflow type
      */
     private createWorkflowTools(workflowType: string, parameters: Record<string, any>): VapiTool[] {
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -283,6 +202,10 @@ export class VapiService {
                                 required: ['role', 'level', 'techstack'],
                             },
                         },
+                        server: {
+                            url: `${baseUrl}/vapi/generate`,
+                            method: 'POST',
+                        },
                     },
                     {
                         type: 'function',
@@ -298,6 +221,10 @@ export class VapiService {
                                 },
                                 required: ['question', 'answer'],
                             },
+                        },
+                        server: {
+                            url: `${baseUrl}/vapi/evaluate`,
+                            method: 'POST',
                         },
                     },
                 ];
@@ -318,6 +245,10 @@ export class VapiService {
                                 required: ['skills'],
                             },
                         },
+                        server: {
+                            url: `${baseUrl}/vapi/assessment`,
+                            method: 'POST',
+                        },
                     },
                 ];
 
@@ -336,6 +267,10 @@ export class VapiService {
                                 },
                                 required: ['interviewId'],
                             },
+                        },
+                        server: {
+                            url: `${baseUrl}/vapi/feedback`,
+                            method: 'POST',
                         },
                     },
                 ];
@@ -360,5 +295,4 @@ export class VapiService {
         }
     }
 }
-
 
