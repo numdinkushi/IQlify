@@ -4,69 +4,67 @@
 
 @layer base {
   :root {
-    --border: 214.3 31.8% 91.4%;
-    --input: 216 33% 97%;
-    --ring: 215 20.2% 65.1%;
+    /* IQlify Brand Colors */
+    --border: 0 0% 29.4%; /* #4A4A4A */
+    --input: 0 0% 29.4%; /* #4A4A4A */
+    --ring: 45 100% 51%; /* #D4AF37 */
 
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 21.2%; /* #363636 - Logo background */
+    --foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 17.6%; /* #2D2D2D */
+    --card-foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 17.6%; /* #2D2D2D */
+    --popover-foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 45 100% 51%; /* #D4AF37 - Main gold */
+    --primary-foreground: 0 0% 10.2%; /* #1A1A1A */
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 17.6%; /* #2D2D2D */
+    --secondary-foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 17.6%; /* #2D2D2D */
+    --muted-foreground: 0 0% 60%; /* #999999 */
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 100% 51%; /* #D4AF37 */
+    --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF */
 
     --radius: 0.5rem;
   }
 
+  /* Dark theme is the default for IQlify */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --border: 0 0% 29.4%; /* #4A4A4A */
+    --input: 0 0% 29.4%; /* #4A4A4A */
+    --ring: 45 100% 51%; /* #D4AF37 */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --background: 0 0% 21.2%; /* #363636 - Logo background */
+    --foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --card: 0 0% 17.6%; /* #2D2D2D */
+    --card-foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 17.6%; /* #2D2D2D */
+    --popover-foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --primary: 45 100% 51%; /* #D4AF37 - Main gold */
+    --primary-foreground: 0 0% 10.2%; /* #1A1A1A */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 0 0% 17.6%; /* #2D2D2D */
+    --secondary-foreground: 0 0% 97.6%; /* #F9F9F9 */
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 0 0% 17.6%; /* #2D2D2D */
+    --muted-foreground: 0 0% 60%; /* #999999 */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 45 100% 51%; /* #D4AF37 */
+    --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF */
   }
 }
 
@@ -76,5 +74,93 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* IQlify Custom Components */
+  .iqlify-grid-bg {
+    background-image: 
+      linear-gradient(rgba(74, 74, 74, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74, 74, 74, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .iqlify-gold-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 50%, #A67C00 100%);
+  }
+  
+  .iqlify-gold-text {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .iqlify-card {
+    @apply bg-card border border-border/50 backdrop-blur-sm;
+    background: rgba(45, 45, 45, 0.8);
+  }
+  
+  .iqlify-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%);
+    color: #1A1A1A;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .iqlify-button-primary:hover {
+    background: linear-gradient(135deg, #B8961F 0%, #D4AF37 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  }
+
+  /* RainbowKit Custom Styling */
+  .rainbowkit-custom [data-rk] {
+    --rk-colors-accentColor: #D4AF37 !important;
+    --rk-colors-accentColorForeground: #1A1A1A !important;
+    --rk-colors-actionButtonBorder: rgba(212, 175, 55, 0.3) !important;
+    --rk-colors-actionButtonBorderMobile: rgba(212, 175, 55, 0.3) !important;
+    --rk-colors-actionButtonSecondaryBackground: rgba(212, 175, 55, 0.1) !important;
+    --rk-colors-closeButton: #F9F9F9 !important;
+    --rk-colors-closeButtonBackground: rgba(45, 45, 45, 0.8) !important;
+    --rk-colors-connectButtonBackground: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    --rk-colors-connectButtonBackgroundError: #EF4444 !important;
+    --rk-colors-connectButtonInnerBackground: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    --rk-colors-connectButtonText: #1A1A1A !important;
+    --rk-colors-connectionIndicator: #10B981 !important;
+    --rk-colors-error: #EF4444 !important;
+    --rk-colors-generalBorder: rgba(212, 175, 55, 0.2) !important;
+    --rk-colors-generalBorderDim: rgba(212, 175, 55, 0.1) !important;
+    --rk-colors-menuItemBackground: rgba(45, 45, 45, 0.8) !important;
+    --rk-colors-menuItemBackgroundHover: rgba(212, 175, 55, 0.1) !important;
+    --rk-colors-modalBackdrop: rgba(0, 0, 0, 0.8) !important;
+    --rk-colors-modalBackground: #2D2D2D !important;
+    --rk-colors-modalBorder: rgba(212, 175, 55, 0.2) !important;
+    --rk-colors-modalText: #F9F9F9 !important;
+    --rk-colors-modalTextDim: #CCCCCC !important;
+    --rk-colors-modalTextSecondary: #999999 !important;
+    --rk-colors-profileAction: #F9F9F9 !important;
+    --rk-colors-profileActionHover: rgba(212, 175, 55, 0.1) !important;
+    --rk-colors-profileForeground: #2D2D2D !important;
+    --rk-colors-selectedOptionBorder: #D4AF37 !important;
+    --rk-colors-standby: #999999 !important;
+  }
+
+  /* Custom button styling */
+  .rainbowkit-custom [data-rk] button {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    color: #1A1A1A !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .rainbowkit-custom [data-rk] button:hover {
+    background: linear-gradient(135deg, #B8961F 0%, #D4AF37 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3) !important;
   }
 }
