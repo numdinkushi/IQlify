@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
-import { Navbar } from '@/components/navbar';
 import { WalletProvider } from "@/components/wallet-provider";
+import { AppProvider } from "@/hooks/use-app-state";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,12 +22,13 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* Navbar is included on all pages */}
         <WalletProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
+          <AppProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <main className="flex-1 pb-20">
+                {children}
+              </main>
+            </div>
+          </AppProvider>
         </WalletProvider>
       </body>
     </html>
