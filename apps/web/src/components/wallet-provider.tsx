@@ -4,7 +4,7 @@ import { RainbowKitProvider, connectorsForWallets } from "@rainbow-me/rainbowkit
 import "@rainbow-me/rainbowkit/styles.css";
 import { injectedWallet } from "@rainbow-me/rainbowkit/wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { WagmiProvider, createConfig, http, useConnect } from "wagmi";
 import { celo, celoAlfajores } from "wagmi/chains";
 import { ConnectButton } from "./connect-button";
@@ -34,7 +34,8 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
-function WalletProviderInner({ children }: { children: React.ReactNode }) {
+
+function WalletProviderInner({ children }: { children: React.ReactNode; }) {
   const { connect, connectors } = useConnect();
 
   useEffect(() => {
@@ -51,14 +52,7 @@ function WalletProviderInner({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export function WalletProvider({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+export function WalletProvider({ children }: { children: React.ReactNode; }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
