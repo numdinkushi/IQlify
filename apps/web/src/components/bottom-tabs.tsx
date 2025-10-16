@@ -1,0 +1,57 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import {
+    Home,
+    Target,
+    Mic,
+    Wallet,
+    Trophy
+} from 'lucide-react';
+import { TabType } from '@/lib/types';
+import { TAB_CONFIGS } from '@/lib/constants';
+import { useAppState } from '@/hooks/use-app-state';
+
+const iconMap = {
+    Home,
+    Target,
+    Mic,
+    Wallet,
+    Trophy
+};
+
+export function BottomTabs() {
+    const { currentTab, setCurrentTab } = useAppState();
+
+    return (
+        <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-gold-400/30"
+        >
+            <div className="flex items-center justify-around py-3 px-2">
+                {TAB_CONFIGS.map((tab) => {
+                    const Icon = iconMap[tab.icon as keyof typeof iconMap];
+                    const isActive = currentTab === tab.id;
+
+                    return (
+                        <motion.div
+                            key={tab.id}
+                            onClick={() => setCurrentTab(tab.id)}
+                            className="flex items-center justify-center transition-all duration-200 relative bg-transparent border-none"
+                            whileTap={{ scale: 0.95 }}
+                            whileHover={{ scale: 1.05 }}
+                        >
+                            {/* Icon */}
+                            <Icon
+                                size={28}
+                                className={isActive ? 'text-gold-400' : 'text-white'}
+                            />
+                        </motion.div>
+                    );
+                })}
+            </div>
+        </motion.div>
+    );
+}
