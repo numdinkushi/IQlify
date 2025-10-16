@@ -7,7 +7,7 @@ import { UserBalance } from '@/components/user-balance';
 import { ConnectButton } from '@/components/connect-button';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
-import { Zap, Target, TrendingUp, Clock } from 'lucide-react';
+import { Target, TrendingUp, Clock } from 'lucide-react';
 
 export function HomeTab() {
     const { isConnected } = useAppState();
@@ -51,10 +51,6 @@ export function HomeTab() {
                         transition={{ delay: 0.2, duration: 0.5 }}
                         className="text-center space-y-4"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-semibold iqlify-gold-gradient text-primary-foreground rounded-full border border-gold-400/30 shadow-lg">
-                            <Zap className="h-4 w-4" />
-                            Built on Celo
-                        </div>
 
                         <h1 className="text-4xl font-bold">
                             Welcome to <span className="iqlify-gold-text">IQlify</span>
@@ -65,11 +61,25 @@ export function HomeTab() {
                         </p>
                     </motion.div>
 
-                    {/* User Balance */}
+                    {/* Connect Wallet Section */}
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.4, duration: 0.5 }}
+                        className="iqlify-card border-gold-400/20 p-6 text-center space-y-4"
+                    >
+                        <h2 className="text-xl font-semibold">Connect Your Wallet</h2>
+                        <p className="text-muted-foreground text-sm">
+                            Connect your wallet to view your balance and start earning rewards!
+                        </p>
+                        <ConnectButton />
+                    </motion.div>
+
+                    {/* User Balance */}
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.6, duration: 0.5 }}
                     >
                         <UserBalance />
                     </motion.div>
@@ -78,7 +88,7 @@ export function HomeTab() {
                     <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.6, duration: 0.5 }}
+                        transition={{ delay: 0.8, duration: 0.5 }}
                         className="text-center"
                     >
                         <Button size="lg" className="iqlify-button-primary px-8 py-3 text-base font-medium rounded-xl w-full">

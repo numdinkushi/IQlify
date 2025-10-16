@@ -98,7 +98,7 @@
   }
   
   .iqlify-card {
-    @apply bg-card border border-border/50 backdrop-blur-sm;
+    @apply bg-card border border-border/50 backdrop-blur-sm rounded-xl;
     background: rgba(45, 45, 45, 0.8);
   }
   
@@ -129,10 +129,13 @@
     background-color: #D4AF37 !important;
     color: #1A1A1A !important;
     border: 1px solid rgba(212, 175, 55, 0.3) !important;
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     font-weight: 600 !important;
     font-size: 14px !important;
-    padding: 10px 20px !important;
+    padding: 8px 16px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2) !important;
     position: relative !important;
@@ -203,5 +206,24 @@
   [data-rk] p,
   .rainbowkit-custom p {
     color: #CCCCCC !important;
+  }
+
+  /* Network selector specific overrides */
+  [data-rk] div[role="button"],
+  [data-rk] div[data-testid="rk-chain-button"],
+  .rainbowkit-custom div[role="button"],
+  .rainbowkit-custom div[data-testid="rk-chain-button"] {
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+  }
+
+  /* Icon sizing */
+  [data-rk] svg,
+  .rainbowkit-custom svg {
+    width: 18px !important;
+    height: 18px !important;
   }
 }

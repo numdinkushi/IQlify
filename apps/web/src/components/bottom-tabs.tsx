@@ -45,7 +45,7 @@ export function BottomTabs() {
                         >
                             {/* Icon */}
                             <Icon
-                                size={24}
+                                size={28}
                                 className={isActive ? 'text-gold-400' : 'text-white'}
                             />
                         </motion.div>
