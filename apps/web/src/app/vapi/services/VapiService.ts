@@ -52,6 +52,32 @@ export class VapiService {
     }
 
     /**
+     * Gets the appropriate base URL for webhooks
+     * Prioritizes external URLs over localhost for webhook functionality
+     */
+    private getWebhookBaseUrl(): string {
+        // Check for explicit webhook URL first
+        const webhookUrl = process.env.NEXT_PUBLIC_WEBHOOK_URL;
+        if (webhookUrl) {
+            return webhookUrl;
+        }
+
+        // Check for app URL (could be tunnel service or production)
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+        if (appUrl && !appUrl.includes('localhost')) {
+            return appUrl;
+        }
+
+        // For localhost, warn about webhook limitations
+        if (appUrl?.includes('localhost') || !appUrl) {
+            console.warn('⚠️  Webhook Warning: Using localhost URL. Webhooks will not work with VAPI unless you use a tunneling service or deploy to production.');
+            console.warn('   Set NEXT_PUBLIC_WEBHOOK_URL to your external URL (tunnel service or production) for webhook functionality.');
+        }
+
+        return appUrl || 'http://localhost:3000';
+    }
+
+    /**
      * Fetches an assistant by ID
      */
     async getAssistant(assistantId: string): Promise<VapiAssistant> {
@@ -173,7 +199,8 @@ export class VapiService {
      * Creates workflow tools based on workflow type
      */
     private createWorkflowTools(workflowType: string, parameters: Record<string, any>): VapiTool[] {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        // Use environment URL or external URL for webhooks
+        const baseUrl = this.getWebhookBaseUrl();
 
         switch (workflowType) {
             case 'interview':

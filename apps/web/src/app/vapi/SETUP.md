@@ -22,8 +22,9 @@ VAPI_WEBHOOK_SECRET=your_webhook_secret_here
 # Gemini AI Configuration
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
 
-# Application URL
+# Application URL (use ngrok URL for webhook functionality)
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_WEBHOOK_URL=https://your-ngrok-url.ngrok.io
 ```
 
 **Get your API keys:**
@@ -73,16 +74,25 @@ curl -X POST http://localhost:3000/vapi/assistant \
   -H "Content-Type: application/json" \
   -d '{
     "assistantId": "0b058f17-55aa-4636-ad06-445287514862",
-    "webhookUrl": "http://localhost:3000/vapi/webhook",
+    "webhookUrl": "https://abc123.ngrok.io/vapi/webhook",
     "webhookSecret": "your-secret-here"
   }'
 ```
 
-**Note:** For local development, you'll need to expose your localhost using ngrok or similar:
+**IMPORTANT:** For webhook functionality, you MUST use an externally accessible URL:
 
 ```bash
+# 1. Start ngrok in a separate terminal
 ngrok http 3000
-# Then use the ngrok URL in your webhook setup
+
+# 2. Copy the ngrok URL (e.g., https://abc123.ngrok.io)
+# 3. Update your .env.local file:
+NEXT_PUBLIC_WEBHOOK_URL=https://abc123.ngrok.io
+
+# 4. Restart your development server
+pnpm run dev
+
+# 5. Now use the ngrok URL for webhook setup:
 ```
 
 ### 5. Test the Integration
@@ -234,8 +244,9 @@ VAPI_WEBHOOK_SECRET=your_webhook_secret_here
 # Gemini AI Configuration
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
 
-# Application URL
+# Application URL (use ngrok URL for webhook functionality)
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_WEBHOOK_URL=https://your-ngrok-url.ngrok.io
 ```
 
 **Get your API keys:**
@@ -285,16 +296,25 @@ curl -X POST http://localhost:3000/vapi/assistant \
   -H "Content-Type: application/json" \
   -d '{
     "assistantId": "0b058f17-55aa-4636-ad06-445287514862",
-    "webhookUrl": "http://localhost:3000/vapi/webhook",
+    "webhookUrl": "https://abc123.ngrok.io/vapi/webhook",
     "webhookSecret": "your-secret-here"
   }'
 ```
 
-**Note:** For local development, you'll need to expose your localhost using ngrok or similar:
+**IMPORTANT:** For webhook functionality, you MUST use an externally accessible URL:
 
 ```bash
+# 1. Start ngrok in a separate terminal
 ngrok http 3000
-# Then use the ngrok URL in your webhook setup
+
+# 2. Copy the ngrok URL (e.g., https://abc123.ngrok.io)
+# 3. Update your .env.local file:
+NEXT_PUBLIC_WEBHOOK_URL=https://abc123.ngrok.io
+
+# 4. Restart your development server
+pnpm run dev
+
+# 5. Now use the ngrok URL for webhook setup:
 ```
 
 ### 5. Test the Integration
