@@ -4,55 +4,194 @@ import { GeminiService } from '../services/GeminiService';
 import { VapiWebhookPayload } from '../types';
 import { WEBHOOK_EVENTS } from '../config';
 
+// Extended webhook payload type to include transcript
+interface ExtendedVapiWebhookPayload extends Omit<VapiWebhookPayload, 'message'> {
+    message: VapiWebhookPayload['message'] & {
+        transcript?: string;
+    };
+}
+
 /**
  * Webhook handler for VAPI events
  * This endpoint receives events from VAPI and processes them accordingly
  */
 
 /**
- * Generates final grading for a completed call
+ * Generates final grading for a completed call using real VAPI data and AI analysis
  */
 async function generateFinalGrading(callId: string, assistantId: string) {
     try {
-        // In a real implementation, you would:
-        // 1. Fetch the call transcript from VAPI
-        // 2. Analyze the conversation
-        // 3. Generate comprehensive grading
+        console.log(`🔍 Fetching call data for ${callId}...`);
 
-        // For now, return a mock grading structure
+        // 1. Fetch the call data from VAPI
+        const vapiService = new VapiService();
+        const callData = await vapiService.getCall(callId);
+
+        console.log('📞 Call data fetched:', {
+            id: callData.id,
+            status: callData.status,
+            duration: callData.duration,
+            hasTranscript: !!callData.transcript
+        });
+
+        // 2. Extract transcript from call data
+        let transcript = '';
+        if (callData.transcript && Array.isArray(callData.transcript)) {
+            // If transcript is an array of messages, join them
+            transcript = callData.transcript
+                .map((msg: any) => `${msg.role || 'Unknown'}: ${msg.content || msg.text || ''}`)
+                .join('\n');
+        } else if (typeof callData.transcript === 'string') {
+            transcript = callData.transcript;
+        } else if (callData.messages && Array.isArray(callData.messages)) {
+            // Alternative: extract from messages array
+            transcript = callData.messages
+                .map((msg: any) => `${msg.role || 'Unknown'}: ${msg.content || msg.text || ''}`)
+                .join('\n');
+        }
+
+        if (!transcript || transcript.trim().length === 0) {
+            console.warn('⚠️ No transcript found in call data');
+            return {
+                callId,
+                assistantId,
+                overallScore: 5,
+                sections: {
+                    technical: { score: 5, feedback: "No transcript available for analysis" },
+                    communication: { score: 5, feedback: "No transcript available for analysis" },
+                    problemSolving: { score: 5, feedback: "No transcript available for analysis" },
+                    experienceRelevance: { score: 5, feedback: "No transcript available for analysis" },
+                    culturalFit: { score: 5, feedback: "No transcript available for analysis" }
+                },
+                recommendation: "maybe",
+                summary: "No transcript available for analysis",
+                keyHighlights: [],
+                areasForImprovement: ["Transcript not available"],
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        console.log(`📝 Transcript length: ${transcript.length} characters`);
+
+        // 3. Analyze the transcript using AI
+        console.log('🤖 Analyzing transcript with AI...');
+        const geminiService = new GeminiService();
+
+        // Extract role and level from call metadata or use defaults
+        const role = callData.assistant?.name || 'Software Engineer';
+        const level = 'Mid-level'; // Could be extracted from call metadata
+        const techstack: string[] = []; // Could be extracted from call metadata
+
+        const aiGrading = await geminiService.analyzeInterviewTranscript(
+            transcript,
+            role,
+            level,
+            techstack
+        );
+
+        console.log('✅ AI grading completed:', {
+            overallScore: aiGrading.overallScore,
+            recommendation: aiGrading.recommendation
+        });
+
+        // 4. Return the AI-generated grading with metadata
         return {
             callId,
             assistantId,
-            overallScore: Math.floor(Math.random() * 3) + 7, // 7-9
-            sections: {
-                technical: {
-                    score: Math.floor(Math.random() * 3) + 7,
-                    feedback: "Good technical understanding with room for improvement"
-                },
-                communication: {
-                    score: Math.floor(Math.random() * 3) + 7,
-                    feedback: "Clear communication skills demonstrated"
-                },
-                problemSolving: {
-                    score: Math.floor(Math.random() * 3) + 7,
-                    feedback: "Shows logical thinking approach"
-                }
-            },
-            recommendation: "hire",
+            overallScore: aiGrading.overallScore,
+            sections: aiGrading.sections,
+            recommendation: aiGrading.recommendation,
+            summary: aiGrading.summary,
+            keyHighlights: aiGrading.keyHighlights || [],
+            areasForImprovement: aiGrading.areasForImprovement || [],
+            transcriptLength: transcript.length,
+            analysisTimestamp: new Date().toISOString(),
             timestamp: new Date().toISOString()
         };
+
     } catch (error) {
-        console.error('Error generating final grading:', error);
+        console.error('❌ Error generating final grading:', error);
         return {
             callId,
             assistantId,
             overallScore: 5,
             sections: {
-                technical: { score: 5, feedback: "Unable to assess" },
-                communication: { score: 5, feedback: "Unable to assess" },
-                problemSolving: { score: 5, feedback: "Unable to assess" }
+                technical: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                communication: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                problemSolving: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                experienceRelevance: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                culturalFit: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] }
             },
             recommendation: "maybe",
+            summary: "Analysis failed due to error",
+            keyHighlights: [],
+            areasForImprovement: ["Analysis failed"],
+            timestamp: new Date().toISOString()
+        };
+    }
+}
+
+/**
+ * Generates grading from transcript data (when transcript is provided in webhook)
+ */
+async function generateGradingFromTranscript(callId: string, assistantId: string, transcript: string) {
+    try {
+        console.log(`📝 Analyzing transcript for ${callId}...`);
+        console.log(`📏 Transcript length: ${transcript.length} characters`);
+
+        // Analyze the transcript using AI
+        console.log('🤖 Analyzing transcript with AI...');
+        const geminiService = new GeminiService();
+
+        // Use default role and level for now
+        const role = 'Software Engineer';
+        const level = 'Mid-level';
+        const techstack: string[] = [];
+
+        const aiGrading = await geminiService.analyzeInterviewTranscript(
+            transcript,
+            role,
+            level,
+            techstack
+        );
+
+        console.log('✅ AI grading completed:', {
+            overallScore: aiGrading.overallScore,
+            recommendation: aiGrading.recommendation
+        });
+
+        // Return the AI-generated grading with metadata
+        return {
+            callId,
+            assistantId,
+            overallScore: aiGrading.overallScore,
+            sections: aiGrading.sections,
+            recommendation: aiGrading.recommendation,
+            summary: aiGrading.summary,
+            keyHighlights: aiGrading.keyHighlights || [],
+            areasForImprovement: aiGrading.areasForImprovement || [],
+            transcriptLength: transcript.length,
+            analysisTimestamp: new Date().toISOString(),
+            timestamp: new Date().toISOString()
+        };
+
+    } catch (error) {
+        console.error('❌ Error generating grading from transcript:', error);
+        return {
+            callId,
+            assistantId,
+            overallScore: 5,
+            sections: {
+                technical: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                communication: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                problemSolving: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                experienceRelevance: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] },
+                culturalFit: { score: 5, feedback: "Error in analysis", strengths: [], improvements: [] }
+            },
+            recommendation: "maybe",
+            summary: "Analysis failed due to error",
+            keyHighlights: [],
+            areasForImprovement: ["Analysis failed"],
             timestamp: new Date().toISOString()
         };
     }
@@ -197,7 +336,7 @@ export async function POST(request: NextRequest) {
         const signature = request.headers.get('x-vapi-signature');
 
         // Parse the webhook payload
-        const payload: VapiWebhookPayload = await request.json();
+        const payload: ExtendedVapiWebhookPayload = await request.json();
 
         console.log('Received webhook:', {
             type: payload.message.type,
@@ -236,8 +375,21 @@ export async function POST(request: NextRequest) {
                     const callId = payload.message.call.id;
                     const assistantId = payload.message.call.assistantId;
 
-                    // Generate final grading based on the call
-                    const finalGrading = await generateFinalGrading(callId, assistantId);
+                    // Check if transcript is provided in the webhook payload
+                    let finalGrading;
+                    // @ts-ignore - transcript property may be present in webhook payload
+                    const messageWithTranscript = payload.message as any;
+                    if (messageWithTranscript.transcript) {
+                        console.log('📝 Using transcript from webhook payload');
+                        finalGrading = await generateGradingFromTranscript(
+                            callId,
+                            assistantId,
+                            messageWithTranscript.transcript
+                        );
+                    } else {
+                        console.log('📞 No transcript in payload, fetching from VAPI API...');
+                        finalGrading = await generateFinalGrading(callId, assistantId);
+                    }
 
                     // Store the grading results
                     await storeGradingResults(callId, finalGrading);

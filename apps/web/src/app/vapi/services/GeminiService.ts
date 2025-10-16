@@ -155,6 +155,151 @@ Return ONLY the JSON array, no additional text.`;
             throw error;
         }
     }
+
+    /**
+     * Analyzes interview transcript and generates comprehensive grading
+     */
+    async analyzeInterviewTranscript(
+        transcript: string,
+        role: string,
+        level: string,
+        techstack: string[] = []
+    ): Promise<any> {
+        try {
+            const model = this.genAI.getGenerativeModel({
+                model: this.model,
+                generationConfig: {
+                    temperature: 0.3, // Lower temperature for more consistent grading
+                    maxOutputTokens: 2000,
+                }
+            });
+
+            const prompt = this.buildGradingPrompt(transcript, role, level, techstack);
+            const result = await model.generateContent(prompt);
+            const response = result.response.text();
+
+            return this.parseGradingResponse(response);
+        } catch (error) {
+            console.error('Error analyzing interview transcript:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Builds a comprehensive grading prompt for transcript analysis
+     */
+    private buildGradingPrompt(
+        transcript: string,
+        role: string,
+        level: string,
+        techstack: string[]
+    ): string {
+        return `You are an expert technical interviewer and evaluator. Analyze the following interview transcript and provide comprehensive grading.
+
+**Interview Context:**
+- Role: ${role}
+- Level: ${level}
+- Tech Stack: ${techstack.join(', ') || 'General'}
+
+**Interview Transcript:**
+${transcript}
+
+**Evaluation Criteria:**
+1. Technical Knowledge (0-10): Understanding of relevant technologies, concepts, and best practices
+2. Communication Skills (0-10): Clarity, articulation, and ability to explain complex topics
+3. Problem-Solving (0-10): Logical thinking, approach to challenges, and analytical skills
+4. Experience Relevance (0-10): How well their experience matches the role requirements
+5. Cultural Fit (0-10): Professionalism, attitude, and team collaboration potential
+
+**Instructions:**
+- Provide specific examples from the transcript to support your scores
+- Give constructive feedback for improvement
+- Consider the role level (${level}) when evaluating
+- Be objective and fair in your assessment
+- Provide an overall recommendation: "hire", "no-hire", or "maybe"
+
+**Required JSON Format:**
+{
+  "overallScore": number (0-10),
+  "sections": {
+    "technical": {
+      "score": number (0-10),
+      "feedback": "string with specific examples",
+      "strengths": ["string array"],
+      "improvements": ["string array"]
+    },
+    "communication": {
+      "score": number (0-10),
+      "feedback": "string with specific examples",
+      "strengths": ["string array"],
+      "improvements": ["string array"]
+    },
+    "problemSolving": {
+      "score": number (0-10),
+      "feedback": "string with specific examples",
+      "strengths": ["string array"],
+      "improvements": ["string array"]
+    },
+    "experienceRelevance": {
+      "score": number (0-10),
+      "feedback": "string with specific examples",
+      "strengths": ["string array"],
+      "improvements": ["string array"]
+    },
+    "culturalFit": {
+      "score": number (0-10),
+      "feedback": "string with specific examples",
+      "strengths": ["string array"],
+      "improvements": ["string array"]
+    }
+  },
+  "recommendation": "hire|no-hire|maybe",
+  "summary": "Overall assessment summary",
+  "keyHighlights": ["string array of key positive points"],
+  "areasForImprovement": ["string array of key areas to improve"]
+}
+
+Return ONLY the JSON object, no additional text.`;
+    }
+
+    /**
+     * Parses the AI grading response into structured data
+     */
+    private parseGradingResponse(response: string): any {
+        try {
+            // Try to extract JSON from the response
+            const jsonMatch = response.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) {
+                throw new Error('No JSON object found in response');
+            }
+
+            const grading = JSON.parse(jsonMatch[0]);
+
+            // Validate required fields
+            if (!grading.overallScore || !grading.sections || !grading.recommendation) {
+                throw new Error('Invalid grading structure');
+            }
+
+            return grading;
+        } catch (error) {
+            console.error('Error parsing grading response:', error);
+            // Return fallback grading structure
+            return {
+                overallScore: 5,
+                sections: {
+                    technical: { score: 5, feedback: "Unable to analyze transcript", strengths: [], improvements: [] },
+                    communication: { score: 5, feedback: "Unable to analyze transcript", strengths: [], improvements: [] },
+                    problemSolving: { score: 5, feedback: "Unable to analyze transcript", strengths: [], improvements: [] },
+                    experienceRelevance: { score: 5, feedback: "Unable to analyze transcript", strengths: [], improvements: [] },
+                    culturalFit: { score: 5, feedback: "Unable to analyze transcript", strengths: [], improvements: [] }
+                },
+                recommendation: "maybe",
+                summary: "Analysis failed - manual review required",
+                keyHighlights: [],
+                areasForImprovement: ["Transcript analysis failed"]
+            };
+        }
+    }
 }
 
 

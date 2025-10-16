@@ -168,6 +168,69 @@ export class VapiService {
     }
 
     /**
+     * Fetches call details including transcript from VAPI API
+     */
+    async getCall(callId: string): Promise<any> {
+        try {
+            const response = await fetch(`${this.baseUrl}/call/${callId}`, {
+                method: 'GET',
+                headers: this.getHeaders(),
+            });
+
+            if (!response.ok) {
+                await this.handleApiError(response);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching call:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Fetches call recording from VAPI API
+     */
+    async getCallRecording(callId: string): Promise<any> {
+        try {
+            const response = await fetch(`${this.baseUrl}/call/${callId}/recording`, {
+                method: 'GET',
+                headers: this.getHeaders(),
+            });
+
+            if (!response.ok) {
+                await this.handleApiError(response);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching call recording:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Fetches all calls from VAPI API
+     */
+    async getAllCalls(limit: number = 10): Promise<any> {
+        try {
+            const response = await fetch(`${this.baseUrl}/call?limit=${limit}`, {
+                method: 'GET',
+                headers: this.getHeaders(),
+            });
+
+            if (!response.ok) {
+                await this.handleApiError(response);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching all calls:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Triggers a workflow for the assistant
      */
     async triggerWorkflow(request: WorkflowTriggerRequest): Promise<WorkflowResponse> {
