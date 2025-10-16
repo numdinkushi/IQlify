@@ -61,6 +61,7 @@ export interface VapiWebhookPayload {
             assistantId: string;
             status: string;
         };
+        transcript?: string;
     };
 }
 
@@ -184,6 +185,7 @@ export interface VapiWebhookPayload {
             assistantId: string;
             status: string;
         };
+        transcript?: string;
     };
 }
 
