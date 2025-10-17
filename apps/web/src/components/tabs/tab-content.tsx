@@ -3,11 +3,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { TabType } from '@/lib/types';
 import { useAppState } from '@/hooks/use-app-state';
-import { HomeTab } from './tabs/home-tab';
-import { ChallengesTab } from './tabs/challenges-tab';
-import { InterviewTab } from './tabs/interview-tab';
-import { WalletTab } from './tabs/wallet-tab';
-import { LeaderboardTab } from './tabs/leaderboard-tab';
+import { HomeTab } from './home-tab';
+import { ChallengesTab } from './challenges-tab';
+import { InterviewTab } from './interview-tab';
+import { WalletTab } from './wallet-tab';
+import { LeaderboardTab } from './leaderboard-tab';
 
 const tabComponents = {
     [TabType.HOME]: HomeTab,
