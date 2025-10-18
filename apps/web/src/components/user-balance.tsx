@@ -93,7 +93,7 @@ function UserBalanceContent() {
               className="p-2 hover:bg-gold-400/20 rounded-lg transition-colors"
               title="Copy address"
             >
-              <Copy className="h-3 w-3 text-gold-400" />
+              <Copy className="h-3 w-3 text-white" />
             </button>
           </div>
         </div>

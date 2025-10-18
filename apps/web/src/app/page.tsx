@@ -1,7 +1,7 @@
 'use client';
 
-import { TabContent } from '@/components/tab-content';
-import { BottomTabs } from '@/components/bottom-tabs';
+import { TabContent } from '@/components/tabs/tab-content';
+import { BottomTabs } from '@/components/tabs/bottom-tabs';
 
 export default function Home() {
   return (
