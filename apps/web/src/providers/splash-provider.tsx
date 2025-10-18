@@ -26,27 +26,22 @@ interface SplashProviderProps {
 }
 
 export function SplashProvider({ children }: SplashProviderProps) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [showInitialSplash, setShowInitialSplash] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [showInitialSplash, setShowInitialSplash] = useState(true);
 
-    // Show initial splash screen on first visit
+    // Show splash screen on every page load/refresh
     useEffect(() => {
-        const hasVisited = localStorage.getItem(STORAGE_KEYS.hasVisited);
+        // Always show splash screen initially
+        setShowInitialSplash(true);
+        setIsLoading(true);
 
-        if (!hasVisited) {
-            // First time visitor - show splash screen
-            setShowInitialSplash(true);
-            setIsLoading(true);
-
-            // Mark as visited after splash completes
-            setTimeout(() => {
-                localStorage.setItem(STORAGE_KEYS.hasVisited, 'true');
-            }, 3000);
-        } else {
-            // Returning visitor - skip initial splash
+        // Hide splash screen after a minimum duration
+        const timer = setTimeout(() => {
             setShowInitialSplash(false);
             setIsLoading(false);
-        }
+        }, 2000); // 2 seconds minimum
+
+        return () => clearTimeout(timer);
     }, []);
 
     const showSplash = () => {

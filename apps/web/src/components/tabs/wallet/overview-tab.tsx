@@ -4,13 +4,17 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UserBalance } from '@/components/user-balance';
+import { ShareModal } from '@/components/share-modal';
 import { useAppState } from '@/hooks/use-app-state';
-import { Wallet, TrendingUp, Download, Send, Copy, Check } from 'lucide-react';
+import { useStreak } from '@/hooks/use-streak';
+import { Wallet, TrendingUp, Download, Send, Copy, Check, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function OverviewTab() {
     const { address } = useAppState();
+    const { streakData, userData } = useStreak();
     const [copied, setCopied] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
 
 
     const copyToClipboard = async (text: string) => {
@@ -61,9 +65,20 @@ export function OverviewTab() {
             <motion.div variants={itemVariants}>
                 <Card className="iqlify-card">
                     <CardHeader>
-                        <div className="flex items-center gap-2">
-                            <TrendingUp className="h-5 w-5 text-gold-400" />
-                            <CardTitle className="text-gold-400">Earnings Summary</CardTitle>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <TrendingUp className="h-5 w-5 text-gold-400" />
+                                <CardTitle className="text-gold-400">Earnings Summary</CardTitle>
+                            </div>
+                            <Button
+                                onClick={() => setShowShareModal(true)}
+                                variant="outline"
+                                size="sm"
+                                className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 flex items-center gap-2"
+                            >
+                                <Share2 className="h-4 w-4" />
+                                <span className="text-sm">Share</span>
+                            </Button>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -88,6 +103,15 @@ export function OverviewTab() {
                     </CardContent>
                 </Card>
             </motion.div>
+
+            {/* Share Modal */}
+            <ShareModal
+                isOpen={showShareModal}
+                onClose={() => setShowShareModal(false)}
+                userRank={userData?.rank || 127}
+                totalEarnings={userData?.totalEarnings || 0}
+                streak={streakData.currentStreak}
+            />
         </div>
     );
 }

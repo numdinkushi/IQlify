@@ -14,6 +14,7 @@ export function WalletTab() {
     const [activeTab, setActiveTab] = useState<WalletTabType>(WalletTabType.OVERVIEW);
 
 
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -35,6 +36,23 @@ export function WalletTab() {
             }
         }
     };
+
+    // Show loading state during hydration (only on server-side)
+    if (typeof window === 'undefined') {
+        return (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="min-h-screen p-4 iqlify-grid-bg flex items-center justify-center"
+            >
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-400 mx-auto mb-4"></div>
+                    <p className="text-muted-foreground">Loading IQlify...</p>
+                </div>
+            </motion.div>
+        );
+    }
 
     // Show connect wallet screen if not connected
     if (!isConnected || !address) {
