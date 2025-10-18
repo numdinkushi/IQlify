@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { ConvexProviderWrapper } from './convex-provider';
 import { WalletProvider } from './wallet-provider';
 import { SplashProvider } from './splash-provider';
+import { ProfileProvider } from './profile-provider';
 import { AppProvider } from '@/hooks/use-app-state';
 
 interface ProvidersProps {
@@ -15,9 +16,11 @@ export function Providers({ children }: ProvidersProps) {
         <SplashProvider>
             <ConvexProviderWrapper>
                 <WalletProvider>
-                    <AppProvider>
-                        {children}
-                    </AppProvider>
+                    <ProfileProvider>
+                        <AppProvider>
+                            {children}
+                        </AppProvider>
+                    </ProfileProvider>
                 </WalletProvider>
             </ConvexProviderWrapper>
         </SplashProvider>

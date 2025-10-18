@@ -18,7 +18,9 @@ export const upsertUser = mutation({
         walletAddress: v.string(),
         phoneNumber: v.optional(v.string()),
         email: v.optional(v.string()),
-        fullName: v.optional(v.string()),
+        firstName: v.optional(v.string()),
+        lastName: v.optional(v.string()),
+        profileImage: v.optional(v.string()),
         skillLevel: v.union(
             v.literal("beginner"),
             v.literal("intermediate"),
@@ -34,14 +36,19 @@ export const upsertUser = mutation({
         const now = Date.now();
 
         if (existingUser) {
-            // Update existing user
-            await ctx.db.patch(existingUser._id, {
-                phoneNumber: args.phoneNumber,
-                email: args.email,
-                fullName: args.fullName,
-                skillLevel: args.skillLevel,
+            // Update existing user - only update fields that are provided
+            const updateData: any = {
                 lastActiveAt: now,
-            });
+            };
+
+            if (args.phoneNumber !== undefined) updateData.phoneNumber = args.phoneNumber;
+            if (args.email !== undefined) updateData.email = args.email;
+            if (args.firstName !== undefined) updateData.firstName = args.firstName;
+            if (args.lastName !== undefined) updateData.lastName = args.lastName;
+            if (args.profileImage !== undefined) updateData.profileImage = args.profileImage;
+            if (args.skillLevel !== undefined) updateData.skillLevel = args.skillLevel;
+
+            await ctx.db.patch(existingUser._id, updateData);
             return existingUser._id;
         } else {
             // Create new user
@@ -49,7 +56,9 @@ export const upsertUser = mutation({
                 walletAddress: args.walletAddress,
                 phoneNumber: args.phoneNumber,
                 email: args.email,
-                fullName: args.fullName,
+                firstName: args.firstName,
+                lastName: args.lastName,
+                profileImage: args.profileImage,
                 skillLevel: args.skillLevel,
                 totalEarnings: 0,
                 currentStreak: 0,
@@ -116,5 +125,40 @@ export const updateEarnings = mutation({
             description: `Earned ${args.amount} ${args.currency.toUpperCase()}`,
             timestamp: Date.now(),
         });
+    },
+});
+
+// Update user profile
+export const updateUserProfile = mutation({
+    args: {
+        userId: v.id("users"),
+        firstName: v.optional(v.string()),
+        lastName: v.optional(v.string()),
+        email: v.optional(v.string()),
+        phoneNumber: v.optional(v.string()),
+        profileImage: v.optional(v.string()),
+        skillLevel: v.optional(v.union(
+            v.literal("beginner"),
+            v.literal("intermediate"),
+            v.literal("advanced")
+        )),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db.get(args.userId);
+        if (!user) throw new Error("User not found");
+
+        const updateData: any = {
+            lastActiveAt: Date.now(),
+        };
+
+        if (args.firstName !== undefined) updateData.firstName = args.firstName;
+        if (args.lastName !== undefined) updateData.lastName = args.lastName;
+        if (args.email !== undefined) updateData.email = args.email;
+        if (args.phoneNumber !== undefined) updateData.phoneNumber = args.phoneNumber;
+        if (args.profileImage !== undefined) updateData.profileImage = args.profileImage;
+        if (args.skillLevel !== undefined) updateData.skillLevel = args.skillLevel;
+
+        await ctx.db.patch(args.userId, updateData);
+        return await ctx.db.get(args.userId);
     },
 });

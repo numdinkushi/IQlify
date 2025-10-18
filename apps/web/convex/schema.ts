@@ -6,7 +6,9 @@ export default defineSchema({
         walletAddress: v.string(),
         phoneNumber: v.optional(v.string()),
         email: v.optional(v.string()),
-        fullName: v.optional(v.string()),
+        firstName: v.optional(v.string()),
+        lastName: v.optional(v.string()),
+        profileImage: v.optional(v.string()),
         skillLevel: v.union(
             v.literal("beginner"),
             v.literal("intermediate"),
