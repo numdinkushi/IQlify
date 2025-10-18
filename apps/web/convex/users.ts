@@ -53,6 +53,7 @@ export const upsertUser = mutation({
                 skillLevel: args.skillLevel,
                 totalEarnings: 0,
                 currentStreak: 0,
+                longestStreak: 0,
                 totalInterviews: 0,
                 rank: 0,
                 createdAt: now,
@@ -67,8 +68,14 @@ export const upsertUser = mutation({
 export const updateStreak = mutation({
     args: { userId: v.id("users"), newStreak: v.number() },
     handler: async (ctx, args) => {
+        const user = await ctx.db.get(args.userId);
+        if (!user) throw new Error("User not found");
+
+        const newLongestStreak = Math.max(user.longestStreak, args.newStreak);
+
         await ctx.db.patch(args.userId, {
             currentStreak: args.newStreak,
+            longestStreak: newLongestStreak,
             lastActiveAt: Date.now(),
         });
     },

@@ -3,12 +3,14 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { TabType, AppState, User } from '@/lib/types';
 import { STORAGE_KEYS } from '@/lib/constants';
+import { useAccount } from 'wagmi';
 
 interface AppContextType extends AppState {
     setCurrentTab: (tab: TabType) => void;
     setUser: (user: User | null) => void;
     setIsConnected: (connected: boolean) => void;
     setIsLoading: (loading: boolean) => void;
+    address?: string;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -26,12 +28,18 @@ interface AppProviderProps {
 }
 
 export function AppProvider({ children }: AppProviderProps) {
+    // UI State - Application-level state that doesn't need database persistence
     const [currentTab, setCurrentTab] = useState<TabType>(TabType.HOME);
-    const [user, setUser] = useState<User | null>(null);
-    const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Load saved tab from localStorage
+    // Connection State - Managed by wagmi, synced here for app-wide access
+    const [isConnected, setIsConnected] = useState(false);
+    const { address, isConnected: wagmiConnected } = useAccount();
+
+    // User State - This will be replaced by Convex data in components
+    const [user, setUser] = useState<User | null>(null);
+
+    // Tab state - UI state that doesn't need database persistence
     useEffect(() => {
         const savedTab = localStorage.getItem(STORAGE_KEYS.currentTab) as TabType;
         if (savedTab && Object.values(TabType).includes(savedTab)) {
@@ -39,25 +47,30 @@ export function AppProvider({ children }: AppProviderProps) {
         }
     }, []);
 
-    // Save tab to localStorage when it changes
     useEffect(() => {
         localStorage.setItem(STORAGE_KEYS.currentTab, currentTab);
     }, [currentTab]);
+
+    // Sync wagmi connection state
+    useEffect(() => {
+        setIsConnected(wagmiConnected);
+    }, [wagmiConnected]);
 
     const value: AppContextType = {
         currentTab,
         user,
         isConnected,
         isLoading,
+        address,
         setCurrentTab,
         setUser,
         setIsConnected,
         setIsLoading
     };
 
-   return (
-    <AppContext.Provider value={value}>
-        {children}
-    </AppContext.Provider>
-);
+    return (
+        <AppContext.Provider value={value}>
+            {children}
+        </AppContext.Provider>
+    );
 }

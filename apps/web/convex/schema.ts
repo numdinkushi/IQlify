@@ -14,6 +14,7 @@ export default defineSchema({
         ),
         totalEarnings: v.number(),
         currentStreak: v.number(),
+        longestStreak: v.number(),
         totalInterviews: v.number(),
         rank: v.number(),
         createdAt: v.number(),

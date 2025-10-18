@@ -7,7 +7,7 @@ import { UserBalance } from '@/components/user-balance';
 import { ConnectButton } from '@/components/connect-button';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
-import { Target, TrendingUp, Clock } from 'lucide-react';
+import { Target, TrendingUp, Clock, Zap } from 'lucide-react';
 
 export function HomeTab() {
     const { isConnected } = useAppState();

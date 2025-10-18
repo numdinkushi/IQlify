@@ -117,10 +117,15 @@ export const API_ENDPOINTS = {
     leaderboard: '/api/leaderboard'
 };
 
-// Local Storage Keys
+// Local Storage Keys - Only for UI/Application state
 export const STORAGE_KEYS = {
     currentTab: 'iqlify_current_tab',
-    userProfile: 'iqlify_user_profile',
-    streakData: 'iqlify_streak_data',
-    lastActiveDate: 'iqlify_last_active_date'
+    // Add other UI-only state here as needed
+    // Examples: theme preferences, sidebar state, modal states, etc.
+
+    // ❌ DO NOT store in localStorage:
+    // - User data (now in Convex DB)
+    // - Streak data (now in Convex DB) 
+    // - Earnings/transactions (now in Convex DB)
+    // - Any data that needs cross-device sync
 };

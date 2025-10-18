@@ -1,96 +1,68 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { STORAGE_KEYS } from '@/lib/constants';
+import { useEffect } from 'react';
+import { useUserByWallet, useUpdateStreak, useUpsertUser } from './use-convex';
+import { useAppState } from './use-app-state';
 
-interface StreakData {
-    currentStreak: number;
-    longestStreak: number;
-    lastActiveDate: string;
-    streakStartDate: string;
-}
+// This hook manages user streak data in Convex DB
+// UI state like tabs should stay in context/localStorage
 
 export function useStreak() {
-    const [streakData, setStreakData] = useState<StreakData>({
-        currentStreak: 0,
-        longestStreak: 0,
-        lastActiveDate: '',
-        streakStartDate: ''
-    });
+    const { user, isConnected } = useAppState();
+    const { address } = useAppState(); // Get wallet address
+    const userData = useUserByWallet(address || '');
+    const updateStreak = useUpdateStreak();
+    const upsertUser = useUpsertUser();
 
-    // Load streak data from localStorage
+    // Update streak when user data changes
     useEffect(() => {
-        const savedStreakData = localStorage.getItem(STORAGE_KEYS.streakData);
-        const savedLastActiveDate = localStorage.getItem(STORAGE_KEYS.lastActiveDate);
-
-        if (savedStreakData) {
-            setStreakData(JSON.parse(savedStreakData));
+        if (userData && isConnected) {
+            checkAndUpdateStreak();
         }
+    }, [userData, isConnected]);
 
-        if (savedLastActiveDate) {
-            // Check if streak should continue or break
-            updateStreakStatus(savedLastActiveDate);
-        }
-    }, []);
+    const checkAndUpdateStreak = async () => {
+        if (!userData || !address) return;
 
-    const updateStreakStatus = (lastActiveDate: string) => {
         const today = new Date().toDateString();
-        const lastActive = new Date(lastActiveDate).toDateString();
+        const lastActiveDate = new Date(userData.lastActiveAt).toDateString();
         const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
 
-        setStreakData(prev => {
-            let newStreak = prev.currentStreak;
+        let newStreak = userData.currentStreak;
 
-            if (lastActive === today) {
-                // User was active today, streak continues
-                newStreak = prev.currentStreak;
-            } else if (lastActive === yesterday) {
-                // User was active yesterday, streak continues
-                newStreak = prev.currentStreak;
-            } else {
-                // Streak broken
-                newStreak = 0;
-            }
+        if (lastActiveDate === today) {
+            // User was active today, streak continues
+            newStreak = userData.currentStreak;
+        } else if (lastActiveDate === yesterday) {
+            // User was active yesterday, streak continues
+            newStreak = userData.currentStreak;
+        } else if (lastActiveDate !== today && lastActiveDate !== yesterday) {
+            // Streak broken - reset to 0
+            newStreak = 0;
+        }
 
-            const updatedStreak = {
-                ...prev,
-                currentStreak: newStreak,
-                longestStreak: Math.max(prev.longestStreak, newStreak),
-                lastActiveDate: today,
-                streakStartDate: newStreak === 1 ? today : prev.streakStartDate
-            };
-
-            // Save to localStorage
-            localStorage.setItem(STORAGE_KEYS.streakData, JSON.stringify(updatedStreak));
-            localStorage.setItem(STORAGE_KEYS.lastActiveDate, today);
-
-            return updatedStreak;
-        });
+        // Only update if streak changed
+        if (newStreak !== userData.currentStreak) {
+            await updateStreak({
+                userId: userData._id,
+                newStreak
+            });
+        }
     };
 
-    const incrementStreak = () => {
-        setStreakData(prev => {
-            const today = new Date().toDateString();
-            const newStreak = prev.currentStreak + 1;
+    const incrementStreak = async () => {
+        if (!userData || !address) return;
 
-            const updatedStreak = {
-                ...prev,
-                currentStreak: newStreak,
-                longestStreak: Math.max(prev.longestStreak, newStreak),
-                lastActiveDate: today,
-                streakStartDate: newStreak === 1 ? today : prev.streakStartDate
-            };
-
-            // Save to localStorage
-            localStorage.setItem(STORAGE_KEYS.streakData, JSON.stringify(updatedStreak));
-            localStorage.setItem(STORAGE_KEYS.lastActiveDate, today);
-
-            return updatedStreak;
+        const newStreak = userData.currentStreak + 1;
+        await updateStreak({
+            userId: userData._id,
+            newStreak
         });
     };
 
     const getStreakMultiplier = () => {
-        const { currentStreak } = streakData;
+        if (!userData) return 1;
+        const currentStreak = userData.currentStreak;
         if (currentStreak >= 30) return 5;
         if (currentStreak >= 7) return 2;
         return 1;
@@ -100,11 +72,33 @@ export function useStreak() {
         return baseReward * getStreakMultiplier();
     };
 
+    // Ensure user exists in database
+    const ensureUserExists = async () => {
+        if (!address || !isConnected) return;
+
+        if (!userData) {
+            await upsertUser({
+                walletAddress: address,
+                skillLevel: 'beginner',
+            });
+        }
+    };
+
+    useEffect(() => {
+        ensureUserExists();
+    }, [address, isConnected]);
+
     return {
-        streakData,
+        streakData: {
+            currentStreak: userData?.currentStreak || 0,
+            longestStreak: userData?.longestStreak || 0,
+            lastActiveDate: userData ? new Date(userData.lastActiveAt).toDateString() : '',
+            streakStartDate: userData ? new Date(userData.createdAt).toDateString() : ''
+        },
         incrementStreak,
         getStreakMultiplier,
         getStreakReward,
-        updateStreakStatus
+        updateStreakStatus: checkAndUpdateStreak,
+        userData
     };
 }
