@@ -4,8 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ExternalLink } from "lucide-react";
+import { useAccount } from "wagmi";
 
 import { ConnectButton } from "@/components/connect-button";
+import { AvatarIcon } from "@/components/avatar-icon";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -14,6 +16,7 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const { address, isConnected } = useAccount();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gold-400/20 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
@@ -32,6 +35,14 @@ export function Navbar() {
           </span>
         </Link>
 
+        {/* Right side - Connect Button or Avatar */}
+        <div className="flex items-center gap-3">
+          {isConnected && address ? (
+            <AvatarIcon />
+          ) : (
+            <ConnectButton />
+          )}
+        </div>
       </div>
     </header>
   );
