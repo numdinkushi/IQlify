@@ -8,9 +8,8 @@ import { useAppState } from './use-app-state';
 // UI state like tabs should stay in context/localStorage
 
 export function useStreak() {
-    const { user, isConnected } = useAppState();
-    const { address } = useAppState(); // Get wallet address
-    const userData = useUserByWallet(address || '');
+    const { user, isConnected, address } = useAppState();
+    const userData = useUserByWallet(address || ''); // Only query when address exists
     const updateStreak = useUpdateStreak();
     const upsertUser = useUpsertUser();
 
