@@ -4,9 +4,24 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UserBalance } from '@/components/user-balance';
-import { Wallet, TrendingUp, Download, Send, History } from 'lucide-react';
+import { useAppState } from '@/hooks/use-app-state';
+import { Wallet, TrendingUp, Download, Send, History, Copy, Check } from 'lucide-react';
+import { useState } from 'react';
 
 export function WalletTab() {
+    const { address, isConnected } = useAppState();
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    };
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -29,6 +44,24 @@ export function WalletTab() {
         }
     };
 
+    // Show connect wallet screen if not connected
+    if (!isConnected || !address) {
+        return (
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="min-h-screen p-4 iqlify-grid-bg flex items-center justify-center"
+            >
+                <div className="text-center space-y-4">
+                    <Wallet className="h-16 w-16 text-gold-400 mx-auto opacity-50" />
+                    <h1 className="text-2xl font-bold iqlify-gold-text">Connect Your Wallet</h1>
+                    <p className="text-muted-foreground">Connect your wallet to view your wallet information</p>
+                </div>
+            </motion.div>
+        );
+    }
+
     return (
         <motion.div
             variants={containerVariants}
@@ -43,21 +76,42 @@ export function WalletTab() {
                     <p className="text-muted-foreground">Manage your earnings and rewards</p>
                 </motion.div>
 
-                {/* Wallet Info */}
+                {/* Wallet Address */}
                 <motion.div variants={itemVariants}>
                     <Card className="iqlify-card border-gold-400/30">
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Wallet className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Wallet Overview</CardTitle>
+                                <CardTitle className="text-gold-400">Wallet Address</CardTitle>
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground text-sm">
-                                Manage your earnings and track your progress
+                        <CardContent className="space-y-3">
+                            <div className="flex items-center gap-2 p-3 bg-secondary/50 rounded-lg border border-gold-400/10">
+                                <p className="text-sm font-mono text-foreground truncate flex-1">
+                                    {address}
+                                </p>
+                                <button
+                                    onClick={() => copyToClipboard(address)}
+                                    className="p-2 hover:bg-gold-400/20 rounded-lg transition-colors"
+                                    title="Copy address"
+                                >
+                                    {copied ? (
+                                        <Check className="h-4 w-4 text-success" />
+                                    ) : (
+                                        <Copy className="h-4 w-4 text-gold-400" />
+                                    )}
+                                </button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                                {copied ? 'Address copied to clipboard!' : 'Click the copy icon to copy your wallet address'}
                             </p>
                         </CardContent>
                     </Card>
+                </motion.div>
+
+                {/* User Balance */}
+                <motion.div variants={itemVariants}>
+                    <UserBalance />
                 </motion.div>
 
                 {/* Quick Actions */}
