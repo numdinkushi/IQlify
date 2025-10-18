@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useMutation } from 'convex/react';
+import { useDisconnect } from 'wagmi';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Button } from '@/components/ui/button';
 import { ImageUpload } from '@/components/image-upload';
-import { User, Mail, Phone, Star, Camera } from 'lucide-react';
+import { User, Mail, Phone, Star, Camera, LogOut } from 'lucide-react';
 
 interface ProfileBottomSheetProps {
     isOpen: boolean;
@@ -43,6 +44,12 @@ export const ProfileBottomSheet = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const updateUserProfile = useMutation(api.users.updateUserProfile);
+    const { disconnect } = useDisconnect();
+
+    // Check if running in MiniPay environment
+    const isMiniPay = typeof window !== 'undefined' &&
+        window.ethereum &&
+        window.ethereum.isMiniPay;
 
     // Initialize form data when user data changes
     useEffect(() => {
@@ -99,6 +106,11 @@ export const ProfileBottomSheet = ({
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleLogout = () => {
+        disconnect();
+        onClose();
     };
 
     const getSkillLevelColor = (level: string) => {
@@ -251,6 +263,21 @@ export const ProfileBottomSheet = ({
                                 disabled
                                 className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-400 cursor-not-allowed"
                             />
+                        </div>
+                    )}
+
+                    {/* Logout Button - Only show when not in MiniPay */}
+                    {!isMiniPay && (
+                        <div className="pt-4 border-t border-gray-600">
+                            <Button
+                                type="button"
+                                onClick={handleLogout}
+                                variant="outline"
+                                className="w-full bg-red-600/20 border-red-500/50 text-red-400 hover:bg-red-600/30 hover:border-red-400"
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                Disconnect Wallet
+                            </Button>
                         </div>
                     )}
 
