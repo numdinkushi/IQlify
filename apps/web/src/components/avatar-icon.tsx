@@ -28,7 +28,7 @@ export const AvatarIcon = ({ className = '' }: AvatarIconProps) => {
             className={`hover:opacity-80 transition-opacity ${className}`}
             aria-label="Open profile"
         >
-            <Avatar className="w-10 h-10 ring-2 ring-gold-400/20 hover:ring-gold-400/40 transition-all">
+            <Avatar className="w-8 h-8 ring-2 ring-gold-400/20 hover:ring-gold-400/40 transition-all">
                 <AvatarImage
                     src={user?.profileImage}
                     alt="Profile"

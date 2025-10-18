@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/providers/toast-provider';
 
 interface ImageUploadProps {
     onUploadSuccess?: (result: any) => void;
@@ -22,6 +23,7 @@ export const ImageUpload = ({
     const [preview, setPreview] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { success, error: showError, loading } = useToast();
 
     const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -34,6 +36,7 @@ export const ImageUpload = ({
         if (file.size > maxSize * 1024 * 1024) {
             const errorMsg = `File size must be less than ${maxSize}MB`;
             setError(errorMsg);
+            showError('File too large', errorMsg);
             onUploadError?.(errorMsg);
             return;
         }
@@ -44,6 +47,9 @@ export const ImageUpload = ({
             setPreview(e.target?.result as string);
         };
         reader.readAsDataURL(file);
+
+        // Show loading toast
+        const loadingToastId = loading('Uploading image', 'Please wait while we upload your image...');
 
         // Upload file to API route
         setIsUploading(true);
@@ -63,6 +69,7 @@ export const ImageUpload = ({
             const result = await response.json();
             if (result.success && result.data) {
                 setError(null);
+                success('Image uploaded!', 'Your profile picture has been updated successfully.');
                 onUploadSuccess?.(result.data);
             } else {
                 throw new Error(result.error || 'Upload failed');
@@ -71,6 +78,7 @@ export const ImageUpload = ({
             console.error('Upload error:', error);
             const errorMsg = error instanceof Error ? error.message : 'Upload failed';
             setError(errorMsg);
+            showError('Upload failed', errorMsg);
             onUploadError?.(errorMsg);
         } finally {
             setIsUploading(false);
