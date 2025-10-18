@@ -78,7 +78,7 @@ function UserBalanceContent() {
       <CardHeader>
         <CardTitle className="text-lg font-medium flex items-center gap-2 text-gold-400">
           <Wallet className="h-5 w-5 text-primary" />
-          {isMiniPay ? "MiniPay Connected" : "Connected Wallet"}
+          Balances
         </CardTitle>
 
         {/* Wallet Address */}
