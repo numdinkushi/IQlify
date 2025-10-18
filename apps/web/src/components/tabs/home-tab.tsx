@@ -5,13 +5,96 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UserBalance } from '@/components/user-balance';
 import { ConnectButton } from '@/components/connect-button';
+import { ClientOnly } from '@/components/client-only';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
 import { Target, TrendingUp, Clock, Zap } from 'lucide-react';
 
 export function HomeTab() {
-    const { isConnected } = useAppState();
-    const { streakData, getStreakMultiplier } = useStreak();
+    const { isConnected, address } = useAppState();
+    const { streakData, getStreakMultiplier, userData } = useStreak();
+
+    return (
+        <ClientOnly
+            fallback={
+                <div className="min-h-screen p-4 iqlify-grid-bg flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-400 mx-auto mb-4"></div>
+                        <p className="text-muted-foreground">Loading IQlify...</p>
+                    </div>
+                </div>
+            }
+        >
+            {/* Show connect wallet screen when not connected */}
+            {(!isConnected || !address) ? (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="min-h-screen p-4 iqlify-grid-bg"
+                >
+                    <div className="max-w-md mx-auto space-y-8">
+                        {/* Header */}
+                        <motion.div
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="text-center space-y-4"
+                        >
+                            <h1 className="text-4xl font-bold">
+                                Welcome to <span className="iqlify-gold-text">IQlify</span>
+                            </h1>
+                            <p className="text-muted-foreground text-lg">
+                                Master interviews while earning real money
+                            </p>
+                        </motion.div>
+
+                        {/* Connect Wallet Section */}
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.4, duration: 0.5 }}
+                            className="iqlify-card border-gold-400/20 p-6 text-center space-y-4"
+                        >
+                            <h2 className="text-xl font-semibold">Connect Your Wallet</h2>
+                            <p className="text-muted-foreground text-sm">
+                                Connect your wallet to view your balance and start earning rewards!
+                            </p>
+                            <ConnectButton />
+                        </motion.div>
+
+                        {/* User Balance */}
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.6, duration: 0.5 }}
+                        >
+                            <UserBalance />
+                        </motion.div>
+
+                        {/* CTA Button */}
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.8, duration: 0.5 }}
+                            className="text-center"
+                        >
+                            <Button size="lg" className="iqlify-button-primary px-8 py-3 text-base font-medium rounded-xl w-full">
+                                Start Learning & Earning
+                            </Button>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            ) : (
+                <DashboardContent />
+            )}
+        </ClientOnly>
+    );
+}
+
+function DashboardContent() {
+    const { isConnected, address } = useAppState();
+    const { streakData, getStreakMultiplier, userData } = useStreak();
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -35,70 +118,6 @@ export function HomeTab() {
         }
     };
 
-    if (!isConnected) {
-        return (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="min-h-screen p-4 iqlify-grid-bg"
-            >
-                <div className="max-w-md mx-auto space-y-8">
-                    {/* Header */}
-                    <motion.div
-                        initial={{ y: -20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.5 }}
-                        className="text-center space-y-4"
-                    >
-
-                        <h1 className="text-4xl font-bold">
-                            Welcome to <span className="iqlify-gold-text">IQlify</span>
-                        </h1>
-
-                        <p className="text-muted-foreground text-lg">
-                            Master interviews while earning real money
-                        </p>
-                    </motion.div>
-
-                    {/* Connect Wallet Section */}
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.4, duration: 0.5 }}
-                        className="iqlify-card border-gold-400/20 p-6 text-center space-y-4"
-                    >
-                        <h2 className="text-xl font-semibold">Connect Your Wallet</h2>
-                        <p className="text-muted-foreground text-sm">
-                            Connect your wallet to view your balance and start earning rewards!
-                        </p>
-                        <ConnectButton />
-                    </motion.div>
-
-                    {/* User Balance */}
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.6, duration: 0.5 }}
-                    >
-                        <UserBalance />
-                    </motion.div>
-
-                    {/* CTA Button */}
-                    <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.8, duration: 0.5 }}
-                        className="text-center"
-                    >
-                        <Button size="lg" className="iqlify-button-primary px-8 py-3 text-base font-medium rounded-xl w-full">
-                            Start Learning & Earning
-                        </Button>
-                    </motion.div>
-                </div>
-            </motion.div>
-        );
-    }
 
     return (
         <motion.div

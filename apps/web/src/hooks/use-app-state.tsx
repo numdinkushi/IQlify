@@ -31,6 +31,7 @@ export function AppProvider({ children }: AppProviderProps) {
     // UI State - Application-level state that doesn't need database persistence
     const [currentTab, setCurrentTab] = useState<TabType>(TabType.HOME);
     const [isLoading, setIsLoading] = useState(false);
+    const [isHydrated, setIsHydrated] = useState(false);
 
     // Connection State - Managed by wagmi, synced here for app-wide access
     const [isConnected, setIsConnected] = useState(false);
@@ -39,29 +40,37 @@ export function AppProvider({ children }: AppProviderProps) {
     // User State - This will be replaced by Convex data in components
     const [user, setUser] = useState<User | null>(null);
 
+    // Hydration check
+    useEffect(() => {
+        setIsHydrated(true);
+    }, []);
+
     // Tab state - UI state that doesn't need database persistence
     useEffect(() => {
+        if (!isHydrated) return;
         const savedTab = localStorage.getItem(STORAGE_KEYS.currentTab) as TabType;
         if (savedTab && Object.values(TabType).includes(savedTab)) {
             setCurrentTab(savedTab);
         }
-    }, []);
+    }, [isHydrated]);
 
     useEffect(() => {
+        if (!isHydrated) return;
         localStorage.setItem(STORAGE_KEYS.currentTab, currentTab);
-    }, [currentTab]);
+    }, [currentTab, isHydrated]);
 
     // Sync wagmi connection state
     useEffect(() => {
+        if (!isHydrated) return;
         setIsConnected(wagmiConnected);
-    }, [wagmiConnected]);
+    }, [wagmiConnected, isHydrated]);
 
     const value: AppContextType = {
         currentTab,
         user,
-        isConnected,
+        isConnected: isHydrated ? isConnected : false,
         isLoading,
-        address,
+        address: isHydrated ? address : undefined,
         setCurrentTab,
         setUser,
         setIsConnected,

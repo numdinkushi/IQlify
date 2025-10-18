@@ -6,7 +6,10 @@ import { Id } from '../../convex/_generated/dataModel';
 
 // User hooks
 export function useUserByWallet(walletAddress: string) {
-    return useQuery(api.users.getUserByWallet, { walletAddress });
+    return useQuery(
+        api.users.getUserByWallet,
+        walletAddress ? { walletAddress } : "skip"
+    );
 }
 
 export function useUpsertUser() {

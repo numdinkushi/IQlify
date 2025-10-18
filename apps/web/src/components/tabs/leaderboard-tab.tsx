@@ -3,9 +3,17 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trophy, Medal, Award, TrendingUp, Users } from 'lucide-react';
+import { ShareModal } from '@/components/share-modal';
+import { useAppState } from '@/hooks/use-app-state';
+import { useStreak } from '@/hooks/use-streak';
+import { Trophy, Medal, Award, TrendingUp, Users, Share2 } from 'lucide-react';
+import { useState } from 'react';
 
 export function LeaderboardTab() {
+    const { address, isConnected } = useAppState();
+    const { streakData, userData } = useStreak();
+    const [showShareModal, setShowShareModal] = useState(false);
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -80,15 +88,26 @@ export function LeaderboardTab() {
                 <motion.div variants={itemVariants}>
                     <Card className="iqlify-card border-gold-400/30">
                         <CardHeader>
-                            <div className="flex items-center gap-2">
-                                <TrendingUp className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Your Rank</CardTitle>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <TrendingUp className="h-5 w-5 text-gold-400" />
+                                    <CardTitle className="text-gold-400">Your Rank</CardTitle>
+                                </div>
+                                <Button
+                                    onClick={() => setShowShareModal(true)}
+                                    variant="outline"
+                                    size="sm"
+                                    className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 flex items-center gap-2"
+                                >
+                                    <Share2 className="h-4 w-4" />
+                                    <span className="text-sm">Share</span>
+                                </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="text-center space-y-2">
-                                <p className="text-3xl font-bold text-gold-400">#127</p>
-                                <p className="text-muted-foreground">0 CELO earned</p>
+                                <p className="text-3xl font-bold text-gold-400">#{userData?.rank || 127}</p>
+                                <p className="text-muted-foreground">{userData?.totalEarnings || 0} CELO earned</p>
                                 <p className="text-sm text-muted-foreground">Keep practicing to climb the ranks!</p>
                             </div>
                         </CardContent>
@@ -235,6 +254,15 @@ export function LeaderboardTab() {
                         </CardContent>
                     </Card>
                 </motion.div>
+
+                {/* Share Modal */}
+                <ShareModal
+                    isOpen={showShareModal}
+                    onClose={() => setShowShareModal(false)}
+                    userRank={userData?.rank || 127}
+                    totalEarnings={userData?.totalEarnings || 0}
+                    streak={streakData.currentStreak}
+                />
             </div>
         </motion.div>
     );

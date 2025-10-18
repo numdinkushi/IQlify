@@ -120,6 +120,7 @@ export const API_ENDPOINTS = {
 // Local Storage Keys - Only for UI/Application state
 export const STORAGE_KEYS = {
     currentTab: 'iqlify_current_tab',
+    hasVisited: 'iqlify-has-visited',
     // Add other UI-only state here as needed
     // Examples: theme preferences, sidebar state, modal states, etc.
 

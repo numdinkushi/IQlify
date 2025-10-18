@@ -25,10 +25,15 @@ export function TabContent() {
         <AnimatePresence mode="wait">
             <motion.div
                 key={currentTab}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{
+                    duration: 0.5,
+                    ease: 'easeOut',
+                    delay: 0.1 // Small delay to ensure smooth transition from splash
+                }}
+                className="w-full"
             >
                 <CurrentComponent />
             </motion.div>
