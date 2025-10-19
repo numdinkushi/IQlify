@@ -133,7 +133,7 @@ export const PreInterviewLauncher = ({
             skillLevel: selectedSkillLevel,
             interviewType: selectedInterviewType,
             duration: selectedDuration,
-            preparationTime: 120 // 2 minutes
+            preparationTime: 15 // 15 seconds
         };
 
         onStartInterview(config);
@@ -196,8 +196,8 @@ export const PreInterviewLauncher = ({
                     <div key={step} className="flex items-center">
                         <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${index <= currentStepIndex
-                                    ? 'bg-gold-400 text-black'
-                                    : 'bg-gray-600 text-gray-400'
+                                ? 'bg-gold-400 text-black'
+                                : 'bg-gray-600 text-gray-400'
                                 }`}
                         >
                             {index + 1}

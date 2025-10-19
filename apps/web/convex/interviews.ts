@@ -57,6 +57,7 @@ export const updateInterview = mutation({
         feedback: v.optional(v.string()),
         earnings: v.optional(v.number()),
         completedAt: v.optional(v.number()),
+        vapiCallId: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const { interviewId, ...updates } = args;

@@ -29,10 +29,28 @@ export const useInterview = (userId?: string) => {
     );
 
     const startInterview = useCallback(async (configuration: InterviewConfiguration, userId: string) => {
+        if (!userId) {
+            throw new Error('User ID is required to start interview');
+        }
+
+        if (typeof userId !== 'string' || userId.trim() === '') {
+            throw new Error('User ID must be a non-empty string');
+        }
+
         setIsLoading(true);
         setError(null);
 
         try {
+            console.log('Starting interview with configuration:', configuration);
+            console.log('User ID:', userId);
+            console.log('User ID type:', typeof userId);
+            console.log('User ID length:', userId.length);
+
+            // Validate configuration
+            if (!configuration.skillLevel || !configuration.interviewType || !configuration.duration) {
+                throw new Error('Invalid interview configuration');
+            }
+
             // Create interview record
             const interviewId = await createInterview({
                 userId: userId as any,
@@ -43,8 +61,12 @@ export const useInterview = (userId?: string) => {
                 vapiCallId: undefined,
             });
 
+            console.log('Interview created with ID:', interviewId);
+
             // Start VAPI call
             const vapiCallId = await startVapiCall(configuration, interviewId);
+
+            console.log('VAPI call started with ID:', vapiCallId);
 
             // Update interview with VAPI call ID
             await updateInterview({
@@ -55,7 +77,8 @@ export const useInterview = (userId?: string) => {
             return { id: interviewId, vapiCallId };
         } catch (error) {
             console.error('Failed to start interview:', error);
-            setError(error instanceof Error ? error.message : 'Failed to start interview');
+            const errorMessage = error instanceof Error ? error.message : 'Failed to start interview';
+            setError(`Interview Error: ${errorMessage}`);
             throw error;
         } finally {
             setIsLoading(false);
@@ -135,11 +158,12 @@ async function startVapiCall(configuration: InterviewConfiguration, interviewId:
         });
 
         if (!response.ok) {
-            throw new Error('Failed to start VAPI call');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to start VAPI workflow');
         }
 
         const data = await response.json();
-        return data.callId;
+        return data.callId || data.workflowId || `workflow_${interviewId}`;
     } catch (error) {
         console.error('VAPI call failed:', error);
         throw error;

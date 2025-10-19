@@ -65,13 +65,25 @@ export function InterviewTabNew() {
     } = useInterview(user?._id);
 
     const handleStartInterview = async (config: InterviewConfiguration) => {
-        if (!user?._id) return;
+        if (!user) {
+            console.error('User object is missing');
+            return;
+        }
+
+        if (!user._id) {
+            console.error('User ID is missing:', user);
+            return;
+        }
+
+        console.log('Starting interview with user ID:', user._id);
+        console.log('User object:', user);
+        console.log('Configuration:', config);
 
         setIsLauncherOpen(false);
         clearError();
 
         try {
-            const session = await startInterview(config);
+            const session = await startInterview(config, user._id);
 
             if (session) {
                 // Redirect to the actual interview interface
@@ -79,6 +91,8 @@ export function InterviewTabNew() {
             }
         } catch (error) {
             console.error('Failed to start interview:', error);
+            // Error is already handled by the useInterview hook
+            // The error state will be displayed in the UI
         }
     };
 
@@ -139,7 +153,7 @@ export function InterviewTabNew() {
     }
 
     // Show loading state while data is being fetched
-    if (history === undefined || stats === undefined) {
+    if (history === undefined || stats === undefined || !user) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
@@ -164,6 +178,29 @@ export function InterviewTabNew() {
                     <h1 className="text-3xl font-bold iqlify-gold-text">Interview Practice</h1>
                     <p className="text-gray-400">Practice with AI and earn rewards</p>
                 </motion.div>
+
+                {/* Error Display */}
+                {error && (
+                    <motion.div variants={itemVariants}>
+                        <Card className="iqlify-card border-red-400/30 bg-red-400/10">
+                            <div className="p-4 flex items-center gap-3">
+                                <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
+                                <div>
+                                    <h4 className="font-medium text-red-400">Interview Error</h4>
+                                    <p className="text-sm text-red-300">{error}</p>
+                                </div>
+                                <Button
+                                    onClick={clearError}
+                                    variant="outline"
+                                    size="sm"
+                                    className="ml-auto border-red-400/50 text-red-400 hover:bg-red-400/20"
+                                >
+                                    Dismiss
+                                </Button>
+                            </div>
+                        </Card>
+                    </motion.div>
+                )}
 
                 {/* Current Session Status */}
                 {currentSession && (
@@ -199,12 +236,18 @@ export function InterviewTabNew() {
                                 Choose your skill level, interview type, and duration. Practice with AI and earn CELO rewards.
                             </p>
                             <Button
-                                onClick={() => setIsLauncherOpen(true)}
-                                disabled={isLoading}
-                                className="w-full bg-gold-400 hover:bg-gold-500 text-black font-medium"
+                                onClick={() => {
+                                    if (!user?._id) {
+                                        console.error('Cannot start interview: User ID is missing');
+                                        return;
+                                    }
+                                    setIsLauncherOpen(true);
+                                }}
+                                disabled={isLoading || !user?._id}
+                                className="w-full bg-gold-400 hover:bg-gold-500 text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Play className="w-4 h-4 mr-2" />
-                                {isLoading ? 'Starting...' : 'Launch Interview Setup'}
+                                {isLoading ? 'Starting...' : !user?._id ? 'Loading User...' : 'Launch Interview Setup'}
                             </Button>
                         </div>
                     </Card>
@@ -305,11 +348,18 @@ export function InterviewTabNew() {
                                     Start your first interview to see your history here.
                                 </p>
                                 <Button
-                                    onClick={() => setIsLauncherOpen(true)}
-                                    className="bg-gold-400 hover:bg-gold-500 text-black font-medium"
+                                    onClick={() => {
+                                        if (!user?._id) {
+                                            console.error('Cannot start interview: User ID is missing');
+                                            return;
+                                        }
+                                        setIsLauncherOpen(true);
+                                    }}
+                                    disabled={!user?._id}
+                                    className="bg-gold-400 hover:bg-gold-500 text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Play className="w-4 h-4 mr-2" />
-                                    Start Your First Interview
+                                    {!user?._id ? 'Loading User...' : 'Start Your First Interview'}
                                 </Button>
                             </div>
                         </Card>

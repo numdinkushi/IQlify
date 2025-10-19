@@ -105,7 +105,7 @@ export const DurationSelector = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.values(InterviewDuration).map((duration) => {
+                {([InterviewDuration.SHORT, InterviewDuration.MEDIUM, InterviewDuration.LONG] as const).map((duration) => {
                     const config = getDurationConfig(duration);
                     if (!config) {
                         console.warn(`Invalid duration config for: ${duration}`);
@@ -196,7 +196,7 @@ export const DurationSelector = ({
                                 Preparation time included:
                             </div>
                             <div className="text-sm font-medium text-white">
-                                2 minutes
+                                15 seconds
                             </div>
                         </div>
                         <div className="flex items-center justify-between mt-1">
@@ -204,7 +204,7 @@ export const DurationSelector = ({
                                 Total session time:
                             </div>
                             <div className="text-sm font-medium text-gold-400">
-                                {getDurationConfig(selectedDuration).timeInMinutes + 2} minutes
+                                {getDurationConfig(selectedDuration).timeInMinutes} minutes
                             </div>
                         </div>
                     </div>

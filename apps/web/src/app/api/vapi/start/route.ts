@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { InterviewConfiguration } from '@/lib/interview-types';
+import { VapiService } from '@/app/vapi/services/VapiService';
 
 export async function POST(request: NextRequest) {
     try {
@@ -12,63 +13,63 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Get VAPI API key from environment
+        console.log('VAPI Start Request:', { interviewId, configuration });
+
+        // Check if VAPI is configured
         const vapiApiKey = process.env.VAPI_API_KEY;
         if (!vapiApiKey) {
+            console.error('VAPI_API_KEY not found in environment variables');
             return NextResponse.json(
                 { error: 'VAPI API key not configured' },
                 { status: 500 }
             );
         }
 
+        // Use the existing VAPI service with explicit API key
+        const vapiService = new VapiService(vapiApiKey);
+
         // Get assistant ID based on interview type
         const assistantId = getAssistantId(configuration.interviewType);
+        console.log('Using assistant ID:', assistantId);
 
-        // Create VAPI call
-        const vapiResponse = await fetch('https://api.vapi.ai/call', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${vapiApiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        try {
+            // Use the existing VAPI workflow system instead of direct call creation
+            const workflowResult = await vapiService.triggerWorkflow({
                 assistantId,
-                customer: {
-                    number: '+1234567890', // This would be the user's phone number in a real implementation
-                },
-                // Add interview context
-                context: {
+                workflowType: 'interview',
+                parameters: {
                     interviewId,
                     interviewType: configuration.interviewType,
                     skillLevel: configuration.skillLevel,
                     duration: configuration.duration,
-                },
-                // Webhook URL for call events
-                webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/vapi/webhook`,
-            }),
-        });
+                    userId: interviewId, // Use interviewId as userId for now
+                }
+            });
 
-        if (!vapiResponse.ok) {
-            const errorData = await vapiResponse.json();
-            console.error('VAPI API error:', errorData);
+            console.log('VAPI workflow triggered successfully:', workflowResult);
+
+            return NextResponse.json({
+                success: true,
+                callId: workflowResult.workflowId || `workflow_${interviewId}`,
+                status: 'triggered',
+                workflowResult: workflowResult
+            });
+        } catch (vapiError) {
+            console.error('VAPI workflow error:', vapiError);
             return NextResponse.json(
-                { error: 'Failed to create VAPI call' },
+                {
+                    error: 'Failed to trigger VAPI workflow',
+                    details: vapiError.message,
+                    assistantId: assistantId
+                },
                 { status: 500 }
             );
         }
 
-        const callData = await vapiResponse.json();
-
-        return NextResponse.json({
-            success: true,
-            callId: callData.id,
-            status: callData.status,
-        });
-
     } catch (error) {
         console.error('VAPI start error:', error);
         return NextResponse.json(
-            { error: 'Internal server error' },
+            { error: 'Internal server error', details: error.message },
             { status: 500 }
         );
     }

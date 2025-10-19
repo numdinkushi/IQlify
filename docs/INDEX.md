@@ -19,6 +19,7 @@ Welcome to the IQLIFY documentation! This directory contains all the documentati
 
 ### 🎤 VAPI Integration
 - [VAPI_REAL_INTEGRATION.md](./VAPI_REAL_INTEGRATION.md) - **NEW**: Real VAPI integration setup and configuration
+- [VAPI_ENVIRONMENT_SETUP.md](./VAPI_ENVIRONMENT_SETUP.md) - **NEW**: Environment variables setup for VAPI
 - [vapi-readme.md](./vapi-readme.md) - VAPI integration overview
 - [vapi-setup.md](./vapi-setup.md) - VAPI setup instructions
 - [vapi-quick-start.md](./vapi-quick-start.md) - Quick start guide for VAPI

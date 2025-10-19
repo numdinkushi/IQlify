@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { VapiService } from '@/lib/vapi-service';
 import { InterviewConfiguration } from '@/lib/interview-types';
 import {
     Phone,
@@ -19,8 +18,16 @@ import {
     CheckCircle
 } from 'lucide-react';
 
+interface Interview {
+    _id: string;
+    duration: number;
+    skillLevel: string;
+    interviewType: string;
+    status?: string;
+}
+
 interface InterviewInterfaceProps {
-    interview: any;
+    interview: Interview;
     onComplete: (score: number, feedback: string, earnings: number) => void;
     onFailed: (reason: string) => void;
 }
@@ -30,6 +37,7 @@ export const InterviewInterface = ({
     onComplete,
     onFailed
 }: InterviewInterfaceProps) => {
+    // Component for handling interview interface
     const [isConnected, setIsConnected] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isSpeakerOn, setIsSpeakerOn] = useState(true);
@@ -38,7 +46,6 @@ export const InterviewInterface = ({
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('connecting');
     const [error, setError] = useState<string | null>(null);
 
-    const vapiService = VapiService.getInstance();
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Initialize VAPI call
@@ -48,9 +55,6 @@ export const InterviewInterface = ({
         return () => {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
-            }
-            if (vapiService.isCallActive()) {
-                vapiService.endCall();
             }
         };
     }, []);
@@ -80,59 +84,47 @@ export const InterviewInterface = ({
         try {
             setConnectionStatus('connecting');
 
-            // Initialize VAPI SDK
-            await vapiService.initializeVapi();
-
-            // Build interview configuration
-            const config: InterviewConfiguration = {
-                skillLevel: interview.skillLevel,
-                interviewType: interview.interviewType,
-                duration: interview.duration,
-                preparationTime: 2 // 2 minutes preparation time
-            };
-
-            // Get assistant ID based on interview type
-            const assistantId = vapiService.getAssistantId(config);
-
-            // Start VAPI call
-            await vapiService.startCall({
-                assistantId,
-                onCallStart: () => {
-                    console.log('VAPI call started');
-                    setIsConnected(true);
-                    setConnectionStatus('connected');
-                    setIsInterviewActive(true);
+            // Use the existing VAPI workflow system
+            const response = await fetch('/api/vapi/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                onCallEnd: () => {
-                    console.log('VAPI call ended');
-                    setIsConnected(false);
-                    setConnectionStatus('disconnected');
-                    setIsInterviewActive(false);
-                },
-                onError: (error: any) => {
-                    console.error('VAPI call error:', error);
-                    setError(error.message || 'Call failed');
-                    setConnectionStatus('error');
-                    onFailed(error.message || 'Call failed');
-                },
-                onMessage: (message: any) => {
-                    console.log('VAPI message:', message);
-                }
+                body: JSON.stringify({
+                    interviewId: interview._id,
+                    configuration: {
+                        interviewType: interview.interviewType,
+                        skillLevel: interview.skillLevel,
+                        duration: interview.duration,
+                    }
+                })
             });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to start VAPI workflow');
+            }
+
+            const result = await response.json();
+            console.log('VAPI workflow triggered:', result);
+
+            setIsConnected(true);
+            setConnectionStatus('connected');
+            setIsInterviewActive(true);
+
         } catch (error) {
-            console.error('Failed to initialize VAPI call:', error);
-            setError(error instanceof Error ? error.message : 'Failed to start interview');
+            console.error('Failed to initialize VAPI workflow:', error);
+            const errorMessage = error instanceof Error ? error.message : 'Failed to start interview';
+            setError(`VAPI Error: ${errorMessage}`);
             setConnectionStatus('error');
+            onFailed(errorMessage);
         }
     };
 
 
     const handleEndCall = async () => {
         try {
-            if (vapiService.isCallActive()) {
-                await vapiService.endCall();
-            }
+            // VAPI call management is handled server-side
             handleInterviewEnd();
         } catch (error) {
             console.error('Failed to end call:', error);
@@ -171,6 +163,16 @@ export const InterviewInterface = ({
         else if (score >= 70) baseReward += 0.1;
 
         return Math.round(baseReward * 100) / 100;
+    };
+
+    const getAssistantId = (interviewType: string): string => {
+        const assistantMap: Record<string, string> = {
+            'technical': process.env.VAPI_TECHNICAL_ASSISTANT_ID || 'default-technical',
+            'soft_skills': process.env.VAPI_SOFT_SKILLS_ASSISTANT_ID || 'default-soft-skills',
+            'behavioral': process.env.VAPI_BEHAVIORAL_ASSISTANT_ID || 'default-behavioral',
+            'system_design': process.env.VAPI_SYSTEM_DESIGN_ASSISTANT_ID || 'default-system-design'
+        };
+        return assistantMap[interviewType] || 'default';
     };
 
     const generateFeedback = (score: number, interviewType: string): string => {
