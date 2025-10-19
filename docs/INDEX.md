@@ -13,7 +13,13 @@ Welcome to the IQLIFY documentation! This directory contains all the documentati
 - [CLOUDINARY_SETUP.md](./CLOUDINARY_SETUP.md) - Cloudinary image upload configuration
 - [WEBHOOK_SETUP.md](./WEBHOOK_SETUP.md) - Webhook configuration guide
 
+### 📊 Analysis & Planning
+- [CORE_FUNCTIONALITY_ANALYSIS.md](./CORE_FUNCTIONALITY_ANALYSIS.md) - Detailed analysis of core features, reward system, and implementation strategy
+- [INTERVIEW_TESTING_GUIDE.md](./INTERVIEW_TESTING_GUIDE.md) - Comprehensive testing guide for the interview system
+
 ### 🎤 VAPI Integration
+- [VAPI_REAL_INTEGRATION.md](./VAPI_REAL_INTEGRATION.md) - **NEW**: Real VAPI integration setup and configuration
+- [VAPI_ENVIRONMENT_SETUP.md](./VAPI_ENVIRONMENT_SETUP.md) - **NEW**: Environment variables setup for VAPI
 - [vapi-readme.md](./vapi-readme.md) - VAPI integration overview
 - [vapi-setup.md](./vapi-setup.md) - VAPI setup instructions
 - [vapi-quick-start.md](./vapi-quick-start.md) - Quick start guide for VAPI

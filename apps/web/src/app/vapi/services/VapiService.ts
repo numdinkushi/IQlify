@@ -19,7 +19,8 @@ export class VapiService {
         this.apiKey = apiKey || VAPI_CONFIG.apiKey;
         this.baseUrl = baseUrl || VAPI_CONFIG.baseUrl;
 
-        if (!this.apiKey) {
+        // Only throw error on server side or when explicitly providing an empty API key
+        if (!this.apiKey && (typeof window === 'undefined' || apiKey !== undefined)) {
             throw new Error('VAPI API key is required');
         }
     }
