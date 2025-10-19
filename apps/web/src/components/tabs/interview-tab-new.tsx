@@ -74,33 +74,14 @@ export function InterviewTabNew() {
             const session = await startInterview(config);
 
             if (session) {
-                // Here you would typically redirect to the actual interview interface
-                // For now, we'll simulate a completed interview after 5 seconds
-                setTimeout(() => {
-                    simulateInterviewCompletion(session.id, config);
-                }, 5000);
+                // Redirect to the actual interview interface
+                window.location.href = `/interview/${session.id}`;
             }
         } catch (error) {
             console.error('Failed to start interview:', error);
         }
     };
 
-    const simulateInterviewCompletion = async (sessionId: string, config: InterviewConfiguration) => {
-        // Simulate interview completion with random score
-        const score = Math.floor(Math.random() * 40) + 60; // 60-100
-        const earnings = calculateEarnings(config, score);
-
-        try {
-            await completeInterview(
-                sessionId as any, // Type assertion for Convex ID
-                score,
-                `Great job! You scored ${score}% on your ${config.interviewType} interview.`,
-                earnings
-            );
-        } catch (error) {
-            console.error('Failed to complete interview:', error);
-        }
-    };
 
     const calculateEarnings = (config: InterviewConfiguration, score: number): number => {
         // Base reward calculation based on configuration
@@ -153,6 +134,19 @@ export function InterviewTabNew() {
                     onStartInterview={handleStartInterview}
                     onCancel={() => setIsLauncherOpen(false)}
                 />
+            </div>
+        );
+    }
+
+    // Show loading state while data is being fetched
+    if (history === undefined || stats === undefined) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <h3 className="text-lg font-semibold text-white mb-2">Loading Interview Data</h3>
+                    <p className="text-gray-400">Fetching your interview history and statistics...</p>
+                </div>
             </div>
         );
     }
@@ -217,7 +211,7 @@ export function InterviewTabNew() {
                 </motion.div>
 
                 {/* Stats Grid */}
-                {stats && (
+                {stats && stats.totalInterviews > 0 && (
                     <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <Card className="iqlify-card border-green-400/30">
                             <div className="p-4 text-center">
@@ -254,7 +248,7 @@ export function InterviewTabNew() {
                 )}
 
                 {/* Recent Interviews */}
-                {history.length > 0 && (
+                {history && history.length > 0 ? (
                     <motion.div variants={itemVariants}>
                         <Card className="iqlify-card">
                             <div className="p-6">
@@ -296,6 +290,27 @@ export function InterviewTabNew() {
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+                ) : (
+                    <motion.div variants={itemVariants}>
+                        <Card className="iqlify-card border-gray-600/30">
+                            <div className="p-6 text-center">
+                                <div className="w-16 h-16 bg-gray-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <History className="w-8 h-8 text-gray-400" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-white mb-2">No Interviews Yet</h3>
+                                <p className="text-gray-400 mb-6">
+                                    Start your first interview to see your history here.
+                                </p>
+                                <Button
+                                    onClick={() => setIsLauncherOpen(true)}
+                                    className="bg-gold-400 hover:bg-gold-500 text-black font-medium"
+                                >
+                                    <Play className="w-4 h-4 mr-2" />
+                                    Start Your First Interview
+                                </Button>
                             </div>
                         </Card>
                     </motion.div>

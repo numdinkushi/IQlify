@@ -18,6 +18,7 @@ Welcome to the IQLIFY documentation! This directory contains all the documentati
 - [INTERVIEW_TESTING_GUIDE.md](./INTERVIEW_TESTING_GUIDE.md) - Comprehensive testing guide for the interview system
 
 ### 🎤 VAPI Integration
+- [VAPI_REAL_INTEGRATION.md](./VAPI_REAL_INTEGRATION.md) - **NEW**: Real VAPI integration setup and configuration
 - [vapi-readme.md](./vapi-readme.md) - VAPI integration overview
 - [vapi-setup.md](./vapi-setup.md) - VAPI setup instructions
 - [vapi-quick-start.md](./vapi-quick-start.md) - Quick start guide for VAPI

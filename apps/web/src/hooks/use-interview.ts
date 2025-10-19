@@ -1,187 +1,147 @@
 import { useState, useCallback } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
-import { Id } from '../../convex/_generated/dataModel';
 import { InterviewConfiguration } from '@/lib/interview-types';
 
-export const useInterview = (userId?: Id<"users">) => {
+export const useInterview = (userId?: string) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Convex mutations
     const createInterview = useMutation(api.interviews.createInterview);
     const updateInterview = useMutation(api.interviews.updateInterview);
-    const updateUserStats = useMutation(api.interviews.updateUserStatsAfterInterview);
 
-    // Convex queries
+    // Get user interviews
     const userInterviews = useQuery(
         api.interviews.getUserInterviews,
-        userId ? { userId, limit: 10 } : "skip"
+        userId ? { userId: userId as any, limit: 10 } : "skip"
     );
 
+    // Get user stats
     const userStats = useQuery(
         api.interviews.getUserInterviewStats,
-        userId ? { userId } : "skip"
+        userId ? { userId: userId as any } : "skip"
     );
 
+    // Get active interview
     const activeInterview = useQuery(
         api.interviews.getActiveInterview,
-        userId ? { userId } : "skip"
+        userId ? { userId: userId as any } : "skip"
     );
 
-    // Start a new interview
-    const startInterview = useCallback(async (configuration: InterviewConfiguration) => {
-        if (!userId) {
-            setError('User ID is required');
-            return null;
-        }
-
+    const startInterview = useCallback(async (configuration: InterviewConfiguration, userId: string) => {
         setIsLoading(true);
         setError(null);
 
         try {
-            // Create interview record in Convex
+            // Create interview record
             const interviewId = await createInterview({
-                userId,
-                type: "mock",
+                userId: userId as any,
+                type: 'live',
                 skillLevel: configuration.skillLevel,
                 interviewType: configuration.interviewType,
                 duration: configuration.duration,
+                vapiCallId: undefined,
             });
 
-            // Trigger VAPI workflow
-            const vapiResponse = await fetch('/api/vapi/workflow', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    assistantId: getAssistantId(configuration),
-                    workflowType: 'interview',
-                    parameters: buildVapiParameters(configuration)
-                })
+            // Start VAPI call
+            const vapiCallId = await startVapiCall(configuration, interviewId);
+
+            // Update interview with VAPI call ID
+            await updateInterview({
+                interviewId,
+                vapiCallId,
             });
 
-            if (!vapiResponse.ok) {
-                throw new Error('Failed to start VAPI call');
-            }
-
-            const vapiResult = await vapiResponse.json();
-
-            if (vapiResult.success && vapiResult.data) {
-                // Update interview with VAPI call ID
-                await updateInterview({
-                    interviewId,
-                    status: "in_progress",
-                    vapiCallId: vapiResult.data.callId,
-                });
-
-                return {
-                    id: interviewId,
-                    userId,
-                    configuration,
-                    status: 'active',
-                    vapiCallId: vapiResult.data.callId,
-                    startedAt: Date.now()
-                };
-            } else {
-                throw new Error(vapiResult.error || 'Failed to start VAPI call');
-            }
-        } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-            setError(errorMessage);
-            console.error('Failed to start interview:', err);
-            return null;
+            return { id: interviewId, vapiCallId };
+        } catch (error) {
+            console.error('Failed to start interview:', error);
+            setError(error instanceof Error ? error.message : 'Failed to start interview');
+            throw error;
         } finally {
             setIsLoading(false);
         }
-    }, [userId, createInterview, updateInterview]);
+    }, [createInterview, updateInterview]);
 
-    // Complete an interview
     const completeInterview = useCallback(async (
-        interviewId: Id<"interviews">,
+        interviewId: string,
         score: number,
         feedback: string,
         earnings: number
     ) => {
-        if (!userId) return;
-
-        setIsLoading(true);
-        setError(null);
-
         try {
-            // Update interview record
             await updateInterview({
-                interviewId,
-                status: "completed",
+                interviewId: interviewId as any,
+                status: 'completed',
                 score,
                 feedback,
                 earnings,
                 completedAt: Date.now(),
             });
-
-            // Update user statistics
-            await updateUserStats({
-                userId,
-                score,
-                earnings,
-            });
-
-            return true;
-        } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-            setError(errorMessage);
-            console.error('Failed to complete interview:', err);
-            return false;
-        } finally {
-            setIsLoading(false);
+        } catch (error) {
+            console.error('Failed to complete interview:', error);
+            throw error;
         }
-    }, [userId, updateInterview, updateUserStats]);
+    }, [updateInterview]);
 
-    // Get assistant ID based on interview type
-    const getAssistantId = (configuration: InterviewConfiguration): string => {
-        const assistantMap: Record<string, string> = {
-            'technical': process.env.NEXT_PUBLIC_VAPI_TECHNICAL_ASSISTANT_ID || 'default-technical',
-            'soft_skills': process.env.NEXT_PUBLIC_VAPI_SOFT_SKILLS_ASSISTANT_ID || 'default-soft-skills',
-            'behavioral': process.env.NEXT_PUBLIC_VAPI_BEHAVIORAL_ASSISTANT_ID || 'default-behavioral',
-            'system_design': process.env.NEXT_PUBLIC_VAPI_SYSTEM_DESIGN_ASSISTANT_ID || 'default-system-design'
-        };
+    const failInterview = useCallback(async (interviewId: string, reason: string) => {
+        try {
+            await updateInterview({
+                interviewId: interviewId as any,
+                status: 'failed',
+                feedback: reason,
+                completedAt: Date.now(),
+            });
+        } catch (error) {
+            console.error('Failed to mark interview as failed:', error);
+            throw error;
+        }
+    }, [updateInterview]);
 
-        return assistantMap[configuration.interviewType] || 'default';
-    };
-
-    // Build VAPI parameters
-    const buildVapiParameters = (configuration: InterviewConfiguration): Record<string, any> => {
-        return {
-            skillLevel: configuration.skillLevel,
-            interviewType: configuration.interviewType,
-            duration: configuration.duration,
-            preparationTime: configuration.preparationTime,
-            timestamp: Date.now()
-        };
-    };
+    const clearError = useCallback(() => {
+        setError(null);
+    }, []);
 
     return {
-        // State
-        isLoading,
-        error,
-
-        // Data
+        startInterview,
+        completeInterview,
+        failInterview,
         userInterviews: userInterviews || [],
         userStats: userStats || {
             totalInterviews: 0,
             averageScore: 0,
             totalEarnings: 0,
             currentStreak: 0,
-            longestStreak: 0
+            longestStreak: 0,
         },
-        activeInterview,
-
-        // Actions
-        startInterview,
-        completeInterview,
-
-        // Utilities
-        clearError: () => setError(null)
+        activeInterview: activeInterview || null,
+        isLoading,
+        error,
+        clearError,
     };
 };
+
+// Helper function to start VAPI call
+async function startVapiCall(configuration: InterviewConfiguration, interviewId: string): Promise<string> {
+    try {
+        const response = await fetch('/api/vapi/start', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                interviewId,
+                configuration,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to start VAPI call');
+        }
+
+        const data = await response.json();
+        return data.callId;
+    } catch (error) {
+        console.error('VAPI call failed:', error);
+        throw error;
+    }
+}
