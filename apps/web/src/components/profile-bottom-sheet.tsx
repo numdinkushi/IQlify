@@ -46,11 +46,6 @@ export const ProfileBottomSheet = ({
     const updateUserProfile = useMutation(api.users.updateUserProfile);
     const { disconnect } = useDisconnect();
 
-    // Check if running in MiniPay environment
-    const isMiniPay = typeof window !== 'undefined' &&
-        window.ethereum &&
-        window.ethereum.isMiniPay;
-
     // Initialize form data when user data changes
     useEffect(() => {
         if (user) {
@@ -266,20 +261,18 @@ export const ProfileBottomSheet = ({
                         </div>
                     )}
 
-                    {/* Logout Button - Only show when not in MiniPay */}
-                    {!isMiniPay && (
-                        <div className="pt-4 border-t border-gray-600">
-                            <Button
-                                type="button"
-                                onClick={handleLogout}
-                                variant="outline"
-                                className="w-full bg-red-600/20 border-red-500/50 text-red-400 hover:bg-red-600/30 hover:border-red-400"
-                            >
-                                <LogOut className="w-4 h-4 mr-2" />
-                                Disconnect Wallet
-                            </Button>
-                        </div>
-                    )}
+                    {/* Logout Button - Show in all environments */}
+                    <div className="pt-4 border-t border-gray-600">
+                        <Button
+                            type="button"
+                            onClick={handleLogout}
+                            variant="outline"
+                            className="w-full bg-red-600/20 border-red-500/50 text-red-400 hover:bg-red-600/30 hover:border-red-400"
+                        >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Disconnect Wallet
+                        </Button>
+                    </div>
 
                     {/* Action Buttons */}
                     <div className="flex gap-3 pt-4">
