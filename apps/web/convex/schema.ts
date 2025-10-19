@@ -64,6 +64,17 @@ export default defineSchema({
             v.literal("live"),
             v.literal("assessment")
         ),
+        skillLevel: v.optional(v.union(
+            v.literal("beginner"),
+            v.literal("intermediate"),
+            v.literal("advanced")
+        )),
+        interviewType: v.optional(v.union(
+            v.literal("technical"),
+            v.literal("soft_skills"),
+            v.literal("behavioral"),
+            v.literal("system_design")
+        )),
         skills: v.array(v.string()),
         status: v.union(
             v.literal("not_started"),
@@ -77,6 +88,7 @@ export default defineSchema({
         startedAt: v.number(),
         completedAt: v.optional(v.number()),
         earnings: v.optional(v.number()),
+        vapiCallId: v.optional(v.string()),
     })
         .index("by_user", ["userId"])
         .index("by_challenge", ["challengeId"])

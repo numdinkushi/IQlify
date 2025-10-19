@@ -9,6 +9,8 @@
  */
 
 import type * as challenges from "../challenges.js";
+import type * as interviews from "../interviews.js";
+import type * as migrations from "../migrations.js";
 import type * as users from "../users.js";
 
 import type {
@@ -27,6 +29,8 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   challenges: typeof challenges;
+  interviews: typeof interviews;
+  migrations: typeof migrations;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

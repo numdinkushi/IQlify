@@ -55,6 +55,7 @@ const getSelectedColor = (duration: InterviewDuration) => {
 const isRecommendedForSkillLevel = (duration: InterviewDuration, skillLevel?: SkillLevel): boolean => {
     if (!skillLevel) return true;
     const config = getDurationConfig(duration);
+    if (!config || !config.recommendedFor) return true; // Default to true if config is invalid
     return config.recommendedFor.includes(skillLevel);
 };
 
@@ -106,6 +107,10 @@ export const DurationSelector = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.values(InterviewDuration).map((duration) => {
                     const config = getDurationConfig(duration);
+                    if (!config) {
+                        console.warn(`Invalid duration config for: ${duration}`);
+                        return null;
+                    }
                     const isSelected = selectedDuration === duration;
                     const isRecommended = isRecommendedForSkillLevel(duration, skillLevel);
 

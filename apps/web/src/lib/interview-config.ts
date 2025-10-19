@@ -109,7 +109,19 @@ export const getInterviewTypeConfig = (type: InterviewType): InterviewTypeConfig
 };
 
 export const getDurationConfig = (duration: InterviewDuration): DurationConfig => {
-    return DURATION_CONFIGS[duration];
+    const config = DURATION_CONFIGS[duration];
+    if (!config) {
+        console.error(`No configuration found for duration: ${duration}`);
+        // Return a default config to prevent crashes
+        return {
+            duration: InterviewDuration.MEDIUM,
+            label: 'Default (30 min)',
+            description: 'Default duration',
+            timeInMinutes: 30,
+            recommendedFor: [SkillLevel.BEGINNER, SkillLevel.INTERMEDIATE]
+        };
+    }
+    return config;
 };
 
 // Calculate total potential reward
