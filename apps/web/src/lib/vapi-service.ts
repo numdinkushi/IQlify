@@ -26,28 +26,95 @@ export class VapiService {
      */
     async startCall(config: VapiCallConfig): Promise<any> {
         try {
-            // Check if VAPI SDK is loaded
-            if (typeof window === 'undefined' || !(window as any).Vapi) {
-                throw new Error('VAPI SDK not loaded. Please ensure the VAPI script is included.');
+            console.log('🔍 [VAPI] Starting call initialization...');
+            console.log('🔍 [VAPI] Config received:', config);
+
+            // Validate assistant ID
+            if (!config.assistantId) {
+                console.error('❌ [VAPI] Assistant ID validation failed');
+                throw new Error('Assistant ID is required for VAPI calls');
+            }
+            console.log('✅ [VAPI] Assistant ID validated:', config.assistantId);
+
+            // Check API key - for client-side, we need the public key
+            const apiKey = process.env.NEXT_PUBLIC_VAPI_API_KEY || 'ba249413-c68b-41ee-8e0e-d91ca6ff3e25';
+            console.log('🔑 [VAPI] Using public API key for client-side calls:', apiKey ? `${apiKey.substring(0, 8)}...` : 'NOT SET');
+
+            // Import VAPI SDK dynamically
+            console.log('📦 [VAPI] Importing VAPI SDK...');
+            const Vapi = (await import('@vapi-ai/web')).default;
+            console.log('✅ [VAPI] SDK imported successfully');
+            console.log('📦 [VAPI] VAPI SDK version:', Vapi.toString());
+
+            console.log('🏗️ [VAPI] Creating VAPI instance...');
+            // Create VAPI instance with public key
+            this.currentCall = new Vapi(apiKey);
+            console.log('✅ [VAPI] Instance created:', this.currentCall);
+
+            // Set up event handlers BEFORE starting the call
+            console.log('🎧 [VAPI] Setting up event handlers...');
+            if (config.onCallStart) {
+                this.currentCall.on('call-start', (...args: any[]) => {
+                    console.log('🎉 [VAPI] Call start event triggered:', args);
+                    config.onCallStart?.();
+                });
+            }
+            if (config.onCallEnd) {
+                this.currentCall.on('call-end', (...args: any[]) => {
+                    console.log('📞 [VAPI] Call end event triggered:', args);
+                    config.onCallEnd?.();
+                });
+            }
+            if (config.onError) {
+                this.currentCall.on('error', (...args: any[]) => {
+                    console.log('❌ [VAPI] Error event triggered:', args);
+                    config.onError?.(args[0]);
+                });
+            }
+            if (config.onMessage) {
+                this.currentCall.on('message', (...args: any[]) => {
+                    console.log('💬 [VAPI] Message event triggered:', args);
+                    config.onMessage?.(args[0]);
+                });
+            }
+            console.log('✅ [VAPI] Event handlers set up');
+
+            // Start the call with assistant ID - this will trigger the web call
+            console.log('🚀 [VAPI] Starting web call with assistant ID:', config.assistantId);
+
+            // For web calls, we need to ensure microphone permissions are granted
+            // The VAPI SDK will handle this, but we can pre-request to avoid delays
+            try {
+                console.log('🎤 [VAPI] Pre-requesting microphone permission...');
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                console.log('✅ [VAPI] Microphone permission granted');
+                // Stop the stream as VAPI will create its own
+                stream.getTracks().forEach(track => track.stop());
+            } catch (micError) {
+                console.warn('⚠️ [VAPI] Microphone permission pre-request failed:', micError);
+                // Don't throw error here, let VAPI handle it
             }
 
-            const Vapi = (window as any).Vapi;
+            // Use the correct VAPI Web SDK method for starting web calls
+            const startResult = await this.currentCall.start(config.assistantId);
+            console.log('✅ [VAPI] Call start result:', startResult);
 
-            // Create VAPI call instance
-            this.currentCall = new Vapi({
-                assistantId: config.assistantId,
-                onCallStart: config.onCallStart,
-                onCallEnd: config.onCallEnd,
-                onError: config.onError,
-                onMessage: config.onMessage,
-            });
-
-            // Start the call
-            await this.currentCall.start();
-
+            console.log('✅ [VAPI] Call started successfully');
             return this.currentCall;
         } catch (error) {
-            console.error('Failed to start VAPI call:', error);
+            console.error('❌ [VAPI] Failed to start call - Full error details:', {
+                error,
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : undefined,
+                config,
+                currentCall: this.currentCall
+            });
             throw error;
         }
     }
@@ -57,12 +124,19 @@ export class VapiService {
      */
     async endCall(): Promise<void> {
         try {
+            console.log('🔍 [VAPI] Ending call...');
+            console.log('🔍 [VAPI] Current call instance:', this.currentCall);
+
             if (this.currentCall) {
-                await this.currentCall.end();
+                console.log('🛑 [VAPI] Stopping call...');
+                await this.currentCall.stop();
                 this.currentCall = null;
+                console.log('✅ [VAPI] Call ended successfully');
+            } else {
+                console.log('⚠️ [VAPI] No active call to end');
             }
         } catch (error) {
-            console.error('Failed to end VAPI call:', error);
+            console.error('❌ [VAPI] Failed to end call:', error);
             throw error;
         }
     }
@@ -132,6 +206,32 @@ export class VapiService {
             script.onerror = () => reject(new Error('Failed to load VAPI SDK'));
             document.head.appendChild(script);
         });
+    }
+
+    /**
+     * Format phone number to E.164 format
+     */
+    private formatPhoneNumber(phone: string): string {
+        // Remove all non-digit characters
+        const digits = phone.replace(/\D/g, '');
+
+        // If it doesn't start with country code, assume it's a US number
+        if (digits.length === 10) {
+            return `+1${digits}`;
+        }
+
+        // If it already has country code
+        if (digits.length === 11 && digits.startsWith('1')) {
+            return `+${digits}`;
+        }
+
+        // If it already starts with +
+        if (phone.startsWith('+')) {
+            return phone;
+        }
+
+        // Default: add +1 if no country code
+        return `+1${digits}`;
     }
 
     /**

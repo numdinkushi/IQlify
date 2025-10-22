@@ -42,10 +42,17 @@ export class VapiService {
         const errorText = await response.text();
         let errorMessage = `VAPI API Error: ${response.status} ${response.statusText}`;
 
+        console.error('🚨 [VAPI-SERVICE] API Error Details:');
+        console.error('🚨 [VAPI-SERVICE] Status:', response.status);
+        console.error('🚨 [VAPI-SERVICE] Status Text:', response.statusText);
+        console.error('🚨 [VAPI-SERVICE] Response Body:', errorText);
+
         try {
             const errorJson = JSON.parse(errorText);
+            console.error('🚨 [VAPI-SERVICE] Parsed Error JSON:', errorJson);
             errorMessage = errorJson.message || errorMessage;
         } catch {
+            console.error('🚨 [VAPI-SERVICE] Could not parse error as JSON, using raw text');
             errorMessage = errorText || errorMessage;
         }
 
@@ -151,19 +158,29 @@ export class VapiService {
      */
     async createCall(callRequest: VapiCallRequest): Promise<any> {
         try {
+            console.log('🌐 [VAPI-SERVICE] Creating call with request:', JSON.stringify(callRequest, null, 2));
+            console.log('🌐 [VAPI-SERVICE] Using base URL:', this.baseUrl);
+            console.log('🌐 [VAPI-SERVICE] Using headers:', this.getHeaders());
+
             const response = await fetch(`${this.baseUrl}/call`, {
                 method: 'POST',
                 headers: this.getHeaders(),
                 body: JSON.stringify(callRequest),
             });
 
+            console.log('🌐 [VAPI-SERVICE] Response status:', response.status);
+            console.log('🌐 [VAPI-SERVICE] Response headers:', Object.fromEntries(response.headers.entries()));
+
             if (!response.ok) {
+                console.error('❌ [VAPI-SERVICE] API call failed with status:', response.status);
                 await this.handleApiError(response);
             }
 
-            return await response.json();
+            const result = await response.json();
+            console.log('✅ [VAPI-SERVICE] Call created successfully:', JSON.stringify(result, null, 2));
+            return result;
         } catch (error) {
-            console.error('Error creating call:', error);
+            console.error('❌ [VAPI-SERVICE] Error creating call:', error);
             throw error;
         }
     }
@@ -244,11 +261,29 @@ export class VapiService {
             // Update assistant with workflow tools
             await this.addToolsToAssistant(assistantId, tools);
 
+            // Create an actual VAPI call for web-based interviews
+            const callRequest: any = {
+                assistantId: assistantId,
+                // For web calls, we don't specify customer phone number
+                // The client-side SDK will handle the connection
+                maxDurationSeconds: (parameters.duration || 30) * 60, // Convert minutes to seconds
+                customerJoinTimeoutSeconds: 60, // Give user 60 seconds to join
+                metadata: {
+                    interviewId: parameters.interviewId,
+                    interviewType: parameters.interviewType,
+                    skillLevel: parameters.skillLevel,
+                    userId: parameters.userId,
+                    callType: 'web'
+                }
+            };
+
+            const callResult = await this.createCall(callRequest);
+
             return {
                 success: true,
-                workflowId: `workflow_${Date.now()}`,
+                workflowId: callResult.id || `workflow_${Date.now()}`,
                 status: 'active',
-                data: { tools },
+                data: { tools, callResult },
             };
         } catch (error) {
             console.error('Error triggering workflow:', error);
@@ -293,10 +328,6 @@ export class VapiService {
                                 required: ['role', 'level', 'techstack'],
                             },
                         },
-                        server: {
-                            url: `${baseUrl}/vapi/generate`,
-                            method: 'POST',
-                        },
                     },
                     {
                         type: 'function',
@@ -312,10 +343,6 @@ export class VapiService {
                                 },
                                 required: ['question', 'answer'],
                             },
-                        },
-                        server: {
-                            url: `${baseUrl}/vapi/evaluate`,
-                            method: 'POST',
                         },
                     },
                 ];
@@ -336,10 +363,6 @@ export class VapiService {
                                 required: ['skills'],
                             },
                         },
-                        server: {
-                            url: `${baseUrl}/vapi/assessment`,
-                            method: 'POST',
-                        },
                     },
                 ];
 
@@ -358,10 +381,6 @@ export class VapiService {
                                 },
                                 required: ['interviewId'],
                             },
-                        },
-                        server: {
-                            url: `${baseUrl}/vapi/feedback`,
-                            method: 'POST',
                         },
                     },
                 ];

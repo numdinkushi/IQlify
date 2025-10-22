@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InterviewConfiguration } from '@/lib/interview-types';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import {
     Phone,
     PhoneOff,
@@ -18,18 +20,32 @@ import {
     CheckCircle
 } from 'lucide-react';
 
+// Helper function to get assistant ID based on interview type
+function getAssistantId(interviewType: string): string {
+    console.log('🎯 [CLIENT] Getting assistant ID for interview type:', interviewType);
+
+    // Use the actual assistant ID from your VAPI dashboard
+    // This is the real assistant ID that exists in VAPI
+    const assistantId = '0b058f17-55aa-4636-ad06-445287514862';
+
+    console.log('🎯 [CLIENT] Resolved assistant ID:', assistantId);
+
+    return assistantId;
+}
+
 interface Interview {
     _id: string;
     duration: number;
     skillLevel: string;
     interviewType: string;
     status?: string;
+    assistantId?: string;
 }
 
 interface InterviewInterfaceProps {
     interview: Interview;
-    onComplete: (score: number, feedback: string, earnings: number) => void;
-    onFailed: (reason: string) => void;
+    onComplete?: (score: number, feedback: string, earnings: number) => void;
+    onFailed?: (reason: string) => void;
 }
 
 export const InterviewInterface = ({
@@ -47,6 +63,7 @@ export const InterviewInterface = ({
     const [error, setError] = useState<string | null>(null);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const updateInterview = useMutation(api.interviews.updateInterview);
 
     // Initialize VAPI call
     useEffect(() => {
@@ -82,53 +99,133 @@ export const InterviewInterface = ({
 
     const initializeVapiCall = async () => {
         try {
-            setConnectionStatus('connecting');
+            console.log('🔍 [INTERVIEW] Starting VAPI call initialization...');
+            console.log('🔍 [INTERVIEW] Interview data:', interview);
 
-            // Use the existing VAPI workflow system
-            const response = await fetch('/api/vapi/start', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    interviewId: interview._id,
-                    configuration: {
-                        interviewType: interview.interviewType,
-                        skillLevel: interview.skillLevel,
-                        duration: interview.duration,
-                    }
-                })
+            setConnectionStatus('connecting');
+            setError(null); // Clear any previous errors
+
+            // Import the correct VAPI service for web calls
+            console.log('📦 [INTERVIEW] Importing VAPI service...');
+            const { VapiService } = await import('@/lib/vapi-service');
+            const vapiService = VapiService.getInstance();
+            console.log('✅ [INTERVIEW] VAPI service imported:', vapiService);
+
+            // Get assistant ID for web call
+            const assistantId = getAssistantId(interview.interviewType);
+            console.log('🎯 [INTERVIEW] Assistant ID resolved:', assistantId);
+
+            console.log('🚀 [INTERVIEW] Starting VAPI web call with:', {
+                assistantId,
+                interviewType: interview.interviewType,
+                interviewId: interview._id,
+                callType: 'web'
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to start VAPI workflow');
+            // Validate assistant ID
+            if (!assistantId || assistantId === 'default') {
+                console.error('❌ [INTERVIEW] Assistant ID validation failed:', assistantId);
+                throw new Error('Invalid assistant ID. Please check your VAPI assistant configuration.');
             }
 
-            const result = await response.json();
-            console.log('VAPI workflow triggered:', result);
+            // Set a timeout to prevent infinite loading
+            const connectionTimeout = setTimeout(() => {
+                if (connectionStatus === 'connecting') {
+                    console.error('⏰ [INTERVIEW] Connection timeout after 45 seconds');
+                    setError('Connection timeout. The assistant may not be receiving audio. Please check your microphone permissions and ensure you granted access when prompted.');
+                    setConnectionStatus('error');
+                    onFailed?.('Connection timeout - check microphone permissions');
+                }
+            }, 45000); // 45 second timeout to account for microphone permission delays
 
-            setIsConnected(true);
-            setConnectionStatus('connected');
-            setIsInterviewActive(true);
+            // Start VAPI call using the SDK (client-side)
+            console.log('🚀 [INTERVIEW] Calling vapiService.startCall...');
+            const vapiCall = await vapiService.startCall({
+                assistantId: assistantId,
+                onCallStart: () => {
+                    console.log('🎉 [INTERVIEW] VAPI call started successfully');
+                    clearTimeout(connectionTimeout);
+                    setIsConnected(true);
+                    setConnectionStatus('connected');
+                    setIsInterviewActive(true);
+                },
+                onCallEnd: () => {
+                    console.log('📞 [INTERVIEW] VAPI call ended');
+                    clearTimeout(connectionTimeout);
+                    handleInterviewEnd();
+                },
+                onError: (error: any) => {
+                    console.error('❌ [INTERVIEW] VAPI call error received:', error);
+                    clearTimeout(connectionTimeout);
+
+                    let errorMessage = 'Call failed';
+
+                    if (error.message) {
+                        errorMessage = error.message;
+                    } else if (error.code) {
+                        errorMessage = `Error ${error.code}: ${error.message || 'Unknown error'}`;
+                    }
+
+                    console.error('❌ [INTERVIEW] Setting error state:', errorMessage);
+                    setError(`VAPI Error: ${errorMessage}`);
+                    setConnectionStatus('error');
+                    onFailed?.(errorMessage);
+                },
+                onMessage: (message: any) => {
+                    console.log('💬 [INTERVIEW] VAPI message received:', message);
+                }
+            });
+
+            console.log('✅ [INTERVIEW] VAPI call initialized:', vapiCall);
+
+            // Update interview status to in_progress
+            try {
+                console.log('💾 [INTERVIEW] Updating interview status...');
+                await updateInterview({
+                    interviewId: interview._id as any,
+                    status: 'in_progress',
+                    vapiCallId: vapiCall.id || `call_${Date.now()}`
+                });
+                console.log('✅ [INTERVIEW] Interview status updated to in_progress');
+            } catch (updateError) {
+                console.warn('⚠️ [INTERVIEW] Failed to update interview status:', updateError);
+            }
 
         } catch (error) {
-            console.error('Failed to initialize VAPI workflow:', error);
+            console.error('❌ [INTERVIEW] Failed to initialize VAPI call:', error);
+            console.error('❌ [INTERVIEW] Error details:', {
+                error,
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : undefined,
+                interview
+            });
+
             const errorMessage = error instanceof Error ? error.message : 'Failed to start interview';
             setError(`VAPI Error: ${errorMessage}`);
             setConnectionStatus('error');
-            onFailed(errorMessage);
+            onFailed?.(errorMessage);
         }
     };
 
 
     const handleEndCall = async () => {
         try {
-            // VAPI call management is handled server-side
+            console.log('🛑 [INTERVIEW] Ending call...');
+
+            // Import VAPI service to end the call
+            const { VapiService } = await import('@/lib/vapi-service');
+            const vapiService = VapiService.getInstance();
+
+            // End the VAPI call
+            console.log('🛑 [INTERVIEW] Calling vapiService.endCall...');
+            await vapiService.endCall();
+
+            // Complete the interview
+            console.log('✅ [INTERVIEW] Call ended, completing interview...');
             handleInterviewEnd();
         } catch (error) {
-            console.error('Failed to end call:', error);
-            onFailed('Failed to end call properly');
+            console.error('❌ [INTERVIEW] Failed to end call:', error);
+            onFailed?.('Failed to end call properly');
         }
     };
 
@@ -144,7 +241,7 @@ export const InterviewInterface = ({
         const earnings = calculateEarnings(interview, score);
         const feedback = generateFeedback(score, interview.interviewType);
 
-        onComplete(score, feedback, earnings);
+        onComplete?.(score, feedback, earnings);
     };
 
     const calculateEarnings = (interview: any, score: number): number => {
@@ -165,15 +262,6 @@ export const InterviewInterface = ({
         return Math.round(baseReward * 100) / 100;
     };
 
-    const getAssistantId = (interviewType: string): string => {
-        const assistantMap: Record<string, string> = {
-            'technical': process.env.VAPI_TECHNICAL_ASSISTANT_ID || 'default-technical',
-            'soft_skills': process.env.VAPI_SOFT_SKILLS_ASSISTANT_ID || 'default-soft-skills',
-            'behavioral': process.env.VAPI_BEHAVIORAL_ASSISTANT_ID || 'default-behavioral',
-            'system_design': process.env.VAPI_SYSTEM_DESIGN_ASSISTANT_ID || 'default-system-design'
-        };
-        return assistantMap[interviewType] || 'default';
-    };
 
     const generateFeedback = (score: number, interviewType: string): string => {
         const typeName = interviewType.replace('_', ' ');
@@ -243,6 +331,30 @@ export const InterviewInterface = ({
                             </span>
                         </div>
                     </div>
+
+                    {/* Call Type Info */}
+                    <div className="mt-3">
+                        <div className="flex items-center gap-2 text-sm">
+                            <Phone className="w-4 h-4 text-blue-400" />
+                            <span className="text-gray-400">Call Type:</span>
+                            <span className="text-green-400">Browser Audio Call</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                            This will use your browser's microphone for the interview
+                        </p>
+
+                        {/* Connection instructions */}
+                        {connectionStatus === 'connecting' && (
+                            <div className="mt-2 text-xs text-yellow-300 bg-yellow-500/20 p-2 rounded">
+                                <strong>Please:</strong>
+                                <ul className="mt-1 list-disc list-inside space-y-1">
+                                    <li>Allow microphone access when prompted</li>
+                                    <li>Speak clearly into your microphone</li>
+                                    <li>Wait for the assistant to respond</li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
                 </Card>
 
                 {/* Main Interview Interface */}
@@ -296,9 +408,35 @@ export const InterviewInterface = ({
                             <Card className="p-4 border-2 border-red-400/30 bg-red-400/10">
                                 <div className="flex items-center gap-3">
                                     <AlertCircle className="w-5 h-5 text-red-400" />
-                                    <div>
+                                    <div className="flex-1">
                                         <h4 className="font-medium text-red-400">Connection Error</h4>
-                                        <p className="text-sm text-red-300">{error}</p>
+                                        <p className="text-sm text-red-300 mb-2">{error}</p>
+
+                                        {/* Microphone permission troubleshooting */}
+                                        {error.includes('microphone') || error.includes('permission') && (
+                                            <div className="text-xs text-red-200 bg-red-500/20 p-2 rounded">
+                                                <strong>Troubleshooting:</strong>
+                                                <ul className="mt-1 list-disc list-inside space-y-1">
+                                                    <li>Check your browser's microphone permissions for this site</li>
+                                                    <li>Look for a microphone icon in your browser's address bar</li>
+                                                    <li>Click "Allow" when prompted for microphone access</li>
+                                                    <li>Refresh the page and try again</li>
+                                                </ul>
+                                            </div>
+                                        )}
+
+                                        {/* Retry button */}
+                                        <Button
+                                            onClick={() => {
+                                                setError(null);
+                                                setConnectionStatus('connecting');
+                                                initializeVapiCall();
+                                            }}
+                                            className="mt-3 bg-red-600 hover:bg-red-700 text-white text-xs"
+                                            size="sm"
+                                        >
+                                            Retry Connection
+                                        </Button>
                                     </div>
                                 </div>
                             </Card>
