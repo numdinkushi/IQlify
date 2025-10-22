@@ -83,14 +83,19 @@ export function InterviewTabNew() {
         clearError();
 
         try {
+            console.log('🚀 [INTERVIEW TAB] Starting interview...');
             const session = await startInterview(config, user._id);
+            console.log('📋 [INTERVIEW TAB] Interview session created:', session);
 
             if (session) {
+                console.log('🔄 [INTERVIEW TAB] Redirecting to interview page:', `/interview/${session.id}`);
                 // Redirect to the actual interview interface
                 window.location.href = `/interview/${session.id}`;
+            } else {
+                console.error('❌ [INTERVIEW TAB] No session returned from startInterview');
             }
         } catch (error) {
-            console.error('Failed to start interview:', error);
+            console.error('❌ [INTERVIEW TAB] Failed to start interview:', error);
             // Error is already handled by the useInterview hook
             // The error state will be displayed in the UI
         }
@@ -136,7 +141,7 @@ export function InterviewTabNew() {
             opacity: 1,
             transition: {
                 duration: 0.5,
-                ease: 'easeOut'
+                ease: [0.25, 0.46, 0.45, 0.94]
             }
         }
     };
@@ -214,7 +219,7 @@ export function InterviewTabNew() {
                                     <h3 className="text-xl font-semibold text-white">Interview in Progress</h3>
                                 </div>
                                 <p className="text-gray-400 mb-4">
-                                    Your {currentSession.configuration.interviewType} interview is starting...
+                                    Your {currentSession.interviewType || 'interview'} interview is starting...
                                 </p>
                                 <div className="flex items-center justify-center">
                                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
@@ -302,7 +307,7 @@ export function InterviewTabNew() {
                                 <div className="space-y-3">
                                     {history.slice(0, 5).map((interview) => (
                                         <div
-                                            key={interview.id}
+                                            key={interview._id}
                                             className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg"
                                         >
                                             <div className="flex items-center gap-3">

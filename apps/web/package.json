@@ -13,7 +13,8 @@
     "setup:production": "node scripts/production-setup.js",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "update-webhook": "node scripts/update-webhook.js"
+    "update-webhook": "node scripts/update-webhook.js",
+    "run-tunnel": "cloudflared tunnel --url http://localhost:3000"
   },
   "dependencies": {
     "@google/genai": "^1.22.0",

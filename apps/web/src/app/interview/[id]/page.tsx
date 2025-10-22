@@ -19,15 +19,34 @@ export default function InterviewPage() {
     const updateInterview = useMutation(api.interviews.updateInterview);
 
     useEffect(() => {
+        console.log('🔍 [INTERVIEW PAGE] Interview data:', interview);
+        console.log('🔍 [INTERVIEW PAGE] Interview ID:', interviewId);
+
         if (interview === undefined) {
+            console.log('⏳ [INTERVIEW PAGE] Interview loading...');
             setIsLoading(true);
         } else if (interview === null) {
+            console.log('❌ [INTERVIEW PAGE] Interview not found');
             setError('Interview not found');
             setIsLoading(false);
         } else {
+            console.log('✅ [INTERVIEW PAGE] Interview found:', interview);
             setIsLoading(false);
         }
-    }, [interview]);
+    }, [interview, interviewId]);
+
+    // Add timeout to prevent infinite loading
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (isLoading && interview === undefined) {
+                console.log('⏰ [INTERVIEW PAGE] Loading timeout - interview not found');
+                setError('Interview loading timeout - please try again');
+                setIsLoading(false);
+            }
+        }, 10000); // 10 second timeout
+
+        return () => clearTimeout(timeout);
+    }, [isLoading, interview]);
 
     const handleInterviewComplete = async (score: number, feedback: string, earnings: number) => {
         try {
@@ -71,6 +90,8 @@ export default function InterviewPage() {
                     <div className="w-16 h-16 border-4 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <h2 className="text-xl font-semibold text-white mb-2">Loading Interview</h2>
                     <p className="text-gray-400">Preparing your interview session...</p>
+                    <p className="text-xs text-gray-500 mt-2">Interview ID: {interviewId}</p>
+                    <p className="text-xs text-gray-500">Status: {interview === undefined ? 'Loading...' : interview === null ? 'Not found' : 'Found'}</p>
                 </div>
             </div>
         );

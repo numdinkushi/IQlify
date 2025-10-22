@@ -52,6 +52,7 @@ export const useInterview = (userId?: string) => {
             }
 
             // Create interview record
+            console.log('📝 [INTERVIEW HOOK] Creating interview record...');
             const interviewId = await createInterview({
                 userId: userId as any,
                 type: 'live',
@@ -61,20 +62,24 @@ export const useInterview = (userId?: string) => {
                 vapiCallId: undefined,
             });
 
-            console.log('Interview created with ID:', interviewId);
-
-            // Start VAPI call
-            const vapiCallId = await startVapiCall(configuration, interviewId);
-
-            console.log('VAPI call started with ID:', vapiCallId);
-
-            // Update interview with VAPI call ID
-            await updateInterview({
-                interviewId,
-                vapiCallId,
+            console.log('✅ [INTERVIEW HOOK] Interview created with ID:', interviewId);
+            console.log('📊 [INTERVIEW HOOK] Interview data:', {
+                userId,
+                skillLevel: configuration.skillLevel,
+                interviewType: configuration.interviewType,
+                duration: configuration.duration
             });
 
-            return { id: interviewId, vapiCallId };
+            // For web calls, we don't need server-side call creation
+            // The VAPI Web SDK handles everything client-side
+            console.log('Interview created - VAPI web call will be handled client-side');
+
+            console.log('Interview ready for VAPI web call');
+
+            return {
+                id: interviewId,
+                configuration: configuration
+            };
         } catch (error) {
             console.error('Failed to start interview:', error);
             const errorMessage = error instanceof Error ? error.message : 'Failed to start interview';
@@ -143,29 +148,5 @@ export const useInterview = (userId?: string) => {
     };
 };
 
-// Helper function to start VAPI call
-async function startVapiCall(configuration: InterviewConfiguration, interviewId: string): Promise<string> {
-    try {
-        const response = await fetch('/api/vapi/start', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                interviewId,
-                configuration,
-            }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to start VAPI workflow');
-        }
-
-        const data = await response.json();
-        return data.callId || data.workflowId || `workflow_${interviewId}`;
-    } catch (error) {
-        console.error('VAPI call failed:', error);
-        throw error;
-    }
-}
+// Note: VAPI calls are now handled client-side in the interview interface
+// No server-side VAPI API calls needed anymore
