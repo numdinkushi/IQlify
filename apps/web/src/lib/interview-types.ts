@@ -15,9 +15,9 @@ export enum InterviewType {
 }
 
 export enum InterviewDuration {
-    SHORT = 15,    // 15 minutes
-    MEDIUM = 30,   // 30 minutes
-    LONG = 45      // 45 minutes
+    SHORT = 5,     // 5 minutes
+    MEDIUM = 10,   // 10 minutes
+    LONG = 15      // 15 minutes
 }
 
 export interface InterviewConfiguration {

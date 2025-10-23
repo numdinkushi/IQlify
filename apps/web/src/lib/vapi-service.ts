@@ -2,6 +2,7 @@ import { InterviewConfiguration } from './interview-types';
 
 export interface VapiCallConfig {
     assistantId: string;
+    duration?: number; // Duration in minutes
     onCallStart?: () => void;
     onCallEnd?: () => void;
     onError?: (error: any) => void;
@@ -101,8 +102,15 @@ export class VapiService {
                 // Don't throw error here, let VAPI handle it
             }
 
-            // Use the correct VAPI Web SDK method for starting web calls
-            const startResult = await this.currentCall.start(config.assistantId);
+            // Prepare assistant overrides with duration if specified
+            const assistantOverrides: any = {};
+            if (config.duration) {
+                assistantOverrides.maxDurationSeconds = config.duration * 60; // Convert minutes to seconds
+                console.log('⏱️ [VAPI] Setting call duration:', `${config.duration} minutes (${assistantOverrides.maxDurationSeconds} seconds)`);
+            }
+
+            // Use the correct VAPI Web SDK method for starting web calls with duration
+            const startResult = await this.currentCall.start(config.assistantId, assistantOverrides);
             console.log('✅ [VAPI] Call start result:', startResult);
 
             console.log('✅ [VAPI] Call started successfully');

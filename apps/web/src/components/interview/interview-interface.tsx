@@ -119,6 +119,7 @@ export const InterviewInterface = ({
                 assistantId,
                 interviewType: interview.interviewType,
                 interviewId: interview._id,
+                duration: interview.duration,
                 callType: 'web'
             });
 
@@ -131,17 +132,19 @@ export const InterviewInterface = ({
             // Set a timeout to prevent infinite loading
             const connectionTimeout = setTimeout(() => {
                 if (connectionStatus === 'connecting') {
-                    console.error('⏰ [INTERVIEW] Connection timeout after 45 seconds');
+                    console.error('⏰ [INTERVIEW] Connection timeout after 2 minutes');
                     setError('Connection timeout. The assistant may not be receiving audio. Please check your microphone permissions and ensure you granted access when prompted.');
                     setConnectionStatus('error');
-                    onFailed?.('Connection timeout - check microphone permissions');
+                    // Don't call onFailed here - let user retry instead of redirecting
+                    // onFailed?.('Connection timeout - check microphone permissions');
                 }
-            }, 45000); // 45 second timeout to account for microphone permission delays
+            }, 120000); // 2 minute timeout to give more time for connection
 
             // Start VAPI call using the SDK (client-side)
             console.log('🚀 [INTERVIEW] Calling vapiService.startCall...');
             const vapiCall = await vapiService.startCall({
                 assistantId: assistantId,
+                duration: interview.duration, // Pass the interview duration
                 onCallStart: () => {
                     console.log('🎉 [INTERVIEW] VAPI call started successfully');
                     clearTimeout(connectionTimeout);
@@ -169,7 +172,8 @@ export const InterviewInterface = ({
                     console.error('❌ [INTERVIEW] Setting error state:', errorMessage);
                     setError(`VAPI Error: ${errorMessage}`);
                     setConnectionStatus('error');
-                    onFailed?.(errorMessage);
+                    // Don't immediately call onFailed - let user retry instead of redirecting
+                    // onFailed?.(errorMessage);
                 },
                 onMessage: (message: any) => {
                     console.log('💬 [INTERVIEW] VAPI message received:', message);
@@ -203,7 +207,8 @@ export const InterviewInterface = ({
             const errorMessage = error instanceof Error ? error.message : 'Failed to start interview';
             setError(`VAPI Error: ${errorMessage}`);
             setConnectionStatus('error');
-            onFailed?.(errorMessage);
+            // Don't immediately call onFailed - let user retry instead of redirecting
+            // onFailed?.(errorMessage);
         }
     };
 
@@ -225,7 +230,8 @@ export const InterviewInterface = ({
             handleInterviewEnd();
         } catch (error) {
             console.error('❌ [INTERVIEW] Failed to end call:', error);
-            onFailed?.('Failed to end call properly');
+            // Don't call onFailed - just complete the interview anyway
+            handleInterviewEnd();
         }
     };
 
@@ -483,6 +489,20 @@ export const InterviewInterface = ({
                         >
                             <PhoneOff className="w-4 h-4 mr-2" />
                             End Interview
+                        </Button>
+
+                        {/* Go Back Button */}
+                        <Button
+                            onClick={() => {
+                                // Navigate back to interview home
+                                window.location.href = '/?tab=interview';
+                            }}
+                            className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium"
+                        >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Go Back to Interviews
                         </Button>
 
                         {/* Tips */}

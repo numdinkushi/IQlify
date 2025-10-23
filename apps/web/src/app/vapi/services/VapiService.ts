@@ -266,7 +266,7 @@ export class VapiService {
                 assistantId: assistantId,
                 // For web calls, we don't specify customer phone number
                 // The client-side SDK will handle the connection
-                maxDurationSeconds: (parameters.duration || 30) * 60, // Convert minutes to seconds
+                maxDurationSeconds: (parameters.duration || 10) * 60, // Convert minutes to seconds
                 customerJoinTimeoutSeconds: 60, // Give user 60 seconds to join
                 metadata: {
                     interviewId: parameters.interviewId,
