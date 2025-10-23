@@ -58,7 +58,6 @@ export function InterviewTabNew() {
         error,
         userInterviews: history,
         userStats: stats,
-        activeInterview: currentSession,
         startInterview,
         completeInterview,
         clearError
@@ -207,27 +206,6 @@ export function InterviewTabNew() {
                     </motion.div>
                 )}
 
-                {/* Current Session Status */}
-                {currentSession && (
-                    <motion.div variants={itemVariants}>
-                        <Card className="iqlify-card border-blue-400/30 bg-blue-400/10">
-                            <div className="p-6 text-center">
-                                <div className="flex items-center justify-center mb-4">
-                                    <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center mr-3">
-                                        <Play className="w-4 h-4 text-black" />
-                                    </div>
-                                    <h3 className="text-xl font-semibold text-white">Interview in Progress</h3>
-                                </div>
-                                <p className="text-gray-400 mb-4">
-                                    Your {currentSession.interviewType || 'interview'} interview is starting...
-                                </p>
-                                <div className="flex items-center justify-center">
-                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
-                                </div>
-                            </div>
-                        </Card>
-                    </motion.div>
-                )}
 
                 {/* Quick Start */}
                 <motion.div variants={itemVariants}>
