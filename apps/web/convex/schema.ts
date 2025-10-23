@@ -79,6 +79,7 @@ export default defineSchema({
         status: v.union(
             v.literal("not_started"),
             v.literal("in_progress"),
+            v.literal("grading"),
             v.literal("completed"),
             v.literal("failed")
         ),

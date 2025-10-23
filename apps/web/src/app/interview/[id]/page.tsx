@@ -1,16 +1,20 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { InterviewInterface } from '@/components/interview/interview-interface';
+import { GradingScreen } from '@/components/interview/grading-screen';
+import { ResultsScreen } from '@/components/interview/results-screen';
 import { Id } from '../../../../convex/_generated/dataModel';
 
 export default function InterviewPage() {
     const params = useParams();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const interviewId = params.id as string;
+    const status = searchParams.get('status');
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -161,6 +165,30 @@ export default function InterviewPage() {
 
     // Use fallback interview if database interview is not available
     const currentInterview = interview || fallbackInterview as any;
+
+    // Handle different status views
+    if (status === 'grading' || currentInterview?.status === 'grading') {
+        return (
+            <GradingScreen
+                interviewId={interviewId}
+                onComplete={handleInterviewComplete}
+                onBack={() => router.push('/?tab=interview')}
+            />
+        );
+    }
+
+    if (status === 'completed' || currentInterview?.status === 'completed') {
+        return (
+            <ResultsScreen
+                interview={currentInterview}
+                onBack={() => router.push('/?tab=interview')}
+                onClaim={() => {
+                    console.log('Claiming rewards for interview:', currentInterview._id);
+                    // TODO: Implement actual claim logic
+                }}
+            />
+        );
+    }
 
     return (
         <InterviewInterface

@@ -50,6 +50,7 @@ export const updateInterview = mutation({
         status: v.optional(v.union(
             v.literal("not_started"),
             v.literal("in_progress"),
+            v.literal("grading"),
             v.literal("completed"),
             v.literal("failed")
         )),

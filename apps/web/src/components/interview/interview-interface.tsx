@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { InterviewConfiguration } from '@/lib/interview-types';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { GradingScreen } from './grading-screen';
 import {
     Phone,
     PhoneOff,
@@ -61,6 +62,7 @@ export const InterviewInterface = ({
     const [isInterviewActive, setIsInterviewActive] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('connecting');
     const [error, setError] = useState<string | null>(null);
+    const [showGrading, setShowGrading] = useState(false);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const updateInterview = useMutation(api.interviews.updateInterview);
@@ -241,13 +243,19 @@ export const InterviewInterface = ({
             clearInterval(timerRef.current);
         }
 
-        // Simulate interview completion with real scoring
-        // In a real implementation, this would come from VAPI webhooks
-        const score = Math.floor(Math.random() * 40) + 60; // 60-100
-        const earnings = calculateEarnings(interview, score);
-        const feedback = generateFeedback(score, interview.interviewType);
+        // Update interview status to grading
+        try {
+            await updateInterview({
+                interviewId: interview._id as any,
+                status: 'grading',
+            });
+            console.log('✅ [INTERVIEW] Status updated to grading');
+        } catch (error) {
+            console.error('❌ [INTERVIEW] Failed to update status:', error);
+        }
 
-        onComplete?.(score, feedback, earnings);
+        // Show grading screen
+        setShowGrading(true);
     };
 
     const calculateEarnings = (interview: any, score: number): number => {
@@ -307,6 +315,21 @@ export const InterviewInterface = ({
             default: return 'Unknown';
         }
     };
+
+    // Show grading screen if interview has ended
+    if (showGrading) {
+        return (
+            <GradingScreen
+                interviewId={interview._id}
+                onComplete={onComplete}
+                onBack={() => {
+                    setShowGrading(false);
+                    // Navigate back to interview home
+                    window.location.href = '/?tab=interview';
+                }}
+            />
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-900 p-4">
