@@ -70,7 +70,7 @@ async function testCallCreation() {
 
         const callRequest = {
             assistantId: ASSISTANT_ID,
-            maxDurationSeconds: 1800, // 30 minutes
+            maxDurationSeconds: 600, // 10 minutes
             customerJoinTimeoutSeconds: 60, // 60 seconds
             metadata: {
                 testCall: true,

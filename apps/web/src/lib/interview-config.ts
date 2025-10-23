@@ -78,23 +78,23 @@ export const INTERVIEW_TYPE_CONFIGS: Record<InterviewType, InterviewTypeConfig> 
 export const DURATION_CONFIGS: Record<InterviewDuration, DurationConfig> = {
     [InterviewDuration.SHORT]: {
         duration: InterviewDuration.SHORT,
-        label: 'Quick (15 min)',
+        label: 'Quick (5 min)',
         description: 'Perfect for quick skill assessment',
-        timeInMinutes: 15,
+        timeInMinutes: 5,
         recommendedFor: [SkillLevel.BEGINNER]
     },
     [InterviewDuration.MEDIUM]: {
         duration: InterviewDuration.MEDIUM,
-        label: 'Standard (30 min)',
+        label: 'Standard (10 min)',
         description: 'Balanced interview with comprehensive questions',
-        timeInMinutes: 30,
+        timeInMinutes: 10,
         recommendedFor: [SkillLevel.BEGINNER, SkillLevel.INTERMEDIATE]
     },
     [InterviewDuration.LONG]: {
         duration: InterviewDuration.LONG,
-        label: 'Extended (45 min)',
+        label: 'Extended (15 min)',
         description: 'In-depth technical and behavioral assessment',
-        timeInMinutes: 45,
+        timeInMinutes: 15,
         recommendedFor: [SkillLevel.INTERMEDIATE, SkillLevel.ADVANCED]
     }
 };
@@ -115,9 +115,9 @@ export const getDurationConfig = (duration: InterviewDuration): DurationConfig =
         // Return a default config to prevent crashes
         return {
             duration: InterviewDuration.MEDIUM,
-            label: 'Default (30 min)',
+            label: 'Default (10 min)',
             description: 'Default duration',
-            timeInMinutes: 30,
+            timeInMinutes: 10,
             recommendedFor: [SkillLevel.BEGINNER, SkillLevel.INTERMEDIATE]
         };
     }

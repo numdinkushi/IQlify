@@ -58,7 +58,6 @@ export function InterviewTabNew() {
         error,
         userInterviews: history,
         userStats: stats,
-        activeInterview: currentSession,
         startInterview,
         completeInterview,
         clearError
@@ -98,6 +97,21 @@ export function InterviewTabNew() {
             console.error('❌ [INTERVIEW TAB] Failed to start interview:', error);
             // Error is already handled by the useInterview hook
             // The error state will be displayed in the UI
+        }
+    };
+
+    const handleInterviewCardClick = (interview: any) => {
+        console.log('🖱️ [INTERVIEW TAB] Interview card clicked:', interview);
+
+        if (interview.status === 'in_progress') {
+            // Navigate back to the interview screen
+            window.location.href = `/interview/${interview._id}`;
+        } else if (interview.status === 'grading') {
+            // Navigate to grading screen
+            window.location.href = `/interview/${interview._id}?status=grading`;
+        } else if (interview.status === 'completed') {
+            // Navigate to results screen
+            window.location.href = `/interview/${interview._id}?status=completed`;
         }
     };
 
@@ -207,27 +221,6 @@ export function InterviewTabNew() {
                     </motion.div>
                 )}
 
-                {/* Current Session Status */}
-                {currentSession && (
-                    <motion.div variants={itemVariants}>
-                        <Card className="iqlify-card border-blue-400/30 bg-blue-400/10">
-                            <div className="p-6 text-center">
-                                <div className="flex items-center justify-center mb-4">
-                                    <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center mr-3">
-                                        <Play className="w-4 h-4 text-black" />
-                                    </div>
-                                    <h3 className="text-xl font-semibold text-white">Interview in Progress</h3>
-                                </div>
-                                <p className="text-gray-400 mb-4">
-                                    Your {currentSession.interviewType || 'interview'} interview is starting...
-                                </p>
-                                <div className="flex items-center justify-center">
-                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
-                                </div>
-                            </div>
-                        </Card>
-                    </motion.div>
-                )}
 
                 {/* Quick Start */}
                 <motion.div variants={itemVariants}>
@@ -308,11 +301,24 @@ export function InterviewTabNew() {
                                     {history.slice(0, 5).map((interview) => (
                                         <div
                                             key={interview._id}
-                                            className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg"
+                                            onClick={() => handleInterviewCardClick(interview)}
+                                            className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-700/50 transition-colors"
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 bg-gold-400/20 rounded-full flex items-center justify-center">
-                                                    <Mic className="w-4 h-4 text-gold-400" />
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${interview.status === 'completed' ? 'bg-green-400/20' :
+                                                        interview.status === 'grading' ? 'bg-yellow-400/20' :
+                                                            interview.status === 'in_progress' ? 'bg-blue-400/20' :
+                                                                'bg-gold-400/20'
+                                                    }`}>
+                                                    {interview.status === 'completed' ? (
+                                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                                    ) : interview.status === 'grading' ? (
+                                                        <div className="w-3 h-3 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+                                                    ) : interview.status === 'in_progress' ? (
+                                                        <Target className="w-4 h-4 text-blue-400" />
+                                                    ) : (
+                                                        <Mic className="w-4 h-4 text-gold-400" />
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <div className="text-white font-medium capitalize">
@@ -331,7 +337,8 @@ export function InterviewTabNew() {
                                                     </div>
                                                 ) : (
                                                     <div className="text-gray-400 text-sm">
-                                                        {interview.status === 'in_progress' ? 'In Progress' : 'Pending'}
+                                                        {interview.status === 'in_progress' ? 'In Progress' :
+                                                            interview.status === 'grading' ? 'Grading...' : 'Pending'}
                                                     </div>
                                                 )}
                                             </div>

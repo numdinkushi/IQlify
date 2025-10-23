@@ -14,7 +14,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "update-webhook": "node scripts/update-webhook.js",
-    "run-tunnel": "cloudflared tunnel --url http://localhost:3000"
+    "run-tunnel": "cd /Users/kushi/Desktop/Experimento/open_source/harckerton/IQLIFY/IQlify/apps/web && cloudflared tunnel --url http://localhost:3000"
   },
   "dependencies": {
     "@google/genai": "^1.22.0",
