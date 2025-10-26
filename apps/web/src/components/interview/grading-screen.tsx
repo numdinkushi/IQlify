@@ -16,6 +16,7 @@ import {
 
 interface GradingScreenProps {
     interviewId: string;
+    interview?: any; // Add interview object to props
     onComplete: (score: number, feedback: string, earnings: number) => void;
     onBack: () => void;
 }
@@ -29,7 +30,7 @@ interface GradingResult {
     recommendation: string;
 }
 
-export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreenProps) => {
+export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: GradingScreenProps) => {
     const [isGrading, setIsGrading] = useState(true);
     const [gradingResult, setGradingResult] = useState<GradingResult | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -87,7 +88,7 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
             const result: GradingResult = {
                 score: gradingData.overallScore || Math.floor(Math.random() * 40) + 60, // 60-100 fallback
                 feedback: gradingData.detailedFeedback || gradingData.overallAssessment || 'Great interview performance!',
-                earnings: calculateEarnings(gradingData.overallScore || 75),
+                earnings: calculateEarnings(gradingData.overallScore || 75, interview),
                 strengths: gradingData.strengths || ['Strong technical knowledge', 'Good communication'],
                 areasForImprovement: gradingData.areasForImprovement || ['Practice more coding problems'],
                 recommendation: gradingData.recommendation || 'hire'
@@ -106,9 +107,23 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
         }
     };
 
-    const calculateEarnings = (score: number): number => {
-        let baseReward = 0.1; // Base reward
+    const calculateEarnings = (score: number, interviewData?: any): number => {
+        // Get base reward from interview type
+        let baseReward = 0.2; // Default
 
+        if (interviewData) {
+            // Set base reward based on interview type
+            if (interviewData.interviewType === 'technical') baseReward = 0.2;
+            else if (interviewData.interviewType === 'soft_skills') baseReward = 0.15;
+            else if (interviewData.interviewType === 'behavioral') baseReward = 0.1;
+            else if (interviewData.interviewType === 'system_design') baseReward = 0.3;
+
+            // Apply skill level multiplier
+            if (interviewData.skillLevel === 'intermediate') baseReward *= 1.5;
+            else if (interviewData.skillLevel === 'advanced') baseReward *= 2.0;
+        }
+
+        // Apply performance bonus
         if (score >= 90) baseReward += 0.3;
         else if (score >= 80) baseReward += 0.2;
         else if (score >= 70) baseReward += 0.1;

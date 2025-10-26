@@ -115,29 +115,6 @@ export function InterviewTabNew() {
         }
     };
 
-
-    const calculateEarnings = (config: InterviewConfiguration, score: number): number => {
-        // Base reward calculation based on configuration
-        let baseReward = 0.2; // Default base reward
-
-        // Adjust based on interview type and skill level
-        if (config.interviewType === 'technical') baseReward = 0.2;
-        else if (config.interviewType === 'soft_skills') baseReward = 0.15;
-        else if (config.interviewType === 'behavioral') baseReward = 0.1;
-        else if (config.interviewType === 'system_design') baseReward = 0.3;
-
-        // Apply skill level multiplier
-        if (config.skillLevel === 'intermediate') baseReward *= 1.5;
-        else if (config.skillLevel === 'advanced') baseReward *= 2.0;
-
-        // Apply performance bonus
-        if (score >= 90) baseReward += 0.3;
-        else if (score >= 80) baseReward += 0.2;
-        else if (score >= 70) baseReward += 0.1;
-
-        return Math.round(baseReward * 100) / 100; // Round to 2 decimal places
-    };
-
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -154,8 +131,7 @@ export function InterviewTabNew() {
             y: 0,
             opacity: 1,
             transition: {
-                duration: 0.5,
-                ease: [0.25, 0.46, 0.45, 0.94]
+                duration: 0.5
             }
         }
     };

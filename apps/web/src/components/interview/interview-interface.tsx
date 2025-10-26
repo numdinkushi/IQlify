@@ -258,25 +258,6 @@ export const InterviewInterface = ({
         setShowGrading(true);
     };
 
-    const calculateEarnings = (interview: any, score: number): number => {
-        let baseReward = 0.2;
-
-        if (interview.interviewType === 'technical') baseReward = 0.2;
-        else if (interview.interviewType === 'soft_skills') baseReward = 0.15;
-        else if (interview.interviewType === 'behavioral') baseReward = 0.1;
-        else if (interview.interviewType === 'system_design') baseReward = 0.3;
-
-        if (interview.skillLevel === 'intermediate') baseReward *= 1.5;
-        else if (interview.skillLevel === 'advanced') baseReward *= 2.0;
-
-        if (score >= 90) baseReward += 0.3;
-        else if (score >= 80) baseReward += 0.2;
-        else if (score >= 70) baseReward += 0.1;
-
-        return Math.round(baseReward * 100) / 100;
-    };
-
-
     const generateFeedback = (score: number, interviewType: string): string => {
         const typeName = interviewType.replace('_', ' ');
         if (score >= 90) {
@@ -321,7 +302,8 @@ export const InterviewInterface = ({
         return (
             <GradingScreen
                 interviewId={interview._id}
-                onComplete={onComplete}
+                interview={interview}
+                onComplete={onComplete || (() => {})}
                 onBack={() => {
                     setShowGrading(false);
                     // Navigate back to interview home

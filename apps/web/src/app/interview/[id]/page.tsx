@@ -171,6 +171,7 @@ export default function InterviewPage() {
         return (
             <GradingScreen
                 interviewId={interviewId}
+                interview={currentInterview}
                 onComplete={handleInterviewComplete}
                 onBack={() => router.push('/?tab=interview')}
             />
