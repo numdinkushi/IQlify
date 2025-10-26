@@ -306,9 +306,9 @@ export function InterviewTabNew() {
                                         >
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${interview.status === 'completed' ? 'bg-green-400/20' :
-                                                        interview.status === 'grading' ? 'bg-yellow-400/20' :
-                                                            interview.status === 'in_progress' ? 'bg-blue-400/20' :
-                                                                'bg-gold-400/20'
+                                                    interview.status === 'grading' ? 'bg-yellow-400/20' :
+                                                        interview.status === 'in_progress' ? 'bg-blue-400/20' :
+                                                            'bg-gold-400/20'
                                                     }`}>
                                                     {interview.status === 'completed' ? (
                                                         <CheckCircle className="w-4 h-4 text-green-400" />
