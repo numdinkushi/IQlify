@@ -5,7 +5,7 @@ import { TabType } from '@/lib/types';
 import { useAppState } from '@/hooks/use-app-state';
 import { HomeTab } from './home-tab';
 import { ChallengesTab } from './challenges-tab';
-import { InterviewTabNew as InterviewTab } from './interview-tab-new';
+import { InterviewTab } from './interview';
 import { WalletTab } from './wallet-tab';
 import { LeaderboardTab } from './leaderboard-tab';
 

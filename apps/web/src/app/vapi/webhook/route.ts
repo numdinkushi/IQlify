@@ -73,6 +73,88 @@ async function generateFinalGrading(callId: string, assistantId: string) {
 
         console.log(`📝 Transcript length: ${transcript.length} characters`);
 
+        // VALIDATION: Check if the interview was too short (failed interview)
+        const callDuration = callData.duration || 0; // Duration in seconds
+        const minValidDuration = 30; // Minimum 30 seconds for a valid interview
+
+        if (callDuration < minValidDuration) {
+            console.warn(`⚠️ Interview too short (${callDuration}s). Marking as failed interview.`);
+            return {
+                callId,
+                assistantId,
+                overallScore: 0,
+                sections: {
+                    technical: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
+                    communication: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
+                    problemSolving: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
+                    experienceRelevance: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
+                    culturalFit: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] }
+                },
+                recommendation: "no-hire",
+                summary: `Interview failed - ended after only ${callDuration} seconds. Please check your connection and try again.`,
+                keyHighlights: [],
+                areasForImprovement: ["Complete interview session", "Check internet connection", "Ensure microphone is working"],
+                callDuration,
+                isFailedInterview: true,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // VALIDATION: Check if candidate actually spoke (basic participation check)
+        const candidateContent = transcript.toLowerCase();
+        const candidateMessageCount = (candidateContent.match(/candidate:/g) || []).length;
+        const minCandidateMessages = 2; // At least 2 responses from candidate
+
+        if (candidateMessageCount < minCandidateMessages) {
+            console.warn(`⚠️ Insufficient candidate participation (${candidateMessageCount} messages). Marking as failed interview.`);
+            return {
+                callId,
+                assistantId,
+                overallScore: 0,
+                sections: {
+                    technical: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
+                    communication: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
+                    problemSolving: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
+                    experienceRelevance: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
+                    culturalFit: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] }
+                },
+                recommendation: "no-hire",
+                summary: `Interview incomplete - candidate only provided ${candidateMessageCount} response(s). Please ensure your microphone is working and respond to questions.`,
+                keyHighlights: [],
+                areasForImprovement: ["Respond to interviewer questions", "Check microphone permissions", "Ensure stable internet connection"],
+                candidateMessageCount,
+                isFailedInterview: true,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // VALIDATION: Check transcript quality (minimal conversation)
+        const transcriptWords = transcript.split(/\s+/).length;
+        const minTranscriptWords = 50; // Minimum 50 words for a valid interview
+
+        if (transcriptWords < minTranscriptWords) {
+            console.warn(`⚠️ Transcript too short (${transcriptWords} words). Marking as failed interview.`);
+            return {
+                callId,
+                assistantId,
+                overallScore: 0,
+                sections: {
+                    technical: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
+                    communication: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
+                    problemSolving: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
+                    experienceRelevance: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
+                    culturalFit: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] }
+                },
+                recommendation: "no-hire",
+                summary: `Interview incomplete - insufficient conversation (${transcriptWords} words). Please engage with the interviewer and provide detailed responses.`,
+                keyHighlights: [],
+                areasForImprovement: ["Provide more detailed answers", "Engage with interviewer", "Share examples and experiences"],
+                transcriptWordCount: transcriptWords,
+                isFailedInterview: true,
+                timestamp: new Date().toISOString()
+            };
+        }
+
         // 3. Analyze the transcript using AI
         console.log('🤖 Analyzing transcript with AI...');
         const geminiService = new GeminiService();
@@ -138,6 +220,61 @@ async function generateGradingFromTranscript(callId: string, assistantId: string
     try {
         console.log(`📝 Analyzing transcript for ${callId}...`);
         console.log(`📏 Transcript length: ${transcript.length} characters`);
+
+        // VALIDATION: Check if candidate actually spoke (basic participation check)
+        const candidateContent = transcript.toLowerCase();
+        const candidateMessageCount = (candidateContent.match(/candidate:/g) || []).length;
+        const minCandidateMessages = 2; // At least 2 responses from candidate
+
+        if (candidateMessageCount < minCandidateMessages) {
+            console.warn(`⚠️ Insufficient candidate participation (${candidateMessageCount} messages). Marking as failed interview.`);
+            return {
+                callId,
+                assistantId,
+                overallScore: 0,
+                sections: {
+                    technical: { score: 0, feedback: "Insufficient candidate participation", strengths: [], improvements: [] },
+                    communication: { score: 0, feedback: "Insufficient candidate participation", strengths: [], improvements: [] },
+                    problemSolving: { score: 0, feedback: "Insufficient candidate participation", strengths: [], improvements: [] },
+                    experienceRelevance: { score: 0, feedback: "Insufficient candidate participation", strengths: [], improvements: [] },
+                    culturalFit: { score: 0, feedback: "Insufficient candidate participation", strengths: [], improvements: [] }
+                },
+                recommendation: "no-hire",
+                summary: `Interview incomplete - candidate only provided ${candidateMessageCount} response(s). Please ensure your microphone is working and respond to questions.`,
+                keyHighlights: [],
+                areasForImprovement: ["Respond to interviewer questions", "Check microphone permissions"],
+                candidateMessageCount,
+                isFailedInterview: true,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // VALIDATION: Check transcript quality (minimal conversation)
+        const transcriptWords = transcript.split(/\s+/).length;
+        const minTranscriptWords = 50; // Minimum 50 words for a valid interview
+
+        if (transcriptWords < minTranscriptWords) {
+            console.warn(`⚠️ Transcript too short (${transcriptWords} words). Marking as failed interview.`);
+            return {
+                callId,
+                assistantId,
+                overallScore: 0,
+                sections: {
+                    technical: { score: 0, feedback: "Insufficient conversation for evaluation", strengths: [], improvements: [] },
+                    communication: { score: 0, feedback: "Insufficient conversation for evaluation", strengths: [], improvements: [] },
+                    problemSolving: { score: 0, feedback: "Insufficient conversation for evaluation", strengths: [], improvements: [] },
+                    experienceRelevance: { score: 0, feedback: "Insufficient conversation for evaluation", strengths: [], improvements: [] },
+                    culturalFit: { score: 0, feedback: "Insufficient conversation for evaluation", strengths: [], improvements: [] }
+                },
+                recommendation: "no-hire",
+                summary: `Interview incomplete - insufficient conversation (${transcriptWords} words). Please engage with the interviewer and provide detailed responses.`,
+                keyHighlights: [],
+                areasForImprovement: ["Provide more detailed answers", "Engage with interviewer"],
+                transcriptWordCount: transcriptWords,
+                isFailedInterview: true,
+                timestamp: new Date().toISOString()
+            };
+        }
 
         // Analyze the transcript using AI
         console.log('🤖 Analyzing transcript with AI...');

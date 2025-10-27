@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PreInterviewLauncher } from './pre-interview-launcher';
+import { PreInterviewLauncher } from './pre-interview';
 import { InterviewConfiguration } from '@/lib/interview-types';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';

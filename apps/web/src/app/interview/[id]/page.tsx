@@ -4,7 +4,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import { InterviewInterface } from '@/components/interview/interview-interface';
+import { InterviewInterface } from '@/components/interview/interface';
 import { GradingScreen } from '@/components/interview/grading-screen';
 import { ResultsScreen } from '@/components/interview/results-screen';
 import { Id } from '../../../../convex/_generated/dataModel';

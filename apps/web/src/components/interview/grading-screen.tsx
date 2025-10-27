@@ -11,7 +11,8 @@ import {
     TrendingUp,
     Award,
     ArrowLeft,
-    Sparkles
+    Sparkles,
+    AlertCircle
 } from 'lucide-react';
 
 interface GradingScreenProps {
@@ -91,7 +92,7 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
                 earnings: calculateEarnings(gradingData.overallScore || 75, interview),
                 strengths: gradingData.strengths || ['Strong technical knowledge', 'Good communication'],
                 areasForImprovement: gradingData.areasForImprovement || ['Practice more coding problems'],
-                recommendation: gradingData.recommendation || 'hire'
+                recommendation: getRecommendation(gradingData.overallScore || 75)
             };
 
             setGradingResult(result);
@@ -105,6 +106,18 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
             setError('Failed to grade interview. Please try again.');
             setIsGrading(false);
         }
+    };
+
+    const getRecommendation = (score: number): string => {
+        if (score >= 90) return 'strong-hire';
+        if (score >= 80) return 'hire';
+        if (score >= 70) return 'maybe';
+        return 'no-hire';
+    };
+
+    const formatRecommendation = (recommendation: string): string => {
+        const formatted = recommendation.replace('-', ' ');
+        return formatted.charAt(0).toUpperCase() + formatted.slice(1);
     };
 
     const calculateEarnings = (score: number, interviewData?: any): number => {
@@ -230,15 +243,31 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center"
                 >
-                    <div className="w-20 h-20 bg-gold-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Trophy className="w-10 h-10 text-gold-400" />
-                    </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">
-                        Interview Complete!
-                    </h1>
-                    <p className="text-gray-400">
-                        Here's how you performed
-                    </p>
+                    {gradingResult.score === 0 ? (
+                        <>
+                            <div className="w-20 h-20 bg-red-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <AlertCircle className="w-10 h-10 text-red-400" />
+                            </div>
+                            <h1 className="text-3xl font-bold text-white mb-2">
+                                Interview Failed
+                            </h1>
+                            <p className="text-gray-400">
+                                The interview could not be completed
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <div className="w-20 h-20 bg-gold-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Trophy className="w-10 h-10 text-gold-400" />
+                            </div>
+                            <h1 className="text-3xl font-bold text-white mb-2">
+                                Interview Complete!
+                            </h1>
+                            <p className="text-gray-400">
+                                Here's how you performed
+                            </p>
+                        </>
+                    )}
                 </motion.div>
 
                 {/* Score Card */}
@@ -268,7 +297,7 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
                             <div className="flex items-center space-x-2">
                                 <Award className="w-5 h-5 text-blue-400" />
                                 <span className="text-sm text-gray-300 capitalize">
-                                    {gradingResult.recommendation.replace('-', ' ')}
+                                    {formatRecommendation(gradingResult.recommendation)}
                                 </span>
                             </div>
                         </div>

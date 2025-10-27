@@ -70,6 +70,18 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
         return 'Keep Practicing!';
     };
 
+    const getRecommendation = (score: number): string => {
+        if (score >= 90) return 'strong-hire';
+        if (score >= 80) return 'hire';
+        if (score >= 70) return 'maybe';
+        return 'no-hire';
+    };
+
+    const formatRecommendation = (recommendation: string): string => {
+        const formatted = recommendation.replace('-', ' ');
+        return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    };
+
     const getRecommendationColor = (recommendation: string) => {
         switch (recommendation) {
             case 'strong-hire': return 'text-green-400 bg-green-400/20';
@@ -79,6 +91,8 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
             default: return 'text-gray-400 bg-gray-400/20';
         }
     };
+
+    const recommendation = interview.recommendation || getRecommendation(interview.score || 0);
 
     return (
         <div className="min-h-screen bg-gray-900 p-4">
@@ -124,8 +138,8 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
                                 <Coins className="w-5 h-5 text-green-400" />
                                 <span className="text-sm text-gray-300">+{interview.earnings || 0} CELO</span>
                             </div>
-                            <div className={`px-3 py-1 rounded-full text-sm font-medium ${getRecommendationColor('hire')}`}>
-                                {interview.recommendation || 'hire'}
+                            <div className={`px-3 py-1 rounded-full text-sm font-medium ${getRecommendationColor(recommendation)}`}>
+                                {formatRecommendation(recommendation)}
                             </div>
                         </div>
                     </Card>
@@ -213,8 +227,8 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
                         onClick={handleClaim}
                         disabled={isClaimed}
                         className={`px-8 py-3 font-semibold ${isClaimed
-                                ? 'bg-green-600 text-white'
-                                : 'bg-gold-400 hover:bg-gold-500 text-black'
+                            ? 'bg-green-600 text-white'
+                            : 'bg-gold-400 hover:bg-gold-500 text-black'
                             }`}
                     >
                         {isClaimed ? (
