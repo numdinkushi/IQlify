@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InterviewConfiguration } from '@/lib/interview-types';
@@ -25,10 +26,16 @@ import {
 function getAssistantId(interviewType: string): string {
     console.log('🎯 [CLIENT] Getting assistant ID for interview type:', interviewType);
 
-    // Use the actual assistant ID from your VAPI dashboard
-    // This is the real assistant ID that exists in VAPI
-    const assistantId = '0b058f17-55aa-4636-ad06-445287514862';
+    // Get assistant ID from environment variables
+    const assistantMap: Record<string, string> = {
+        'technical': process.env.NEXT_PUBLIC_VAPI_TECHNICAL_ASSISTANT_ID || 'default-technical',
+        'soft_skills': process.env.NEXT_PUBLIC_VAPI_SOFT_SKILLS_ASSISTANT_ID || 'default-soft-skills',
+        'behavioral': process.env.NEXT_PUBLIC_VAPI_BEHAVIORAL_ASSISTANT_ID || 'default-behavioral',
+        'system_design': process.env.NEXT_PUBLIC_VAPI_SYSTEM_DESIGN_ASSISTANT_ID || 'default-system-design'
+    };
 
+    const assistantId = assistantMap[interviewType] || 'default';
+    
     console.log('🎯 [CLIENT] Resolved assistant ID:', assistantId);
 
     return assistantId;
@@ -54,6 +61,8 @@ export const InterviewInterface = ({
     onComplete,
     onFailed
 }: InterviewInterfaceProps) => {
+    const router = useRouter();
+
     // Component for handling interview interface
     const [isConnected, setIsConnected] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -303,11 +312,11 @@ export const InterviewInterface = ({
             <GradingScreen
                 interviewId={interview._id}
                 interview={interview}
-                onComplete={onComplete || (() => {})}
+                onComplete={onComplete || (() => { })}
                 onBack={() => {
                     setShowGrading(false);
-                    // Navigate back to interview home
-                    window.location.href = '/?tab=interview';
+                    // Navigate back to interview home (client-side, no reload)
+                    router.push('/?tab=interview');
                 }}
             />
         );
@@ -499,8 +508,8 @@ export const InterviewInterface = ({
                         {/* Go Back Button */}
                         <Button
                             onClick={() => {
-                                // Navigate back to interview home
-                                window.location.href = '/?tab=interview';
+                                // Navigate back to interview home (client-side, no reload)
+                                router.push('/?tab=interview');
                             }}
                             className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium"
                         >

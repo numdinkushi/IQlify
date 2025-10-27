@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useQuery } from 'convex/react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { api } from '../../../convex/_generated/api';
 import { PreInterviewLauncher } from '@/components/interview/pre-interview-launcher';
 import { InterviewConfiguration } from '@/lib/interview-types';
@@ -45,6 +47,7 @@ interface InterviewHistory {
 export function InterviewTabNew() {
     const { address, isConnected } = useAccount();
     const [isLauncherOpen, setIsLauncherOpen] = useState(false);
+    const router = useRouter();
 
     // Get user data from Convex
     const user = useQuery(
@@ -88,8 +91,8 @@ export function InterviewTabNew() {
 
             if (session) {
                 console.log('🔄 [INTERVIEW TAB] Redirecting to interview page:', `/interview/${session.id}`);
-                // Redirect to the actual interview interface
-                window.location.href = `/interview/${session.id}`;
+                // Use Next.js router for client-side navigation (faster, no page reload)
+                router.push(`/interview/${session.id}`);
             } else {
                 console.error('❌ [INTERVIEW TAB] No session returned from startInterview');
             }
@@ -104,14 +107,14 @@ export function InterviewTabNew() {
         console.log('🖱️ [INTERVIEW TAB] Interview card clicked:', interview);
 
         if (interview.status === 'in_progress') {
-            // Navigate back to the interview screen
-            window.location.href = `/interview/${interview._id}`;
+            // Navigate back to the interview screen (client-side, no reload)
+            router.push(`/interview/${interview._id}`);
         } else if (interview.status === 'grading') {
-            // Navigate to grading screen
-            window.location.href = `/interview/${interview._id}?status=grading`;
+            // Navigate to grading screen (client-side, no reload)
+            router.push(`/interview/${interview._id}?status=grading`);
         } else if (interview.status === 'completed') {
-            // Navigate to results screen
-            window.location.href = `/interview/${interview._id}?status=completed`;
+            // Navigate to results screen (client-side, no reload)
+            router.push(`/interview/${interview._id}?status=completed`);
         }
     };
 
