@@ -35,7 +35,7 @@ function getAssistantId(interviewType: string): string {
     };
 
     const assistantId = assistantMap[interviewType] || 'default';
-    
+
     console.log('🎯 [CLIENT] Resolved assistant ID:', assistantId);
 
     return assistantId;
