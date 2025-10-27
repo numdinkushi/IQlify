@@ -78,10 +78,20 @@ export default function InterviewPage() {
 
     const handleInterviewComplete = async (score: number, feedback: string, earnings: number) => {
         try {
-            console.log('📝 [INTERVIEW PAGE] Interview completed, updating status:', { score, feedback, earnings });
+            // Determine status based on score
+            // Score of 0 = failed interview, otherwise completed
+            const status = score === 0 ? 'failed' : 'completed';
+
+            console.log('📝 [INTERVIEW PAGE] Interview completed, updating status:', {
+                score,
+                status,
+                feedback,
+                earnings
+            });
+
             await updateInterview({
                 interviewId: interviewId as any,
-                status: 'completed',
+                status: status,
                 score,
                 feedback,
                 earnings,
@@ -90,7 +100,7 @@ export default function InterviewPage() {
 
             // Don't redirect automatically - let user stay on the interview screen
             // They can manually navigate back when they want to
-            console.log('✅ [INTERVIEW PAGE] Interview completed successfully - staying on interview screen');
+            console.log(`✅ [INTERVIEW PAGE] Interview marked as ${status} - staying on interview screen`);
         } catch (error) {
             console.error('Failed to complete interview:', error);
             setError('Failed to save interview results');

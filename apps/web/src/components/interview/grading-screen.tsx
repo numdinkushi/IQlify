@@ -86,13 +86,66 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
             }
 
             // Process the grading result
+            // Convert AI score (0-10) to percentage (0-100)
+            let finalScore = 0;
+
+            console.log('🔍 [GRADING] Processing grading data:', {
+                overallScore: gradingData.overallScore,
+                isFailedInterview: gradingData.isFailedInterview,
+                transcriptLength: gradingData.transcriptLength,
+                transcriptWordCount: gradingData.transcriptWordCount,
+                candidateMessageCount: gradingData.candidateMessageCount
+            });
+
+            if (gradingData.isFailedInterview) {
+                // CRITICAL: If interview was marked as failed, force score to 0
+                console.warn('⚠️ [GRADING] Interview marked as failed, setting score to 0');
+                finalScore = 0;
+            } else if (gradingData.overallScore !== undefined && gradingData.overallScore !== null) {
+                // Validate score is within expected range (0-10)
+                const rawScore = gradingData.overallScore;
+
+                if (typeof rawScore !== 'number' || isNaN(rawScore)) {
+                    console.error('⚠️ [GRADING] Invalid score type:', rawScore);
+                    finalScore = 0;
+                } else if (rawScore < 0 || rawScore > 10) {
+                    console.error('⚠️ [GRADING] Score out of range (0-10):', rawScore);
+                    finalScore = 0;
+                } else {
+                    // AI returns score in 0-10 range, convert to 0-100
+                    // Cap at 100 to prevent scores over 100%
+                    finalScore = Math.min(Math.round(rawScore * 10), 100);
+                    console.log('✅ [GRADING] Valid score converted:', rawScore, '→', finalScore);
+                }
+            } else {
+                // No score provided - fail safely
+                console.warn('⚠️ [GRADING] No score provided, setting to 0');
+                finalScore = 0;
+            }
+
+            // Determine appropriate feedback based on score and interview status
+            let feedback = 'Interview evaluation completed';
+
+            if (finalScore === 0) {
+                // Failed interview - use specific feedback
+                feedback = gradingData.summary ||
+                    gradingData.overallAssessment ||
+                    'Interview could not be completed. Please try again and ensure you have a stable connection.';
+            } else {
+                // Successful interview - use positive feedback
+                feedback = gradingData.summary ||
+                    gradingData.detailedFeedback ||
+                    gradingData.overallAssessment ||
+                    'Interview evaluation completed successfully.';
+            }
+
             const result: GradingResult = {
-                score: gradingData.overallScore || Math.floor(Math.random() * 40) + 60, // 60-100 fallback
-                feedback: gradingData.detailedFeedback || gradingData.overallAssessment || 'Great interview performance!',
-                earnings: calculateEarnings(gradingData.overallScore || 75, interview),
-                strengths: gradingData.strengths || ['Strong technical knowledge', 'Good communication'],
-                areasForImprovement: gradingData.areasForImprovement || ['Practice more coding problems'],
-                recommendation: getRecommendation(gradingData.overallScore || 75)
+                score: finalScore,
+                feedback: feedback,
+                earnings: calculateEarnings(finalScore, interview),
+                strengths: gradingData.keyHighlights || gradingData.strengths || [],
+                areasForImprovement: gradingData.areasForImprovement || [],
+                recommendation: getRecommendation(finalScore)
             };
 
             setGradingResult(result);

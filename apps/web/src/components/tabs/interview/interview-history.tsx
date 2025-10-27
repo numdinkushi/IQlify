@@ -68,8 +68,9 @@ export function InterviewHistory({
                         >
                             <div className="flex items-center gap-3">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${interview.status === 'completed' ? 'bg-green-400/20' :
-                                        interview.status === 'grading' ? 'bg-yellow-400/20' :
-                                            interview.status === 'in_progress' ? 'bg-blue-400/20' :
+                                    interview.status === 'grading' ? 'bg-yellow-400/20' :
+                                        interview.status === 'in_progress' ? 'bg-blue-400/20' :
+                                            interview.status === 'failed' ? 'bg-red-400/20' :
                                                 'bg-gold-400/20'
                                     }`}>
                                     {interview.status === 'completed' ? (
@@ -78,6 +79,10 @@ export function InterviewHistory({
                                         <div className="w-3 h-3 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" />
                                     ) : interview.status === 'in_progress' ? (
                                         <Target className="w-4 h-4 text-blue-400" />
+                                    ) : interview.status === 'failed' ? (
+                                        <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
                                     ) : (
                                         <Mic className="w-4 h-4 text-gold-400" />
                                     )}
@@ -92,15 +97,20 @@ export function InterviewHistory({
                                 </div>
                             </div>
                             <div className="text-right">
-                                {interview.status === 'completed' && interview.score ? (
+                                {interview.status === 'completed' && interview.score !== undefined ? (
                                     <div className="flex items-center gap-2">
                                         <div className="text-green-400 font-medium">{interview.score}%</div>
-                                        <div className="text-gold-400 text-sm">+{interview.earnings} CELO</div>
+                                        <div className="text-gold-400 text-sm">+{interview.earnings || 0} CELO</div>
+                                    </div>
+                                ) : interview.status === 'failed' ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="text-red-400 font-medium">0%</div>
+                                        <div className="text-red-400 text-sm">Failed</div>
                                     </div>
                                 ) : (
                                     <div className="text-gray-400 text-sm">
                                         {interview.status === 'in_progress' ? 'In Progress' :
-                                            interview.status === 'grading' ? 'Grading...' : 'Pending'}
+                                            interview.status === 'grading' ? 'Grading...' : 'Not Started'}
                                     </div>
                                 )}
                             </div>

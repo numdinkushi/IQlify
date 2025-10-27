@@ -26,51 +26,43 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        console.log('🎯 [EVALUATE] Generating evaluation for interview:', interviewId);
+        console.log('🎯 [EVALUATE] Fetching grading for interview:', interviewId);
 
-        // Generate comprehensive interview feedback
-        const evaluationResult = {
-            feedbackId: `feedback_${Date.now()}`,
-            overallScore: Math.floor(Math.random() * 40) + 60, // 60-100
-            overallAssessment: 'Strong performance with good technical skills and communication.',
-            strengths: [
-                'Strong technical knowledge',
-                'Good problem-solving approach',
-                'Clear communication',
-                'Confident presentation'
-            ],
-            areasForImprovement: [
-                'Practice more coding problems',
-                'Improve time management',
-                'Work on system design concepts'
-            ],
-            technicalSkills: {
-                assessment: 'Demonstrated solid technical foundation with good problem-solving skills.',
-                score: Math.floor(Math.random() * 3) + 7 // 7-9
-            },
-            communication: {
-                assessment: 'Clear and articulate communication throughout the interview.',
-                score: Math.floor(Math.random() * 3) + 7 // 7-9
-            },
-            problemSolving: {
-                assessment: 'Good analytical thinking and systematic approach to problems.',
-                score: Math.floor(Math.random() * 3) + 7 // 7-9
-            },
-            recommendation: ['strong-hire', 'hire', 'maybe', 'no-hire'][Math.floor(Math.random() * 4)],
-            detailedFeedback: 'Great interview performance! You demonstrated strong technical skills and clear communication. Your problem-solving approach was systematic and well-thought-out. Continue practicing coding problems and system design to further improve your skills.',
-            nextSteps: [
-                'Continue practicing coding problems',
-                'Work on system design concepts',
-                'Improve time management skills',
-                'Consider advanced technical topics'
-            ]
-        };
+        // Try to fetch actual grading from the grading system
+        try {
+            const gradingResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/vapi/grading?callId=${interviewId}`);
+            if (gradingResponse.ok) {
+                const gradingData = await gradingResponse.json();
+                if (gradingData.success && gradingData.gradingResults) {
+                    console.log('✅ [EVALUATE] Found stored grading results');
+                    return NextResponse.json({
+                        success: true,
+                        ...gradingData.gradingResults
+                    });
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ [EVALUATE] Could not fetch stored grading, returning fallback');
+        }
 
-        console.log('✅ [EVALUATE] Evaluation completed:', evaluationResult);
-
+        // FALLBACK: Return failed interview result if no grading found
+        console.log('⚠️ [EVALUATE] No grading found, returning failed interview result');
         return NextResponse.json({
             success: true,
-            ...evaluationResult
+            feedbackId: `feedback_${Date.now()}`,
+            overallScore: 0, // Failed interview
+            overallAssessment: 'Interview could not be evaluated. Please complete a full interview to receive a score.',
+            strengths: [],
+            areasForImprovement: [
+                'Complete the full interview session',
+                'Ensure stable internet connection',
+                'Respond to all interviewer questions',
+                'Provide detailed answers'
+            ],
+            summary: 'Interview could not be evaluated. A complete interview session is required for evaluation.',
+            recommendation: 'no-hire',
+            keyHighlights: [],
+            isFailedInterview: true
         });
 
     } catch (error) {

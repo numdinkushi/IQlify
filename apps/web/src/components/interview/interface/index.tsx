@@ -51,11 +51,18 @@ export const InterviewInterface = ({
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('connecting');
     const [error, setError] = useState<string | null>(null);
     const [showGrading, setShowGrading] = useState(false);
+    const [hasEnded, setHasEnded] = useState(false);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const updateInterview = useMutation(api.interviews.updateInterview);
 
     useEffect(() => {
+        // Don't initialize if interview has already ended or is in a non-active state
+        if (hasEnded || interview.status === 'grading' || interview.status === 'completed' || interview.status === 'failed') {
+            console.log('⚠️ [INTERVIEW INTERFACE] Skipping initialization - interview already ended or in non-active state');
+            return;
+        }
+
         initializeVapiCall();
 
         return () => {
@@ -63,7 +70,8 @@ export const InterviewInterface = ({
                 clearInterval(timerRef.current);
             }
         };
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasEnded]);
 
     useEffect(() => {
         if (isInterviewActive && timeRemaining > 0) {
@@ -165,6 +173,13 @@ export const InterviewInterface = ({
     };
 
     const handleInterviewEnd = async () => {
+        // Prevent multiple calls to this function
+        if (hasEnded) {
+            console.log('⚠️ [INTERVIEW INTERFACE] Interview already ended, skipping');
+            return;
+        }
+
+        setHasEnded(true);
         setIsInterviewActive(false);
         if (timerRef.current) {
             clearInterval(timerRef.current);
@@ -179,7 +194,10 @@ export const InterviewInterface = ({
             // Silent fail
         }
 
-        setShowGrading(true);
+        // Redirect to grading screen via URL parameter
+        // This lets the parent page handle the routing logic
+        console.log('✅ [INTERVIEW INTERFACE] Redirecting to grading screen');
+        router.push(`/interview/${interview._id}?status=grading`);
     };
 
     if (showGrading) {
@@ -189,7 +207,6 @@ export const InterviewInterface = ({
                 interview={interview}
                 onComplete={onComplete || (() => { })}
                 onBack={() => {
-                    setShowGrading(false);
                     router.push('/?tab=interview');
                 }}
             />
