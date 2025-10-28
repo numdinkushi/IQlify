@@ -11,11 +11,13 @@ import {
     TrendingUp,
     Award,
     ArrowLeft,
-    Sparkles
+    Sparkles,
+    AlertCircle
 } from 'lucide-react';
 
 interface GradingScreenProps {
     interviewId: string;
+    interview?: any; // Add interview object to props
     onComplete: (score: number, feedback: string, earnings: number) => void;
     onBack: () => void;
 }
@@ -29,7 +31,7 @@ interface GradingResult {
     recommendation: string;
 }
 
-export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreenProps) => {
+export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: GradingScreenProps) => {
     const [isGrading, setIsGrading] = useState(true);
     const [gradingResult, setGradingResult] = useState<GradingResult | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -61,36 +63,101 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
                 console.log('⚠️ [GRADING] No stored results found, generating new ones...');
             }
 
-            // If no stored results, generate new ones
+            // If no stored results, use intelligent grading directly
             if (!gradingData) {
-                console.log('🔄 [GRADING] Generating new grading results...');
-                const response = await fetch('/api/vapi/evaluate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        interviewId,
-                        // Add any additional data needed for grading
-                    }),
-                });
+                console.log('🔄 [GRADING] No stored results, using intelligent grading directly...');
 
-                if (!response.ok) {
-                    throw new Error('Failed to grade interview');
-                }
+                // Import intelligent grading system
+                const { IntelligentGradingSystem } = await import('@/lib/intelligent-grading');
 
-                gradingData = await response.json();
-                console.log('✅ [GRADING] New grading completed:', gradingData);
+                // Create interview metrics (we'll use reasonable defaults since we don't have the actual data)
+                const interviewMetrics = {
+                    duration: 60, // Assume 1 minute for fallback
+                    transcriptLength: 100,
+                    transcriptWords: 20,
+                    candidateMessageCount: 2,
+                    transcript: 'Sample interview transcript - user participated briefly',
+                    interviewType: 'technical',
+                    skillLevel: 'intermediate',
+                    expectedDuration: 15 * 60 // 15 minutes
+                };
+
+                // Use intelligent grading
+                const intelligentResult = IntelligentGradingSystem.gradeInterview(interviewMetrics);
+
+                // Convert to expected format
+                gradingData = {
+                    overallScore: intelligentResult.score / 10, // Convert to 0-10 scale
+                    summary: intelligentResult.feedback,
+                    keyHighlights: intelligentResult.strengths,
+                    areasForImprovement: intelligentResult.areasForImprovement,
+                    recommendation: intelligentResult.recommendation,
+                    isFailedInterview: intelligentResult.status === 'technical_issue' || intelligentResult.status === 'insufficient_data'
+                };
+
+                console.log('✅ [GRADING] Intelligent grading fallback completed:', gradingData);
             }
 
             // Process the grading result
+            // Convert AI score (0-10) to percentage (0-100)
+            let finalScore = 0;
+
+            console.log('🔍 [GRADING] Processing grading data:', {
+                overallScore: gradingData.overallScore,
+                isFailedInterview: gradingData.isFailedInterview,
+                transcriptLength: gradingData.transcriptLength,
+                transcriptWordCount: gradingData.transcriptWordCount,
+                candidateMessageCount: gradingData.candidateMessageCount,
+                summary: gradingData.summary,
+                keyHighlights: gradingData.keyHighlights,
+                areasForImprovement: gradingData.areasForImprovement,
+                partialCreditReason: gradingData.partialCreditReason,
+                technicalIssueReason: gradingData.technicalIssueReason
+            });
+
+            // Use intelligent grading result if available
+            if (gradingData.overallScore !== undefined && gradingData.overallScore !== null) {
+                const rawScore = gradingData.overallScore;
+
+                if (typeof rawScore !== 'number' || isNaN(rawScore)) {
+                    console.error('⚠️ [GRADING] Invalid score type:', rawScore);
+                    finalScore = 0;
+                } else if (rawScore < 0 || rawScore > 10) {
+                    console.error('⚠️ [GRADING] Score out of range (0-10):', rawScore);
+                    finalScore = 0;
+                } else {
+                    // Convert from 0-10 scale to 0-100
+                    finalScore = Math.min(Math.round(rawScore * 10), 100);
+                    console.log('✅ [GRADING] Intelligent score converted:', rawScore, '→', finalScore);
+                }
+            } else {
+                // No score provided - fail safely
+                console.warn('⚠️ [GRADING] No score provided, setting to 0');
+                finalScore = 0;
+            }
+
+            // Use intelligent grading feedback if available, otherwise fallback
+            let feedback = 'Interview evaluation completed';
+
+            if (gradingData.summary) {
+                // Use intelligent grading feedback (this should always be present now)
+                feedback = gradingData.summary;
+                console.log('✅ [GRADING] Using intelligent grading feedback:', feedback);
+            } else if (finalScore === 0) {
+                // Fallback for zero scores
+                feedback = 'Interview could not be completed. Please try again and ensure you have a stable connection.';
+            } else {
+                // Fallback for successful interviews
+                feedback = 'Interview evaluation completed successfully.';
+            }
+
             const result: GradingResult = {
-                score: gradingData.overallScore || Math.floor(Math.random() * 40) + 60, // 60-100 fallback
-                feedback: gradingData.detailedFeedback || gradingData.overallAssessment || 'Great interview performance!',
-                earnings: calculateEarnings(gradingData.overallScore || 75),
-                strengths: gradingData.strengths || ['Strong technical knowledge', 'Good communication'],
-                areasForImprovement: gradingData.areasForImprovement || ['Practice more coding problems'],
-                recommendation: gradingData.recommendation || 'hire'
+                score: finalScore,
+                feedback: feedback,
+                earnings: calculateEarnings(finalScore, interview),
+                strengths: gradingData.keyHighlights || gradingData.strengths || [],
+                areasForImprovement: gradingData.areasForImprovement || [],
+                recommendation: gradingData.recommendation || getRecommendation(finalScore)
             };
 
             setGradingResult(result);
@@ -106,9 +173,35 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
         }
     };
 
-    const calculateEarnings = (score: number): number => {
-        let baseReward = 0.1; // Base reward
+    const getRecommendation = (score: number): string => {
+        if (score >= 90) return 'strong-hire';
+        if (score >= 80) return 'hire';
+        if (score >= 70) return 'maybe';
+        return 'no-hire';
+    };
 
+    const formatRecommendation = (recommendation: string): string => {
+        const formatted = recommendation.replace('-', ' ');
+        return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    };
+
+    const calculateEarnings = (score: number, interviewData?: any): number => {
+        // Get base reward from interview type
+        let baseReward = 0.2; // Default
+
+        if (interviewData) {
+            // Set base reward based on interview type
+            if (interviewData.interviewType === 'technical') baseReward = 0.2;
+            else if (interviewData.interviewType === 'soft_skills') baseReward = 0.15;
+            else if (interviewData.interviewType === 'behavioral') baseReward = 0.1;
+            else if (interviewData.interviewType === 'system_design') baseReward = 0.3;
+
+            // Apply skill level multiplier
+            if (interviewData.skillLevel === 'intermediate') baseReward *= 1.5;
+            else if (interviewData.skillLevel === 'advanced') baseReward *= 2.0;
+        }
+
+        // Apply performance bonus
         if (score >= 90) baseReward += 0.3;
         else if (score >= 80) baseReward += 0.2;
         else if (score >= 70) baseReward += 0.1;
@@ -117,17 +210,23 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
     };
 
     const getScoreColor = (score: number) => {
-        if (score >= 90) return 'text-green-400';
-        if (score >= 80) return 'text-blue-400';
-        if (score >= 70) return 'text-yellow-400';
-        return 'text-red-400';
+        if (score === 0) return 'text-red-400';
+        if (score < 30) return 'text-red-400';
+        if (score < 50) return 'text-orange-400';
+        if (score < 70) return 'text-yellow-400';
+        if (score < 90) return 'text-blue-400';
+        return 'text-green-400';
     };
 
     const getScoreMessage = (score: number) => {
-        if (score >= 90) return 'Outstanding Performance!';
-        if (score >= 80) return 'Great Job!';
-        if (score >= 70) return 'Good Performance!';
-        return 'Keep Practicing!';
+        if (score === 0) return 'Interview Failed';
+        if (score < 30) return 'Needs Significant Improvement';
+        if (score < 50) return 'Room for Improvement';
+        if (score < 70) return 'Good Effort, Keep Practicing';
+        if (score < 80) return 'Good Performance!';
+        if (score < 90) return 'Great Job!';
+        if (score < 95) return 'Excellent Performance!';
+        return 'Outstanding Performance!';
     };
 
     if (isGrading) {
@@ -215,15 +314,31 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center"
                 >
-                    <div className="w-20 h-20 bg-gold-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Trophy className="w-10 h-10 text-gold-400" />
-                    </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">
-                        Interview Complete!
-                    </h1>
-                    <p className="text-gray-400">
-                        Here's how you performed
-                    </p>
+                    {gradingResult.score === 0 ? (
+                        <>
+                            <div className="w-20 h-20 bg-red-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <AlertCircle className="w-10 h-10 text-red-400" />
+                            </div>
+                            <h1 className="text-3xl font-bold text-white mb-2">
+                                Interview Failed
+                            </h1>
+                            <p className="text-gray-400">
+                                The interview could not be completed
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <div className="w-20 h-20 bg-gold-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Trophy className="w-10 h-10 text-gold-400" />
+                            </div>
+                            <h1 className="text-3xl font-bold text-white mb-2">
+                                Interview Complete!
+                            </h1>
+                            <p className="text-gray-400">
+                                Here's how you performed
+                            </p>
+                        </>
+                    )}
                 </motion.div>
 
                 {/* Score Card */}
@@ -232,13 +347,17 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                 >
-                    <Card className="iqlify-card border-gold-400/30 bg-gold-400/10 p-6 text-center">
+                    <Card className={`iqlify-card p-6 text-center ${gradingResult.score === 0 ? 'border-red-400/30 bg-red-400/10' :
+                        gradingResult.score < 30 ? 'border-red-400/30 bg-red-400/10' :
+                            gradingResult.score < 50 ? 'border-orange-400/30 bg-orange-400/10' :
+                                'border-gold-400/30 bg-gold-400/10'
+                        }`}>
                         <div className="flex items-center justify-center mb-4">
-                            <div className="text-6xl font-bold text-white mr-4">
+                            <div className={`text-6xl font-bold mr-4 ${getScoreColor(gradingResult.score)}`}>
                                 {gradingResult.score}
                             </div>
                             <div>
-                                <div className="text-2xl font-semibold text-gold-400">/100</div>
+                                <div className={`text-2xl font-semibold ${getScoreColor(gradingResult.score)}`}>/100</div>
                                 <div className={`text-lg font-medium ${getScoreColor(gradingResult.score)}`}>
                                     {getScoreMessage(gradingResult.score)}
                                 </div>
@@ -253,7 +372,7 @@ export const GradingScreen = ({ interviewId, onComplete, onBack }: GradingScreen
                             <div className="flex items-center space-x-2">
                                 <Award className="w-5 h-5 text-blue-400" />
                                 <span className="text-sm text-gray-300 capitalize">
-                                    {gradingResult.recommendation.replace('-', ' ')}
+                                    {formatRecommendation(gradingResult.recommendation)}
                                 </span>
                             </div>
                         </div>

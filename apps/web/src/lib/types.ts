@@ -25,7 +25,11 @@ export enum InterviewStatus {
     NOT_STARTED = 'not_started',
     IN_PROGRESS = 'in_progress',
     COMPLETED = 'completed',
-    FAILED = 'failed'
+    FAILED = 'failed',
+    GRADING = 'grading',
+    PARTIAL = 'partial',
+    TECHNICAL_ISSUE = 'technical_issue',
+    INSUFFICIENT_DATA = 'insufficient_data'
 }
 
 export enum RewardType {

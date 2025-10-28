@@ -4,7 +4,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import { InterviewInterface } from '@/components/interview/interview-interface';
+import { InterviewInterface } from '@/components/interview/interface';
 import { GradingScreen } from '@/components/interview/grading-screen';
 import { ResultsScreen } from '@/components/interview/results-screen';
 import { Id } from '../../../../convex/_generated/dataModel';
@@ -78,10 +78,20 @@ export default function InterviewPage() {
 
     const handleInterviewComplete = async (score: number, feedback: string, earnings: number) => {
         try {
-            console.log('📝 [INTERVIEW PAGE] Interview completed, updating status:', { score, feedback, earnings });
+            // Determine status based on score
+            // Score of 0 = failed interview, otherwise completed
+            const status = score === 0 ? 'failed' : 'completed';
+
+            console.log('📝 [INTERVIEW PAGE] Interview completed, updating status:', {
+                score,
+                status,
+                feedback,
+                earnings
+            });
+
             await updateInterview({
                 interviewId: interviewId as any,
-                status: 'completed',
+                status: status,
                 score,
                 feedback,
                 earnings,
@@ -90,7 +100,7 @@ export default function InterviewPage() {
 
             // Don't redirect automatically - let user stay on the interview screen
             // They can manually navigate back when they want to
-            console.log('✅ [INTERVIEW PAGE] Interview completed successfully - staying on interview screen');
+            console.log(`✅ [INTERVIEW PAGE] Interview marked as ${status} - staying on interview screen`);
         } catch (error) {
             console.error('Failed to complete interview:', error);
             setError('Failed to save interview results');
@@ -171,13 +181,16 @@ export default function InterviewPage() {
         return (
             <GradingScreen
                 interviewId={interviewId}
+                interview={currentInterview}
                 onComplete={handleInterviewComplete}
                 onBack={() => router.push('/?tab=interview')}
             />
         );
     }
 
-    if (status === 'completed' || currentInterview?.status === 'completed') {
+    if (status === 'completed' || currentInterview?.status === 'completed' ||
+        currentInterview?.status === 'partial' || currentInterview?.status === 'technical_issue' ||
+        currentInterview?.status === 'insufficient_data') {
         return (
             <ResultsScreen
                 interview={currentInterview}

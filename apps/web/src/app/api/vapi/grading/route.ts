@@ -18,34 +18,34 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Import the grading logic from the vapi directory
-        const { generateFinalGrading, storeGradingResults } = await import('../../../vapi/grading/route');
+        // Try to fetch actual grading from stored results via VAPI grading storage
+        console.log('🔍 [GRADING] Fetching grading for callId:', callId);
 
-        // For now, return a mock response since we don't have stored grading yet
-        // In a real implementation, this would fetch from a database
-        const mockGradingData = {
-            overallScore: Math.floor(Math.random() * 40) + 60, // 60-100
-            detailedFeedback: 'Great interview performance! You demonstrated strong technical skills and clear communication.',
-            strengths: ['Strong technical knowledge', 'Good communication skills', 'Problem-solving ability'],
-            areasForImprovement: ['Practice more coding problems', 'Improve time management'],
-            recommendation: 'hire',
-            technicalSkills: {
-                assessment: 'Strong technical foundation with good problem-solving approach',
-                score: 8
-            },
-            communication: {
-                assessment: 'Clear and articulate communication throughout the interview',
-                score: 9
-            },
-            problemSolving: {
-                assessment: 'Good analytical thinking and systematic approach to problems',
-                score: 8
+        try {
+            const vapiGradingResponse = await fetch(
+                `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/vapi/grading?callId=${callId}`
+            );
+
+            if (vapiGradingResponse.ok) {
+                const vapiGradingData = await vapiGradingResponse.json();
+                if (vapiGradingData.success && vapiGradingData.grading) {
+                    console.log('✅ [GRADING] Found stored grading results');
+                    return NextResponse.json({
+                        success: true,
+                        gradingResults: vapiGradingData.grading.gradingResults,
+                        callId: callId,
+                    });
+                }
             }
-        };
+        } catch (error) {
+            console.warn('⚠️ [GRADING] Could not fetch from VAPI grading storage:', error);
+        }
 
+        // No stored grading found
+        console.log('⚠️ [GRADING] No grading found for callId:', callId);
         return NextResponse.json({
             success: true,
-            gradingResults: mockGradingData,
+            gradingResults: null,
             callId: callId,
         });
 

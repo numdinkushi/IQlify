@@ -1,11 +1,11 @@
 'use client';
 
-import { InterviewTabNew } from '@/components/tabs/interview-tab-new';
+import { InterviewTab } from '@/components/tabs/interview';
 
 export default function TestInterviewTabPage() {
     return (
         <div className="min-h-screen bg-gray-900">
-            <InterviewTabNew />
+            <InterviewTab />
         </div>
     );
 }
