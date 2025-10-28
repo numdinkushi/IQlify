@@ -188,7 +188,9 @@ export default function InterviewPage() {
         );
     }
 
-    if (status === 'completed' || currentInterview?.status === 'completed') {
+    if (status === 'completed' || currentInterview?.status === 'completed' ||
+        currentInterview?.status === 'partial' || currentInterview?.status === 'technical_issue' ||
+        currentInterview?.status === 'insufficient_data') {
         return (
             <ResultsScreen
                 interview={currentInterview}

@@ -98,6 +98,7 @@ async function main() {
 
 export { setupInterviewWorkflow, setupWebhook };
 
+/**
  * Example: Setting up a workflow for your VAPI assistant
  * 
  * This script demonstrates how to connect your VAPI assistant to an interview workflow.

@@ -91,6 +91,41 @@ export const getUserInterviews = query({
     },
 });
 
+// Get all interviews for a user with pagination
+export const getAllUserInterviews = query({
+    args: {
+        userId: v.id("users"),
+        limit: v.optional(v.number()),
+        cursor: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const limit = args.limit || 20;
+        let query = ctx.db
+            .query("interviews")
+            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .order("desc");
+
+        // If cursor is provided, start from there
+        if (args.cursor) {
+            const cursorInterview = await ctx.db.get(args.cursor as any);
+            if (cursorInterview && 'startedAt' in cursorInterview) {
+                const startTime = (cursorInterview as any).startedAt as number;
+                query = query.filter((q) => q.lt(q.field("startedAt"), startTime));
+            }
+        }
+
+        const interviews = await query.take(limit);
+
+        // Calculate if there are more results
+        const hasMore = interviews.length === limit;
+
+        return {
+            interviews,
+            nextCursor: hasMore && interviews.length > 0 ? interviews[interviews.length - 1]._id : null,
+        };
+    },
+});
+
 // Get interview statistics for a user
 export const getUserInterviewStats = query({
     args: {

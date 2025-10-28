@@ -77,9 +77,10 @@ export function createLogger(context: string): Logger {
     return new Logger(context);
 }
 
+/**
  * Logger utility for VAPI integration
-    * Provides consistent logging across all services
-        */;
+ * Provides consistent logging across all services
+ */
 
 export enum LogLevel {
     DEBUG = 'DEBUG',

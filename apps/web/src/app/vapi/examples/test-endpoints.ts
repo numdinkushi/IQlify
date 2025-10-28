@@ -247,11 +247,12 @@ export async function runAllTests() {
 // Uncomment to run all tests:
 // runAllTests();
 
+/**
  * Example: Testing VAPI endpoints
-    * 
+ * 
  * This script demonstrates how to use all the VAPI endpoints.
  * Useful for testing and understanding the API.
- */;
+ */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

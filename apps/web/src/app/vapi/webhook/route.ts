@@ -3,6 +3,7 @@ import { VapiService } from '../services/VapiService';
 import { GeminiService } from '../services/GeminiService';
 import { VapiWebhookPayload } from '../types';
 import { WEBHOOK_EVENTS } from '../config';
+import { IntelligentGradingSystem, InterviewMetrics } from '@/lib/intelligent-grading';
 
 // Extended webhook payload type to include transcript
 interface ExtendedVapiWebhookPayload extends Omit<VapiWebhookPayload, 'message'> {
@@ -73,120 +74,132 @@ async function generateFinalGrading(callId: string, assistantId: string) {
 
         console.log(`📝 Transcript length: ${transcript.length} characters`);
 
-        // VALIDATION: Check if the interview was too short (failed interview)
-        const callDuration = callData.duration || 0; // Duration in seconds
-        const minValidDuration = 30; // Minimum 30 seconds for a valid interview
-
-        if (callDuration < minValidDuration) {
-            console.warn(`⚠️ Interview too short (${callDuration}s). Marking as failed interview.`);
-            return {
-                callId,
-                assistantId,
-                overallScore: 0,
-                sections: {
-                    technical: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
-                    communication: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
-                    problemSolving: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
-                    experienceRelevance: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] },
-                    culturalFit: { score: 0, feedback: "Interview connection failed - interview ended prematurely", strengths: [], improvements: ["Complete interview session"] }
-                },
-                recommendation: "no-hire",
-                summary: `Interview failed - ended after only ${callDuration} seconds. Please check your connection and try again.`,
-                keyHighlights: [],
-                areasForImprovement: ["Complete interview session", "Check internet connection", "Ensure microphone is working"],
-                callDuration,
-                isFailedInterview: true,
-                timestamp: new Date().toISOString()
-            };
-        }
-
-        // VALIDATION: Check if candidate actually spoke (basic participation check)
+        // Prepare interview metrics for intelligent grading
+        const callDuration = callData.duration || 0;
+        const transcriptWords = transcript.split(/\s+/).length;
         const candidateContent = transcript.toLowerCase();
         const candidateMessageCount = (candidateContent.match(/candidate:/g) || []).length;
-        const minCandidateMessages = 2; // At least 2 responses from candidate
 
-        if (candidateMessageCount < minCandidateMessages) {
-            console.warn(`⚠️ Insufficient candidate participation (${candidateMessageCount} messages). Marking as failed interview.`);
-            return {
-                callId,
-                assistantId,
-                overallScore: 0,
-                sections: {
-                    technical: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
-                    communication: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
-                    problemSolving: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
-                    experienceRelevance: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] },
-                    culturalFit: { score: 0, feedback: "Insufficient candidate participation - candidate did not respond adequately", strengths: [], improvements: ["Respond to interviewer questions", "Ensure microphone is working"] }
-                },
-                recommendation: "no-hire",
-                summary: `Interview incomplete - candidate only provided ${candidateMessageCount} response(s). Please ensure your microphone is working and respond to questions.`,
-                keyHighlights: [],
-                areasForImprovement: ["Respond to interviewer questions", "Check microphone permissions", "Ensure stable internet connection"],
-                candidateMessageCount,
-                isFailedInterview: true,
-                timestamp: new Date().toISOString()
-            };
-        }
+        // Extract interview type and skill level from call metadata or use defaults
+        const interviewType = callData.assistant?.name?.toLowerCase().includes('technical') ? 'technical' :
+            callData.assistant?.name?.toLowerCase().includes('soft') ? 'soft_skills' :
+                callData.assistant?.name?.toLowerCase().includes('behavioral') ? 'behavioral' : 'technical';
+        const skillLevel = 'intermediate'; // Could be extracted from call metadata
 
-        // VALIDATION: Check transcript quality (minimal conversation)
-        const transcriptWords = transcript.split(/\s+/).length;
-        const minTranscriptWords = 50; // Minimum 50 words for a valid interview
-
-        if (transcriptWords < minTranscriptWords) {
-            console.warn(`⚠️ Transcript too short (${transcriptWords} words). Marking as failed interview.`);
-            return {
-                callId,
-                assistantId,
-                overallScore: 0,
-                sections: {
-                    technical: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
-                    communication: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
-                    problemSolving: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
-                    experienceRelevance: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] },
-                    culturalFit: { score: 0, feedback: "Interview transcript too short - insufficient conversation for evaluation", strengths: [], improvements: ["Engage more with interviewer", "Provide detailed answers"] }
-                },
-                recommendation: "no-hire",
-                summary: `Interview incomplete - insufficient conversation (${transcriptWords} words). Please engage with the interviewer and provide detailed responses.`,
-                keyHighlights: [],
-                areasForImprovement: ["Provide more detailed answers", "Engage with interviewer", "Share examples and experiences"],
-                transcriptWordCount: transcriptWords,
-                isFailedInterview: true,
-                timestamp: new Date().toISOString()
-            };
-        }
-
-        // 3. Analyze the transcript using AI
-        console.log('🤖 Analyzing transcript with AI...');
-        const geminiService = new GeminiService();
-
-        // Extract role and level from call metadata or use defaults
-        const role = callData.assistant?.name || 'Software Engineer';
-        const level = 'Mid-level'; // Could be extracted from call metadata
-        const techstack: string[] = []; // Could be extracted from call metadata
-
-        const aiGrading = await geminiService.analyzeInterviewTranscript(
+        const interviewMetrics: InterviewMetrics = {
+            duration: callDuration,
+            transcriptLength: transcript.length,
+            transcriptWords,
+            candidateMessageCount,
             transcript,
-            role,
-            level,
-            techstack
-        );
+            interviewType,
+            skillLevel,
+            expectedDuration: 15 * 60 // 15 minutes default
+        };
 
-        console.log('✅ AI grading completed:', {
-            overallScore: aiGrading.overallScore,
-            recommendation: aiGrading.recommendation
+        console.log('🧠 [INTELLIGENT GRADING] Using new grading system for interview analysis');
+        console.log('📊 [INTELLIGENT GRADING] Interview metrics:', {
+            duration: interviewMetrics.duration,
+            transcriptWords: interviewMetrics.transcriptWords,
+            candidateMessageCount: interviewMetrics.candidateMessageCount,
+            expectedDuration: interviewMetrics.expectedDuration
         });
 
-        // 4. Return the AI-generated grading with metadata
+        // 3. Use intelligent grading system
+        console.log('🧠 Using intelligent grading system...');
+
+        // Try to get AI analysis if there's sufficient content
+        let aiScore: number | undefined;
+        try {
+            if (transcriptWords >= 50 && candidateMessageCount >= 2) {
+                console.log('🤖 Getting AI analysis for sufficient content...');
+                const geminiService = new GeminiService();
+                const role = callData.assistant?.name || 'Software Engineer';
+                const level = 'Mid-level';
+                const techstack: string[] = [];
+
+                const aiGrading = await geminiService.analyzeInterviewTranscript(
+                    transcript,
+                    role,
+                    level,
+                    techstack
+                );
+                aiScore = aiGrading.overallScore;
+                console.log('✅ AI analysis completed:', { aiScore });
+            }
+        } catch (error) {
+            console.log('⚠️ AI analysis failed, proceeding with intelligent grading only:', error);
+        }
+
+        // 4. Apply intelligent grading
+        const intelligentResult = IntelligentGradingSystem.gradeInterview(interviewMetrics, aiScore);
+
+        console.log('🎯 [INTELLIGENT GRADING] Result:', {
+            score: intelligentResult.score,
+            status: intelligentResult.status,
+            recommendation: intelligentResult.recommendation,
+            feedback: intelligentResult.feedback,
+            partialCreditReason: intelligentResult.partialCreditReason,
+            technicalIssueReason: intelligentResult.technicalIssueReason
+        });
+
+        // Log the intelligent grading result for debugging
+        console.log('✅ [INTELLIGENT GRADING] Final result from algorithm:', {
+            score: intelligentResult.score,
+            status: intelligentResult.status,
+            feedback: intelligentResult.feedback
+        });
+
+        // 5. Convert intelligent grading result to expected format
+        const sections = {
+            technical: {
+                score: Math.round(intelligentResult.score / 10),
+                feedback: intelligentResult.feedback,
+                strengths: intelligentResult.strengths,
+                improvements: intelligentResult.areasForImprovement
+            },
+            communication: {
+                score: Math.round(intelligentResult.score / 10),
+                feedback: intelligentResult.feedback,
+                strengths: intelligentResult.strengths,
+                improvements: intelligentResult.areasForImprovement
+            },
+            problemSolving: {
+                score: Math.round(intelligentResult.score / 10),
+                feedback: intelligentResult.feedback,
+                strengths: intelligentResult.strengths,
+                improvements: intelligentResult.areasForImprovement
+            },
+            experienceRelevance: {
+                score: Math.round(intelligentResult.score / 10),
+                feedback: intelligentResult.feedback,
+                strengths: intelligentResult.strengths,
+                improvements: intelligentResult.areasForImprovement
+            },
+            culturalFit: {
+                score: Math.round(intelligentResult.score / 10),
+                feedback: intelligentResult.feedback,
+                strengths: intelligentResult.strengths,
+                improvements: intelligentResult.areasForImprovement
+            }
+        };
+
         return {
             callId,
             assistantId,
-            overallScore: aiGrading.overallScore,
-            sections: aiGrading.sections,
-            recommendation: aiGrading.recommendation,
-            summary: aiGrading.summary,
-            keyHighlights: aiGrading.keyHighlights || [],
-            areasForImprovement: aiGrading.areasForImprovement || [],
+            overallScore: intelligentResult.score / 10, // Convert to 0-10 scale for compatibility
+            sections,
+            recommendation: intelligentResult.recommendation,
+            summary: intelligentResult.feedback,
+            keyHighlights: intelligentResult.strengths,
+            areasForImprovement: intelligentResult.areasForImprovement,
             transcriptLength: transcript.length,
+            transcriptWordCount: transcriptWords,
+            candidateMessageCount,
+            callDuration,
+            isFailedInterview: intelligentResult.status === 'technical_issue' || intelligentResult.status === 'insufficient_data',
+            partialCreditReason: intelligentResult.partialCreditReason,
+            technicalIssueReason: intelligentResult.technicalIssueReason,
             analysisTimestamp: new Date().toISOString(),
             timestamp: new Date().toISOString()
         };
@@ -505,12 +518,14 @@ export async function POST(request: NextRequest) {
 
             case WEBHOOK_EVENTS.END_OF_CALL:
                 // Handle end of call report
-                console.log('End of call report received');
+                console.log('🎯 [WEBHOOK] End of call report received - INTELLIGENT GRADING WILL BE USED');
 
                 // Process and store grading results
                 if (payload.message.call) {
                     const callId = payload.message.call.id;
                     const assistantId = payload.message.call.assistantId;
+
+                    console.log('🎯 [WEBHOOK] Processing call:', { callId, assistantId });
 
                     // Check if transcript is provided in the webhook payload
                     let finalGrading;

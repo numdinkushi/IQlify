@@ -54,12 +54,18 @@ export function InterviewTab() {
     };
 
     const handleInterviewCardClick = (interview: any) => {
-        if (interview.status === 'in_progress') {
-            router.push(`/interview/${interview._id}`);
-        } else if (interview.status === 'grading') {
+        console.log('🎯 [INTERVIEW CLICK] Clicked interview:', interview);
+
+        if (interview.status === 'grading') {
             router.push(`/interview/${interview._id}?status=grading`);
-        } else if (interview.status === 'completed') {
+        } else if (interview.status === 'completed' || interview.status === 'partial' ||
+            interview.status === 'technical_issue' || interview.status === 'insufficient_data' ||
+            interview.status === 'failed') {
+            // For completed, partial, technical issues, insufficient data, or failed interviews, show results screen
             router.push(`/interview/${interview._id}?status=completed`);
+        } else {
+            // For in_progress, not_started, or any other status, go to interview interface
+            router.push(`/interview/${interview._id}`);
         }
     };
 

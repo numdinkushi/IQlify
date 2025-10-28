@@ -256,14 +256,7 @@ export const EquipmentCheck = ({
                     Recheck Equipment
                 </Button>
 
-                {checkResult.canProceed && (
-                    <Button
-                        onClick={() => {/* Handle proceed */ }}
-                        className="bg-gold-400 hover:bg-gold-500 text-black font-medium"
-                    >
-                        Continue to Interview
-                    </Button>
-                )}
+               
             </div>
         </div>
     );
