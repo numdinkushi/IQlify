@@ -17,6 +17,7 @@
     "run-tunnel": "cd /Users/kushi/Desktop/Experimento/open_source/harckerton/IQLIFY/IQlify/apps/web && cloudflared tunnel --url http://localhost:3000"
   },
   "dependencies": {
+    "@divvi/referral-sdk": "^2.3.0",
     "@google/genai": "^1.22.0",
     "@google/generative-ai": "^0.21.0",
     "@radix-ui/react-dialog": "^1.0.5",

@@ -59,6 +59,9 @@ export const updateInterview = mutation({
         earnings: v.optional(v.number()),
         completedAt: v.optional(v.number()),
         vapiCallId: v.optional(v.string()),
+        claimed: v.optional(v.boolean()),
+        claimedAt: v.optional(v.number()),
+        claimTxHash: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const { interviewId, ...updates } = args;
@@ -71,6 +74,36 @@ export const updateInterview = mutation({
         await ctx.db.patch(interviewId, cleanUpdates);
 
         return await ctx.db.get(interviewId);
+    },
+});
+
+// Mark interview as claimed after successful on-chain claim
+export const markInterviewClaimed = mutation({
+    args: {
+        interviewId: v.id("interviews"),
+        txHash: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const interview = await ctx.db.get(args.interviewId);
+        if (!interview) throw new Error("Interview not found");
+        await ctx.db.patch(args.interviewId, {
+            claimed: true,
+            claimedAt: Date.now(),
+            claimTxHash: args.txHash,
+        });
+        // Also record a transaction record for wallet tab
+        if (interview.userId && interview.earnings) {
+            await ctx.db.insert("transactions", {
+                userId: interview.userId,
+                type: "earned",
+                amount: interview.earnings,
+                currency: "celo",
+                description: "Interview reward claimed",
+                timestamp: Date.now(),
+                interviewId: args.interviewId,
+            });
+        }
+        return await ctx.db.get(args.interviewId);
     },
 });
 

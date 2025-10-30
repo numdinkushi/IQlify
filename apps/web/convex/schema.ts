@@ -89,6 +89,10 @@ export default defineSchema({
         startedAt: v.number(),
         completedAt: v.optional(v.number()),
         earnings: v.optional(v.number()),
+        // Claim tracking
+        claimed: v.optional(v.boolean()),
+        claimedAt: v.optional(v.number()),
+        claimTxHash: v.optional(v.string()),
         vapiCallId: v.optional(v.string()),
     })
         .index("by_user", ["userId"])
