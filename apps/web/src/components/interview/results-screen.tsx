@@ -59,26 +59,61 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
     const handleSwitchToMainnet = async () => {
         try {
             setIsSwitching(true);
-            console.log(`[ui] Switching to ${chainName}...`);
+            console.log(`[ui] Switching to ${chainName}... (chainId: ${TARGET_CHAIN_ID})`);
 
             info('Switching network...', `Please approve the network switch to ${chainName}`);
 
             // Try wagmi's switchChain first
             try {
-                await switchChain({ chainId: targetChain.id });
-            } catch (wagmiError) {
+                await switchChain({ chainId: TARGET_CHAIN_ID });
+                console.log(`[ui] ✅ Switched to ${chainName} via wagmi`);
+                success('Network switched!', `Now connected to ${chainName}`);
+            } catch (wagmiError: any) {
                 console.log('[ui] Wagmi switchChain failed, trying direct window.ethereum...', wagmiError);
                 // Fallback to direct ethereum request for MiniPay test mode compatibility
                 if (typeof window !== 'undefined' && window.ethereum) {
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: `0x${targetChain.id.toString(16)}` }],
-                    });
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: `0x${TARGET_CHAIN_ID.toString(16)}` }],
+                        });
+                        console.log(`[ui] ✅ Switched to ${chainName} via window.ethereum`);
+                        success('Network switched!', `Now connected to ${chainName}`);
+                    } catch (switchError: any) {
+                        console.error('[ui] Direct switch failed:', switchError);
+                        // If switch fails, try to add the network if it's not recognized
+                        if (switchError?.code === 4902) {
+                            console.log('[ui] Chain not in wallet, attempting to add...');
+                            try {
+                                await window.ethereum.request({
+                                    method: 'wallet_addEthereumChain',
+                                    params: [{
+                                        chainId: `0x${TARGET_CHAIN_ID.toString(16)}`,
+                                        chainName: chainName,
+                                        nativeCurrency: {
+                                            name: 'CELO',
+                                            symbol: 'CELO',
+                                            decimals: 18,
+                                        },
+                                        rpcUrls: TARGET_CHAIN_ID === celo.id ? ['https://forno.celo.org'] : ['https://alfajores-forno.celo-testnet.org'],
+                                        blockExplorerUrls: TARGET_CHAIN_ID === celo.id ? ['https://celoscan.io'] : ['https://alfajores.celoscan.io'],
+                                    }],
+                                });
+                                console.log(`[ui] ✅ Added and switched to ${chainName}`);
+                                success('Network added and switched!', `Now connected to ${chainName}`);
+                            } catch (addError: any) {
+                                console.error('[ui] Failed to add network:', addError);
+                                const errorMessage = addError?.shortMessage || addError?.message || 'Failed to add network';
+                                showError('Add Network Failed', errorMessage);
+                            }
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                } else {
+                    throw wagmiError;
                 }
             }
-
-            console.log(`[ui] ✅ Switched to ${chainName}`);
-            success('Network switched!', `Now connected to ${chainName}`);
         } catch (error: any) {
             console.error('[ui] ❌ Failed to switch network:', error);
             const errorMessage = error?.shortMessage || error?.message || 'Failed to switch network';

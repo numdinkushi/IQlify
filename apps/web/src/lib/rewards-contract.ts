@@ -18,12 +18,12 @@ export const getRewardChainId = (): number => {
         return parseInt(process.env.NEXT_PUBLIC_REWARD_CHAIN_ID, 10);
     }
 
-    // In development or if env indicates testnet, use Alfajores
-    if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_USE_TESTNET === 'true') {
+    // Only use Alfajores if explicitly requested via NEXT_PUBLIC_USE_TESTNET
+    if (process.env.NEXT_PUBLIC_USE_TESTNET === 'true') {
         return 44787; // Alfajores testnet
     }
 
-    // Default to mainnet
+    // Default to mainnet (production and development)
     return 42220; // Celo mainnet
 };
 
