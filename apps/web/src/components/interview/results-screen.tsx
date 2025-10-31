@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { useClaimReward } from '@/hooks/use-claim-reward';
 import { useToast } from '@/providers/toast-provider';
 import { useChainId, useSwitchChain } from 'wagmi';
-import { celo } from 'wagmi/chains';
+import { celo, celoAlfajores } from 'wagmi/chains';
+import { REWARD_CHAIN_ID, normalizeChainId } from '@/lib/rewards-contract';
 
 // Extend window type for MiniPay compatibility
 declare global {
@@ -45,35 +46,39 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
     const [isSharing, setIsSharing] = useState(false);
     const [isSwitching, setIsSwitching] = useState(false);
 
-    // Celo Mainnet
-    const TARGET_CHAIN_ID = celo.id;
+    // Get target chain from environment config
+    const TARGET_CHAIN_ID = REWARD_CHAIN_ID;
+    const targetChain = TARGET_CHAIN_ID === celo.id ? celo : celoAlfajores;
+    const chainName = TARGET_CHAIN_ID === celo.id ? 'Celo Mainnet' : 'Alfajores Testnet';
 
     // Log current chain on mount to help debug
-    console.log('[ResultsScreen] Current chain ID:', chainId, 'Expected:', TARGET_CHAIN_ID, 'MiniPay:', typeof window !== 'undefined' && window.ethereum?.isMiniPay);
+    const isMinipay = typeof window !== 'undefined' && window.ethereum?.isMiniPay;
+    const normalizedCurrentChain = normalizeChainId(chainId || TARGET_CHAIN_ID);
+    console.log('[ResultsScreen] Current chain ID:', chainId, 'Normalized:', normalizedCurrentChain, 'Expected:', TARGET_CHAIN_ID, 'Chain:', chainName, 'MiniPay:', isMinipay);
 
     const handleSwitchToMainnet = async () => {
         try {
             setIsSwitching(true);
-            console.log('[ui] Switching to Celo Mainnet...');
+            console.log(`[ui] Switching to ${chainName}...`);
 
-            info('Switching network...', 'Please approve the network switch in your wallet');
+            info('Switching network...', `Please approve the network switch to ${chainName}`);
 
             // Try wagmi's switchChain first
             try {
-                await switchChain({ chainId: celo.id });
+                await switchChain({ chainId: targetChain.id });
             } catch (wagmiError) {
                 console.log('[ui] Wagmi switchChain failed, trying direct window.ethereum...', wagmiError);
                 // Fallback to direct ethereum request for MiniPay test mode compatibility
                 if (typeof window !== 'undefined' && window.ethereum) {
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0xa4ec' }], // 42220 in hex
+                        params: [{ chainId: `0x${targetChain.id.toString(16)}` }],
                     });
                 }
             }
 
-            console.log('[ui] ✅ Switched to Celo Mainnet');
-            success('Network switched!', 'Now connected to Celo Mainnet');
+            console.log(`[ui] ✅ Switched to ${chainName}`);
+            success('Network switched!', `Now connected to ${chainName}`);
         } catch (error: any) {
             console.error('[ui] ❌ Failed to switch network:', error);
             const errorMessage = error?.shortMessage || error?.message || 'Failed to switch network';
@@ -87,14 +92,15 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
         try {
             console.log('[ui] claim clicked');
 
-            // Check if we're on the correct chain
-            console.log('[ui] Current chain ID:', chainId, 'Expected:', TARGET_CHAIN_ID);
+            // Check if we're on the correct chain (normalize MiniPay test chain IDs)
+            const normalizedChainId = normalizeChainId(chainId || TARGET_CHAIN_ID);
+            console.log('[ui] Current chain ID:', chainId, 'Normalized:', normalizedChainId, 'Expected:', TARGET_CHAIN_ID);
 
-            if (chainId !== TARGET_CHAIN_ID) {
-                console.log('[ui] ⚠️ Wrong network. Current:', chainId, 'Expected:', TARGET_CHAIN_ID);
+            if (normalizedChainId !== TARGET_CHAIN_ID) {
+                console.log('[ui] ⚠️ Wrong network. Current:', chainId, 'Normalized:', normalizedChainId, 'Expected:', TARGET_CHAIN_ID, 'Chain:', chainName);
                 warning(
                     'Wrong Network',
-                    `Please switch to Celo Mainnet to claim rewards`,
+                    `Please switch to ${chainName} to claim rewards`,
                     {
                         duration: 8000,
                         action: {

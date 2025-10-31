@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { useAccount, usePublicClient, useSendTransaction } from "wagmi";
 import { encodeFunctionData, parseUnits, decodeEventLog } from "viem";
-import { REWARD_ABI, REWARD_CONTRACT_ADDRESS } from "@/lib/rewards-contract";
+import { REWARD_ABI, REWARD_CONTRACT_ADDRESS, REWARD_CHAIN_ID } from "@/lib/rewards-contract";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Divvi = require("@divvi/referral-sdk") as any;
 import { useMutation } from "convex/react";

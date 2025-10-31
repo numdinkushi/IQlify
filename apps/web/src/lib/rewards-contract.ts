@@ -1,4 +1,51 @@
-export const REWARD_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_REWARD_CONTRACT_ADDRESS || "0x0B38E0A867f97Fea1F39488c3ee022E3DD486F12";
+// Use different contract addresses based on environment
+const getRewardContractAddress = () => {
+    // If explicitly set, use that
+    if (process.env.NEXT_PUBLIC_REWARD_CONTRACT_ADDRESS) {
+        return process.env.NEXT_PUBLIC_REWARD_CONTRACT_ADDRESS;
+    }
+
+    // Default to mainnet address
+    return "0x0B38E0A867f97Fea1F39488c3ee022E3DD486F12";
+};
+
+export const REWARD_CONTRACT_ADDRESS = getRewardContractAddress();
+
+// Get the chain ID based on environment
+export const getRewardChainId = (): number => {
+    // If explicitly set, use that
+    if (process.env.NEXT_PUBLIC_REWARD_CHAIN_ID) {
+        return parseInt(process.env.NEXT_PUBLIC_REWARD_CHAIN_ID, 10);
+    }
+
+    // In development or if env indicates testnet, use Alfajores
+    if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_USE_TESTNET === 'true') {
+        return 44787; // Alfajores testnet
+    }
+
+    // Default to mainnet
+    return 42220; // Celo mainnet
+};
+
+export const REWARD_CHAIN_ID = getRewardChainId();
+
+// Helper to normalize MiniPay test chain IDs
+// MiniPay test environment uses chain IDs like 11142220 (which should map to mainnet 42220)
+export const normalizeChainId = (chainId: number): number => {
+    // MiniPay test mode mainnet: 11142220 -> 42220
+    if (chainId === 11142220) {
+        console.log('[rewards] Detected MiniPay test mainnet chain ID:', chainId, 'normalized to:', 42220);
+        return 42220;
+    }
+
+    // MiniPay test mode Alfajores: 11144787 -> 44787
+    if (chainId === 11144787) {
+        console.log('[rewards] Detected MiniPay test Alfajores chain ID:', chainId, 'normalized to:', 44787);
+        return 44787;
+    }
+
+    return chainId;
+};
 
 export const REWARD_ABI = [
     {
