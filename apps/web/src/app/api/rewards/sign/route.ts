@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
                 { name: "deadline", type: "uint256" },
                 { name: "referralTag", type: "bytes32" },
             ],
-        } as const;
+        };
 
         const value = {
             user: userAddr,
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
             nonce,
             deadline,
             referralTag: referralTagBytes32,
-        } as const;
+        };
 
         const signer = new Wallet(SIGNER_PRIVATE_KEY);
         // ethers v6 typed-data signing
