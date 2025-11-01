@@ -9,12 +9,6 @@ export const TAB_CONFIGS: TabConfig[] = [
         path: '/home'
     },
     {
-        id: TabType.CHALLENGES,
-        label: 'Challenges',
-        icon: 'Target',
-        path: '/challenges'
-    },
-    {
         id: TabType.INTERVIEW,
         label: 'Interview',
         icon: 'Mic',

@@ -19,7 +19,7 @@ export function QuickStart({ onStart, isLoading, isDisabled }: QuickStartProps) 
                     <h2 className="text-xl font-semibold text-gold-400">Start New Interview</h2>
                 </div>
                 <p className="text-gray-400 mb-6">
-                    Choose your skill level, interview type, and duration. Practice with AI and earn CELO rewards.
+                    Choose your skill level, interview type, and duration. Take interviews with AI and earn CELO rewards.
                 </p>
                 <Button
                     onClick={onStart}

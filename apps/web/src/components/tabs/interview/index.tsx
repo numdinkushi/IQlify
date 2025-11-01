@@ -14,6 +14,7 @@ import { QuickStart } from './quick-start';
 import { StatsGrid } from './stats-grid';
 import { InterviewHistory } from './interview-history';
 import { GettingStarted } from './getting-started';
+import { ConnectButton } from '@/components/connect-button';
 
 export function InterviewTab() {
     const { address, isConnected } = useAccount();
@@ -101,6 +102,28 @@ export function InterviewTab() {
         );
     }
 
+    // Show connect wallet prompt if not connected
+    if (!isConnected || !address) {
+        return (
+            <div className="min-h-screen p-4 iqlify-grid-bg flex items-center justify-center">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="max-w-md mx-auto text-center space-y-6"
+                >
+                    <div className="iqlify-card border-gold-400/20 p-6 space-y-4">
+                        <h2 className="text-2xl font-semibold text-gold-400">Connect Your Wallet</h2>
+                        <p className="text-muted-foreground">
+                            Please connect your wallet to access interviews and start earning rewards!
+                        </p>
+                        <ConnectButton />
+                    </div>
+                </motion.div>
+            </div>
+        );
+    }
+
     if (history === undefined || stats === undefined || !user) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
@@ -122,8 +145,8 @@ export function InterviewTab() {
         >
             <div className="max-w-4xl mx-auto space-y-6">
                 <motion.div variants={itemVariants} className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold iqlify-gold-text">Interview Practice</h1>
-                    <p className="text-gray-400">Practice with AI and earn rewards</p>
+                    <h1 className="text-3xl font-bold iqlify-gold-text">Interview</h1>
+                    <p className="text-gray-400">Take interviews with AI and earn rewards</p>
                 </motion.div>
 
                 {error && (
