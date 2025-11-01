@@ -58,7 +58,7 @@ export const ProfileProvider = ({ children }: ProfileProviderProps) => {
                 isOpen={isProfileOpen}
                 onClose={closeProfile}
                 userId={user?._id}
-                user={user}
+                user={user ?? undefined}
             />
         </ProfileContext.Provider>
     );

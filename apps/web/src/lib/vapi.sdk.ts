@@ -1,6 +1,6 @@
 import Vapi from '@vapi-ai/web';
 
-const vapi = new Vapi({ token: process.env.VAPI_API_KEY! });
+const vapi = new Vapi(process.env.VAPI_API_KEY!);
 
 // const assistant = await vapi.assistants.create({
 //   name: "Support Assistant",

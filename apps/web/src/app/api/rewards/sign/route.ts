@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Wallet, ethers } from "ethers";
+import { Wallet } from "ethers";
 
 // Server-only: requires SIGNER_PRIVATE_KEY in env
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as string;
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
                 { name: "deadline", type: "uint256" },
                 { name: "referralTag", type: "bytes32" },
             ],
-        } as const;
+        };
 
         const value = {
             user: userAddr,
@@ -64,11 +64,11 @@ export async function POST(req: NextRequest) {
             nonce,
             deadline,
             referralTag: referralTagBytes32,
-        } as const;
+        };
 
         const signer = new Wallet(SIGNER_PRIVATE_KEY);
-        // ethers v5-compatible typed-data signing in v6
-        const signature = await (signer as any)._signTypedData(domain, types as any, value) as `0x${string}`;
+        // ethers v6 typed-data signing
+        const signature = await signer.signTypedData(domain, types, value) as `0x${string}`;
         const r = signature.slice(0, 66) as `0x${string}`; // 32 bytes
         const s = ("0x" + signature.slice(66, 130)) as `0x${string}`; // next 32 bytes
         const v = parseInt(signature.slice(130, 132), 16);

@@ -52,7 +52,7 @@ export function SplashScreen({ isVisible, onComplete }: SplashScreenProps) {
             opacity: 1,
             rotateY: 0,
             transition: {
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 200,
                 damping: 15,
                 duration: 0.8
@@ -69,7 +69,7 @@ export function SplashScreen({ isVisible, onComplete }: SplashScreenProps) {
             y: 0,
             opacity: 1,
             transition: {
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 100,
                 damping: 12
             }
@@ -82,7 +82,7 @@ export function SplashScreen({ isVisible, onComplete }: SplashScreenProps) {
             transition: {
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut" as const
             }
         }
     };
@@ -106,7 +106,7 @@ export function SplashScreen({ isVisible, onComplete }: SplashScreenProps) {
             scale: 1,
             transition: {
                 duration: 0.6,
-                ease: "easeInOut"
+                ease: "easeInOut" as const
             }
         }
     };
