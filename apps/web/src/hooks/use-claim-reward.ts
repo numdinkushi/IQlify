@@ -98,7 +98,7 @@ export function useClaimReward() {
             });
             console.log("[claim] tx hash", hash);
 
-            if (!publicClient) throw new Error("No public client");
+            if (!publicClient) throw new Error("No public client"); 
 
             // Wait for transaction receipt with timeout
             console.log("[claim] waiting for transaction receipt...");
