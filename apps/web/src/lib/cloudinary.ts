@@ -12,7 +12,20 @@ export { cloudinary };
 // Utility functions for common Cloudinary operations
 export const uploadImage = async (file: File | string, options?: any) => {
     try {
-        const result = await cloudinary.uploader.upload(file, {
+        // Convert File to data URL if needed
+        let fileInput: string;
+        if (file instanceof File) {
+            // Convert File to base64 data URL
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const base64 = buffer.toString('base64');
+            const dataUrl = `data:${file.type};base64,${base64}`;
+            fileInput = dataUrl;
+        } else {
+            fileInput = file;
+        }
+
+        const result = await cloudinary.uploader.upload(fileInput, {
             resource_type: 'auto',
             ...options,
         });
