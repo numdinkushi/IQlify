@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build:production",
-  "installCommand": "npm install",
+  "buildCommand": "pnpm run build:production",
+  "installCommand": "cd ../.. && pnpm install --filter web",
   "env": {
     "NODE_ENV": "production"
   }
