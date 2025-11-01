@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import {
     Home,
-    Target,
     Mic,
     Wallet,
     Trophy
@@ -14,7 +13,6 @@ import { useAppState } from '@/hooks/use-app-state';
 
 const iconMap = {
     Home,
-    Target,
     Mic,
     Wallet,
     Trophy

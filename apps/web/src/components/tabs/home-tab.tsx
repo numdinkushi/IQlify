@@ -3,11 +3,11 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserBalance } from '@/components/user-balance';
 import { ConnectButton } from '@/components/connect-button';
 import { ClientOnly } from '@/components/client-only';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
+import { TabType } from '@/lib/types';
 import { Target, TrendingUp, Clock, Zap } from 'lucide-react';
 
 export function HomeTab() {
@@ -62,27 +62,6 @@ export function HomeTab() {
                             </p>
                             <ConnectButton />
                         </motion.div>
-
-                        {/* User Balance */}
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.6, duration: 0.5 }}
-                        >
-                            <UserBalance />
-                        </motion.div>
-
-                        {/* CTA Button */}
-                        <motion.div
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.8, duration: 0.5 }}
-                            className="text-center"
-                        >
-                            <Button size="lg" className="iqlify-button-primary px-8 py-3 text-base font-medium rounded-xl w-full">
-                                Start Learning & Earning
-                            </Button>
-                        </motion.div>
                     </div>
                 </motion.div>
             ) : (
@@ -93,7 +72,7 @@ export function HomeTab() {
 }
 
 function DashboardContent() {
-    const { isConnected, address } = useAppState();
+    const { isConnected, address, setCurrentTab } = useAppState();
     const { streakData, getStreakMultiplier, userData } = useStreak();
 
     const containerVariants = {
@@ -173,14 +152,13 @@ function DashboardContent() {
                     <h2 className="text-lg font-semibold text-gold-400">Quick Actions</h2>
 
                     <div className="grid gap-3">
-                        <Button className="iqlify-button-primary h-12 rounded-xl">
-                            <Target className="h-5 w-5 mr-2" />
-                            Start Daily Challenge
-                        </Button>
-
-                        <Button variant="outline" className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 h-12 rounded-xl">
+                        <Button 
+                            variant="outline" 
+                            className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 h-12 rounded-xl"
+                            onClick={() => setCurrentTab(TabType.INTERVIEW)}
+                        >
                             <Zap className="h-5 w-5 mr-2" />
-                            Practice Interview
+                            Take Interview
                         </Button>
                     </div>
                 </motion.div>
