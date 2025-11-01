@@ -84,6 +84,9 @@ export const ProfileUsageExample = () => {
 export const ManualProfileExample = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { address } = useAccount();
+    // Note: ProfileBottomSheet requires userId or user object, not walletAddress
+    // This example would need to fetch the user first using useUserProfile hook
+    const { user } = useUserProfile(address);
 
     return (
         <div>
@@ -94,7 +97,8 @@ export const ManualProfileExample = () => {
             <ProfileBottomSheet
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                walletAddress={address}
+                userId={user?._id}
+                user={user ?? undefined}
             />
         </div>
     );
