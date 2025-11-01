@@ -14,6 +14,12 @@ const nextConfig = {
         net: false,
         tls: false,
       };
+      
+      // Ignore React Native async-storage (only needed for mobile, not web)
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@react-native-async-storage/async-storage': false,
+      };
     }
     
     return config;
