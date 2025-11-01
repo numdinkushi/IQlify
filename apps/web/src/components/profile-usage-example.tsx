@@ -71,7 +71,7 @@ export const ProfileUsageExample = () => {
                 isOpen={isProfileOpen}
                 onClose={closeProfile}
                 userId={user?._id}
-                user={user}
+                user={user ?? undefined}
             />
         </div>
     );
