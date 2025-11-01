@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { WagmiProvider, createConfig, http, useConnect, useChainId, useSwitchChain } from "wagmi";
 import { celo, celoAlfajores } from "wagmi/chains";
-import { ConnectButton } from "./connect-button";
 
 const connectors = connectorsForWallets(
   [
