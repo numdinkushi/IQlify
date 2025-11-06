@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useUserByWallet, useUpdateStreak, useUpsertUser } from './use-convex';
+import { useUserByWallet, useRecalculateStreak, useUpsertUser } from './use-convex';
 import { useAppState } from './use-app-state';
 
 // This hook manages user streak data in Convex DB
@@ -10,54 +10,20 @@ import { useAppState } from './use-app-state';
 export function useStreak() {
     const { user, isConnected, address } = useAppState();
     const userData = useUserByWallet(address || ''); // Only query when address exists
-    const updateStreak = useUpdateStreak();
+    const recalculateStreak = useRecalculateStreak();
     const upsertUser = useUpsertUser();
 
-    // Update streak when user data changes
+    // Recalculate streak when user data changes (on app load)
+    // This ensures streak is accurate even if user hasn't completed an interview recently
     useEffect(() => {
-        if (userData && isConnected) {
-            checkAndUpdateStreak();
-        }
-    }, [userData, isConnected]);
-
-    const checkAndUpdateStreak = async () => {
-        if (!userData || !address) return;
-
-        const today = new Date().toDateString();
-        const lastActiveDate = new Date(userData.lastActiveAt).toDateString();
-        const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
-
-        let newStreak = userData.currentStreak;
-
-        if (lastActiveDate === today) {
-            // User was active today, streak continues
-            newStreak = userData.currentStreak;
-        } else if (lastActiveDate === yesterday) {
-            // User was active yesterday, streak continues
-            newStreak = userData.currentStreak;
-        } else if (lastActiveDate !== today && lastActiveDate !== yesterday) {
-            // Streak broken - reset to 0
-            newStreak = 0;
-        }
-
-        // Only update if streak changed
-        if (newStreak !== userData.currentStreak) {
-            await updateStreak({
-                userId: userData._id,
-                newStreak
+        if (userData && isConnected && userData._id) {
+            // Recalculate streak from completed interviews to catch any breaks
+            // This runs on app load to ensure accuracy
+            recalculateStreak({ userId: userData._id }).catch((error) => {
+                console.error('Failed to recalculate streak:', error);
             });
         }
-    };
-
-    const incrementStreak = async () => {
-        if (!userData || !address) return;
-
-        const newStreak = userData.currentStreak + 1;
-        await updateStreak({
-            userId: userData._id,
-            newStreak
-        });
-    };
+    }, [userData?._id, isConnected]); // Only recalculate when user ID changes or connection status changes
 
     const getStreakMultiplier = () => {
         if (!userData) return 1;
@@ -94,10 +60,9 @@ export function useStreak() {
             lastActiveDate: userData ? new Date(userData.lastActiveAt).toDateString() : '',
             streakStartDate: userData ? new Date(userData.createdAt).toDateString() : ''
         },
-        incrementStreak,
         getStreakMultiplier,
         getStreakReward,
-        updateStreakStatus: checkAndUpdateStreak,
+        recalculateStreak: () => userData?._id ? recalculateStreak({ userId: userData._id }) : Promise.resolve(),
         userData
     };
 }

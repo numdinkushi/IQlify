@@ -7,12 +7,14 @@ import { UserBalance } from '@/components/user-balance';
 import { ShareModal } from '@/components/share-modal';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
+import { useEarnings } from '@/hooks/use-earnings';
 import { Wallet, TrendingUp, Download, Send, Copy, Check, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function OverviewTab() {
     const { address } = useAppState();
     const { streakData, userData } = useStreak();
+    const { earnings } = useEarnings();
     const [copied, setCopied] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
 
@@ -85,19 +87,19 @@ export function OverviewTab() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
                                 <p className="text-sm text-muted-foreground">Today</p>
-                                <p className="text-xl font-bold text-gold-400">0 CELO</p>
+                                <p className="text-xl font-bold text-gold-400">{earnings.today.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
                                 <p className="text-sm text-muted-foreground">This Week</p>
-                                <p className="text-xl font-bold text-gold-400">0 CELO</p>
+                                <p className="text-xl font-bold text-gold-400">{earnings.thisWeek.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
                                 <p className="text-sm text-muted-foreground">This Month</p>
-                                <p className="text-xl font-bold text-gold-400">0 CELO</p>
+                                <p className="text-xl font-bold text-gold-400">{earnings.thisMonth.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
                                 <p className="text-sm text-muted-foreground">Total</p>
-                                <p className="text-xl font-bold text-gold-400">0 CELO</p>
+                                <p className="text-xl font-bold text-gold-400">{earnings.total.toFixed(2)} CELO</p>
                             </div>
                         </div>
                     </CardContent>
@@ -109,7 +111,7 @@ export function OverviewTab() {
                 isOpen={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 userRank={userData?.rank || 127}
-                totalEarnings={userData?.totalEarnings || 0}
+                totalEarnings={earnings.total}
                 streak={streakData.currentStreak}
             />
         </div>

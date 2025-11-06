@@ -66,6 +66,22 @@ export const updateInterview = mutation({
     handler: async (ctx, args) => {
         const { interviewId, ...updates } = args;
 
+        // Get interview before updating to check if it was already completed
+        const existingInterview = await ctx.db.get(interviewId);
+        if (!existingInterview) {
+            throw new Error("Interview not found");
+        }
+
+        // Check if interview was already completed (to avoid double-counting)
+        const wasAlreadyCompleted = existingInterview.status === "completed" &&
+            existingInterview.score !== undefined &&
+            existingInterview.earnings !== undefined;
+
+        // If status is being set to "completed" and completedAt is not provided, set it automatically
+        if (args.status === "completed" && !args.completedAt && !existingInterview.completedAt) {
+            updates.completedAt = Date.now();
+        }
+
         // Remove undefined values
         const cleanUpdates = Object.fromEntries(
             Object.entries(updates).filter(([_, value]) => value !== undefined)
@@ -73,7 +89,42 @@ export const updateInterview = mutation({
 
         await ctx.db.patch(interviewId, cleanUpdates);
 
-        return await ctx.db.get(interviewId);
+        const updatedInterview = await ctx.db.get(interviewId);
+        if (!updatedInterview) {
+            throw new Error("Interview not found");
+        }
+
+        // If interview was just marked as completed, recalculate user streak and update stats
+        // Only update if this is the first time it's being marked as completed
+        if (args.status === "completed" && "userId" in updatedInterview && updatedInterview.userId && updatedInterview.completedAt) {
+            try {
+                const userId = updatedInterview.userId as any;
+                const user = await ctx.db.get(userId);
+                if (user && "longestStreak" in user) {
+                    // Recalculate streak from all completed interviews
+                    const { currentStreak, longestStreak } = await calculateStreakFromInterviews(ctx, userId);
+
+                    const updateData: any = {
+                        currentStreak,
+                        longestStreak: Math.max((user as any).longestStreak, longestStreak),
+                        lastActiveAt: Date.now(),
+                    };
+
+                    // Only increment counters if this is a new completion
+                    if (!wasAlreadyCompleted && args.score !== undefined && args.earnings !== undefined) {
+                        updateData.totalInterviews = (user as any).totalInterviews + 1;
+                        updateData.totalEarnings = (user as any).totalEarnings + (args.earnings || 0);
+                    }
+
+                    await ctx.db.patch(userId, updateData);
+                }
+            } catch (error) {
+                // Log error but don't fail the interview update
+                console.error("Failed to update streak after interview completion:", error);
+            }
+        }
+
+        return updatedInterview;
     },
 });
 
@@ -179,48 +230,155 @@ export const getUserInterviewStats = query({
 
         const totalEarnings = completedInterviews.reduce((sum, i) => sum + (i.earnings || 0), 0);
 
-        // Calculate current streak
-        const sortedInterviews = completedInterviews.sort((a, b) => b.completedAt! - a.completedAt!);
-        let currentStreak = 0;
-        let currentTime = Date.now();
-        const oneDay = 24 * 60 * 60 * 1000;
+        // Calculate time-based earnings breakdowns (UTC-based)
+        const now = Date.now();
+        const nowDate = new Date(now);
 
-        for (const interview of sortedInterviews) {
-            const daysSinceCompletion = (currentTime - interview.completedAt!) / oneDay;
-            if (daysSinceCompletion <= 1) {
-                currentStreak++;
-                currentTime -= oneDay; // Move back one day for next iteration
-            } else {
-                break;
+        // Get start of today (midnight UTC)
+        const startOfToday = Date.UTC(
+            nowDate.getUTCFullYear(),
+            nowDate.getUTCMonth(),
+            nowDate.getUTCDate(),
+            0, 0, 0, 0
+        );
+
+        // Get start of this week (Monday UTC)
+        const dayOfWeek = nowDate.getUTCDay();
+        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust when day is Sunday
+        // Create a new date for Monday, handling month boundaries correctly
+        const mondayDate = new Date(Date.UTC(
+            nowDate.getUTCFullYear(),
+            nowDate.getUTCMonth(),
+            nowDate.getUTCDate() + diff,
+            0, 0, 0, 0
+        ));
+        const startOfThisWeek = mondayDate.getTime();
+
+        // Get start of this month (UTC)
+        const startOfMonth = Date.UTC(
+            nowDate.getUTCFullYear(),
+            nowDate.getUTCMonth(),
+            1,
+            0, 0, 0, 0
+        );
+
+        let todayEarnings = 0;
+        let thisWeekEarnings = 0;
+        let thisMonthEarnings = 0;
+
+        for (const interview of completedInterviews) {
+            if (!interview.completedAt) continue;
+
+            const earnings = interview.earnings || 0;
+
+            // Compare timestamps directly
+            if (interview.completedAt >= startOfToday) {
+                todayEarnings += earnings;
+            }
+
+            if (interview.completedAt >= startOfThisWeek) {
+                thisWeekEarnings += earnings;
+            }
+
+            if (interview.completedAt >= startOfMonth) {
+                thisMonthEarnings += earnings;
             }
         }
 
-        // Calculate longest streak (simplified)
-        let longestStreak = 0;
-        let tempStreak = 0;
-        for (let i = 0; i < sortedInterviews.length - 1; i++) {
-            const current = sortedInterviews[i];
-            const next = sortedInterviews[i + 1];
-            const daysBetween = (current.completedAt! - next.completedAt!) / oneDay;
-
-            if (daysBetween <= 1) {
-                tempStreak++;
-            } else {
-                longestStreak = Math.max(longestStreak, tempStreak);
-                tempStreak = 0;
-            }
-        }
-        longestStreak = Math.max(longestStreak, tempStreak);
+        // Calculate streak using UTC-based logic (same as in updateUserStatsAfterInterview)
+        const { currentStreak, longestStreak } = await calculateStreakFromInterviews(ctx, args.userId);
 
         return {
             totalInterviews,
             averageScore,
             totalEarnings,
+            todayEarnings,
+            thisWeekEarnings,
+            thisMonthEarnings,
             currentStreak,
             longestStreak,
         };
     },
 });
+
+// Helper function to calculate streak from completed interviews (UTC-based)
+async function calculateStreakFromInterviews(ctx: any, userId: any) {
+    // Get all completed interviews for the user
+    const interviews = await ctx.db
+        .query("interviews")
+        .withIndex("by_user", (q: any) => q.eq("userId", userId))
+        .filter((q: any) => q.eq(q.field("status"), "completed"))
+        .collect();
+
+    // Filter interviews with valid completedAt timestamps
+    const completedInterviews = interviews.filter((i: any) => i.completedAt !== undefined && i.completedAt !== null);
+
+    if (completedInterviews.length === 0) {
+        return { currentStreak: 0, longestStreak: 0 };
+    }
+
+    // Get unique completion dates (UTC, normalized to midnight)
+    const completionDates = new Set<number>();
+    for (const interview of completedInterviews) {
+        const date = new Date(interview.completedAt!);
+        // Normalize to UTC midnight
+        const utcMidnight = Date.UTC(
+            date.getUTCFullYear(),
+            date.getUTCMonth(),
+            date.getUTCDate()
+        );
+        completionDates.add(utcMidnight);
+    }
+
+    // Convert to sorted array (descending)
+    const sortedDates = Array.from(completionDates).sort((a, b) => b - a);
+
+    // Calculate current streak
+    const now = Date.now();
+    const today = new Date(now);
+    const todayUTC = Date.UTC(
+        today.getUTCFullYear(),
+        today.getUTCMonth(),
+        today.getUTCDate()
+    );
+
+    let currentStreak = 0;
+    let expectedDate = todayUTC;
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    for (const date of sortedDates) {
+        if (date === expectedDate) {
+            currentStreak++;
+            expectedDate -= oneDay; // Move to previous day
+        } else if (date < expectedDate) {
+            // Gap found - streak broken
+            break;
+        }
+        // If date > expectedDate, it's in the future (shouldn't happen, but skip it)
+    }
+
+    // Calculate longest streak
+    let longestStreak = 0;
+    let tempStreak = 1;
+
+    for (let i = 0; i < sortedDates.length - 1; i++) {
+        const current = sortedDates[i];
+        const next = sortedDates[i + 1];
+        const daysBetween = (current - next) / oneDay;
+
+        if (daysBetween === 1) {
+            // Consecutive days
+            tempStreak++;
+        } else {
+            // Gap found - save current streak and reset
+            longestStreak = Math.max(longestStreak, tempStreak);
+            tempStreak = 1;
+        }
+    }
+    longestStreak = Math.max(longestStreak, tempStreak);
+
+    return { currentStreak, longestStreak };
+}
 
 // Update user statistics after interview completion
 export const updateUserStatsAfterInterview = mutation({
@@ -240,20 +398,10 @@ export const updateUserStatsAfterInterview = mutation({
             totalEarnings: user.totalEarnings + args.earnings,
         };
 
-        // Update streak logic
-        const oneDay = 24 * 60 * 60 * 1000;
-        const daysSinceLastActive = (now - user.lastActiveAt) / oneDay;
-
-        if (daysSinceLastActive <= 1) {
-            // Continuing streak
-            updateData.currentStreak = user.currentStreak + 1;
-        } else {
-            // New streak
-            updateData.currentStreak = 1;
-        }
-
-        // Update longest streak
-        updateData.longestStreak = Math.max(user.longestStreak, updateData.currentStreak);
+        // Recalculate streak from all completed interviews (UTC-based)
+        const { currentStreak, longestStreak } = await calculateStreakFromInterviews(ctx, args.userId);
+        updateData.currentStreak = currentStreak;
+        updateData.longestStreak = Math.max(user.longestStreak, longestStreak);
 
         await ctx.db.patch(args.userId, updateData);
 

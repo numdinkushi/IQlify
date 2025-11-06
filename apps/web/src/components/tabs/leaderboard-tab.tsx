@@ -6,12 +6,18 @@ import { Button } from '@/components/ui/button';
 import { ShareModal } from '@/components/share-modal';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
+import { useEarnings } from '@/hooks/use-earnings';
+import { useLeaderboard, useUserRank, useUserInterviewPoints } from '@/hooks/use-convex';
 import { Trophy, Medal, Award, TrendingUp, Users, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function LeaderboardTab() {
     const { address, isConnected } = useAppState();
     const { streakData, userData } = useStreak();
+    const { earnings } = useEarnings();
+    const leaderboardData = useLeaderboard(10);
+    const userRank = useUserRank(userData?._id);
+    const userInterviewPoints = useUserInterviewPoints(userData?._id);
     const [showShareModal, setShowShareModal] = useState(false);
 
     const containerVariants = {
@@ -36,13 +42,15 @@ export function LeaderboardTab() {
         }
     };
 
-    const mockLeaderboard = [
-        { rank: 1, name: 'Alex Chen', earnings: 1250, streak: 45, skillLevel: 'Advanced' },
-        { rank: 2, name: 'Sarah Kim', earnings: 1180, streak: 32, skillLevel: 'Advanced' },
-        { rank: 3, name: 'Mike Johnson', earnings: 1050, streak: 28, skillLevel: 'Intermediate' },
-        { rank: 4, name: 'Emma Wilson', earnings: 980, streak: 25, skillLevel: 'Intermediate' },
-        { rank: 5, name: 'David Lee', earnings: 920, streak: 22, skillLevel: 'Advanced' }
-    ];
+    // Map leaderboard data from Convex to component format
+    const leaderboard = (leaderboardData || []).map((user) => ({
+        rank: user.rank,
+        name: user.name,
+        interviewPoints: user.interviewPoints,
+        earnings: user.earnings, // Keep for reference
+        streak: user.streak,
+        skillLevel: user.skillLevel,
+    }));
 
     const getRankIcon = (rank: number) => {
         switch (rank) {
@@ -81,7 +89,7 @@ export function LeaderboardTab() {
                 {/* Header */}
                 <motion.div variants={itemVariants} className="text-center space-y-2">
                     <h1 className="text-2xl font-bold iqlify-gold-text">Leaderboard</h1>
-                    <p className="text-muted-foreground">Top performers this week</p>
+                    <p className="text-muted-foreground">Ranked by interview points</p>
                 </motion.div>
 
                 {/* Your Rank */}
@@ -106,8 +114,8 @@ export function LeaderboardTab() {
                         </CardHeader>
                         <CardContent>
                             <div className="text-center space-y-2">
-                                <p className="text-3xl font-bold text-gold-400">#{userData?.rank || 127}</p>
-                                <p className="text-muted-foreground">{userData?.totalEarnings || 0} CELO earned</p>
+                                <p className="text-3xl font-bold text-gold-400">#{userRank ?? '—'}</p>
+                                <p className="text-muted-foreground">{(userInterviewPoints ?? 0).toLocaleString()} interview points</p>
                                 <p className="text-sm text-muted-foreground">Keep practicing to climb the ranks!</p>
                             </div>
                         </CardContent>
@@ -130,31 +138,39 @@ export function LeaderboardTab() {
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {mockLeaderboard.map((user, index) => (
-                                <motion.div
-                                    key={user.rank}
-                                    initial={{ x: -20, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ delay: index * 0.1 }}
-                                    className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex items-center justify-center w-8">
-                                            {getRankIcon(user.rank)}
+                            {leaderboard.length > 0 ? (
+                                leaderboard.map((user, index) => (
+                                    <motion.div
+                                        key={user.rank}
+                                        initial={{ x: -20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex items-center justify-center w-8">
+                                                {getRankIcon(user.rank)}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{user.name}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {user.streak} day streak •
+                                                    <span className={getSkillLevelColor(user.skillLevel)}> {user.skillLevel}</span>
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold">{user.name}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {user.streak} day streak •
-                                                <span className={getSkillLevelColor(user.skillLevel)}> {user.skillLevel}</span>
-                                            </p>
+                                        <div className="text-right">
+                                            <p className="font-semibold text-gold-400">{user.interviewPoints.toLocaleString()} pts</p>
                                         </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="font-semibold text-gold-400">{user.earnings} CELO</p>
-                                    </div>
-                                </motion.div>
-                            ))}
+                                    </motion.div>
+                                ))
+                            ) : (
+                                <div className="text-center py-8 text-muted-foreground">
+                                    <Trophy className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                                    <p>No leaderboard data yet</p>
+                                    <p className="text-sm">Start earning to see top performers!</p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </motion.div>
@@ -259,8 +275,8 @@ export function LeaderboardTab() {
                 <ShareModal
                     isOpen={showShareModal}
                     onClose={() => setShowShareModal(false)}
-                    userRank={userData?.rank || 127}
-                    totalEarnings={userData?.totalEarnings || 0}
+                    userRank={userRank ?? 0}
+                    totalEarnings={earnings.total}
                     streak={streakData.currentStreak}
                 />
             </div>
