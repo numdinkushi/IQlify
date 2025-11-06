@@ -3,8 +3,16 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { History, ArrowUpRight, ArrowDownLeft, Clock } from 'lucide-react';
+import { useAppState } from '@/hooks/use-app-state';
+import { useUserByWallet, useUserTransactions } from '@/hooks/use-convex';
+import { useEarnings } from '@/hooks/use-earnings';
+import { formatTimeAgo } from '@/lib/app-utils';
 
 export function TransactionsTab() {
+    const { address } = useAppState();
+    const userData = useUserByWallet(address || '');
+    const transactionsData = useUserTransactions(userData?._id, 'earned', 20);
+    const { earnings } = useEarnings();
     const itemVariants = {
         hidden: { y: 20, opacity: 0 },
         visible: {
@@ -17,36 +25,28 @@ export function TransactionsTab() {
         }
     };
 
-    // Mock transaction data - replace with real data from Convex
-    const transactions = [
-        {
-            id: '1',
-            type: 'earning',
-            amount: '2.5',
-            token: 'CELO',
-            description: 'Interview Challenge Reward',
-            timestamp: '2 hours ago',
-            status: 'completed'
-        },
-        {
-            id: '2',
-            type: 'earning',
-            amount: '1.2',
-            token: 'CELO',
-            description: 'Daily Streak Bonus',
-            timestamp: '1 day ago',
-            status: 'completed'
-        },
-        {
-            id: '3',
-            type: 'earning',
-            amount: '0.8',
-            token: 'CELO',
-            description: 'Skill Assessment Reward',
-            timestamp: '3 days ago',
-            status: 'completed'
-        }
-    ];
+    // Map transactions from Convex to component format
+    const transactions = (transactionsData || []).map((tx) => {
+        // Map transaction type from Convex to component format
+        const type = tx.type === 'earned' ? 'earning' : tx.type === 'withdrawn' ? 'withdrawal' : 'spent';
+        
+        // Format amount - convert to CELO if needed
+        const amount = tx.currency === 'celo' 
+            ? tx.amount 
+            : tx.currency === 'cUSD' 
+                ? tx.amount * 0.1 // Simple conversion
+                : 0;
+
+        return {
+            id: tx._id,
+            type,
+            amount: amount.toFixed(2),
+            token: tx.currency.toUpperCase() === 'CELO' ? 'CELO' : 'CELO',
+            description: tx.description || 'Transaction',
+            timestamp: formatTimeAgo(tx.timestamp),
+            status: 'completed' // All stored transactions are completed
+        };
+    });
 
     const getTransactionIcon = (type: string) => {
         switch (type) {
@@ -102,7 +102,7 @@ export function TransactionsTab() {
                                         </div>
                                         <div className="text-right">
                                             <p className={`text-sm font-semibold ${getTransactionColor(transaction.type)}`}>
-                                                +{transaction.amount} {transaction.token}
+                                                {transaction.type === 'earning' ? '+' : transaction.type === 'withdrawal' ? '-' : ''}{transaction.amount} {transaction.token}
                                             </p>
                                             <p className="text-xs text-muted-foreground capitalize">
                                                 {transaction.status}
@@ -132,11 +132,11 @@ export function TransactionsTab() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
                                 <p className="text-sm text-muted-foreground">Total Earned</p>
-                                <p className="text-xl font-bold text-success">4.5 CELO</p>
+                                <p className="text-xl font-bold text-success">{earnings.total.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
                                 <p className="text-sm text-muted-foreground">This Month</p>
-                                <p className="text-xl font-bold text-gold-400">3.2 CELO</p>
+                                <p className="text-xl font-bold text-gold-400">{earnings.thisMonth.toFixed(2)} CELO</p>
                             </div>
                         </div>
                     </CardContent>

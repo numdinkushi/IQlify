@@ -45,6 +45,21 @@ export function useJoinChallenge() {
     return useMutation(api.challenges.joinChallenge);
 }
 
+// Transaction hooks
+export function useUserTransactions(userId: Id<"users"> | undefined, type?: "earned" | "spent" | "withdrawn", limit?: number) {
+    return useQuery(
+        api.transactions.getUserTransactions,
+        userId ? { userId, type, limit } : "skip"
+    );
+}
+
+export function useUserEarningsSummary(userId: Id<"users"> | undefined) {
+    return useQuery(
+        api.transactions.getUserEarningsSummary,
+        userId ? { userId } : "skip"
+    );
+}
+
 // Combined hooks for common operations
 export function useUserOperations() {
     const upsertUser = useUpsertUser();

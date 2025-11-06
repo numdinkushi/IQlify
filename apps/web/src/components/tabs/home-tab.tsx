@@ -7,6 +7,7 @@ import { ConnectButton } from '@/components/connect-button';
 import { ClientOnly } from '@/components/client-only';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
+import { useEarnings } from '@/hooks/use-earnings';
 import { TabType } from '@/lib/types';
 import { Target, TrendingUp, Clock, Zap } from 'lucide-react';
 
@@ -74,6 +75,7 @@ export function HomeTab() {
 function DashboardContent() {
     const { isConnected, address, setCurrentTab } = useAppState();
     const { streakData, getStreakMultiplier, userData } = useStreak();
+    const { earnings } = useEarnings();
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -118,7 +120,7 @@ function DashboardContent() {
                         <CardContent className="p-4 text-center">
                             <TrendingUp className="h-8 w-8 text-gold-400 mx-auto mb-2" />
                             <p className="text-sm text-muted-foreground">Total Earnings</p>
-                            <p className="text-xl font-bold text-gold-400">0 CELO</p>
+                            <p className="text-xl font-bold text-gold-400">{earnings.total.toFixed(2)} CELO</p>
                         </CardContent>
                     </Card>
 
