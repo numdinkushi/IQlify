@@ -52,7 +52,7 @@ export const ToastComponent = ({ toast, onRemove }: ToastProps) => {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className={`
         relative flex items-start gap-3 p-4 rounded-lg border backdrop-blur-sm
-        min-w-[320px] max-w-[400px] shadow-lg
+        min-w-[320px] max-w-[400px] shadow-lg pointer-events-auto
         ${getToastStyles(toast.type)}
       `}
         >

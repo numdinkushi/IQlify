@@ -10,7 +10,7 @@ interface ToastContainerProps {
 }
 
 const getContainerStyles = (position: ToastPosition) => {
-    const baseStyles = 'fixed z-50 flex flex-col gap-2 pointer-events-none';
+    const baseStyles = 'fixed z-[9999] flex flex-col gap-2 pointer-events-none';
 
     switch (position) {
         case ToastPosition.TOP_LEFT:

@@ -156,7 +156,7 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
             const referralTag = '0x0000000000000000000000000000000000000000000000000000000000000000' as const;
 
             console.log('[ui] calling claim with args:', { amountCelo, nonce, deadline, chainId: TARGET_CHAIN_ID });
-            const txHash = await claim({
+            const result = await claim({
                 interviewId: interview._id,
                 amountCelo,
                 nonce,
@@ -165,14 +165,34 @@ export const ResultsScreen = ({ interview, onBack, onClaim }: ResultsScreenProps
                 chainId: TARGET_CHAIN_ID,
             });
 
-            console.log('✅ Claimed tx:', txHash);
+            const txHash = typeof result === 'string' ? result : result.hash;
+            const claimedAmount = typeof result === 'object' && result.claimedAmountCelo
+                ? result.claimedAmountCelo
+                : amountCelo;
+
+            console.log('✅ Claimed tx:', txHash, 'Amount:', claimedAmount, 'CELO');
             setIsClaimed(true);
 
-            // Show success toast
+            // Show success toast with actual amount claimed
+            const celoscanUrl = TARGET_CHAIN_ID === celo.id
+                ? `https://celoscan.io/tx/${txHash}`
+                : `https://alfajores.celoscan.io/tx/${txHash}`;
+
+            // Direct link to Internal Transactions tab (if available)
+            const internalTxUrl = TARGET_CHAIN_ID === celo.id
+                ? `https://celoscan.io/tx/${txHash}#internaltx`
+                : `https://alfajores.celoscan.io/tx/${txHash}#internaltx`;
+
             success(
                 'Rewards claimed!',
-                `Transaction: ${txHash}`,
-                { duration: 10000 }
+                `You received ${claimedAmount} CELO. The "Transactions" tab shows 0 CELO because the contract sends the reward to you (not you sending to contract). Check the "Internal Transactions" tab on CeloScan to see the actual transfer.`,
+                {
+                    duration: 20000,
+                    action: {
+                        label: 'View on CeloScan',
+                        onClick: () => window.open(celoscanUrl, '_blank')
+                    }
+                }
             );
 
             onClaim?.();
