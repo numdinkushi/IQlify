@@ -91,6 +91,13 @@ export function useUserInterviews(userId: Id<"users"> | undefined, limit?: numbe
     );
 }
 
+export function useUserInterviewStats(userId: Id<"users"> | undefined) {
+    return useQuery(
+        api.interviews.getUserInterviewStats,
+        userId ? { userId } : "skip"
+    );
+}
+
 // Combined hooks for common operations
 export function useUserOperations() {
     const upsertUser = useUpsertUser();

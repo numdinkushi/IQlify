@@ -77,6 +77,11 @@ export const updateInterview = mutation({
             existingInterview.score !== undefined &&
             existingInterview.earnings !== undefined;
 
+        // If status is being set to "completed" and completedAt is not provided, set it automatically
+        if (args.status === "completed" && !args.completedAt && !existingInterview.completedAt) {
+            updates.completedAt = Date.now();
+        }
+
         // Remove undefined values
         const cleanUpdates = Object.fromEntries(
             Object.entries(updates).filter(([_, value]) => value !== undefined)
@@ -225,6 +230,61 @@ export const getUserInterviewStats = query({
 
         const totalEarnings = completedInterviews.reduce((sum, i) => sum + (i.earnings || 0), 0);
 
+        // Calculate time-based earnings breakdowns (UTC-based)
+        const now = Date.now();
+        const nowDate = new Date(now);
+
+        // Get start of today (midnight UTC)
+        const startOfToday = Date.UTC(
+            nowDate.getUTCFullYear(),
+            nowDate.getUTCMonth(),
+            nowDate.getUTCDate(),
+            0, 0, 0, 0
+        );
+
+        // Get start of this week (Monday UTC)
+        const dayOfWeek = nowDate.getUTCDay();
+        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust when day is Sunday
+        // Create a new date for Monday, handling month boundaries correctly
+        const mondayDate = new Date(Date.UTC(
+            nowDate.getUTCFullYear(),
+            nowDate.getUTCMonth(),
+            nowDate.getUTCDate() + diff,
+            0, 0, 0, 0
+        ));
+        const startOfThisWeek = mondayDate.getTime();
+
+        // Get start of this month (UTC)
+        const startOfMonth = Date.UTC(
+            nowDate.getUTCFullYear(),
+            nowDate.getUTCMonth(),
+            1,
+            0, 0, 0, 0
+        );
+
+        let todayEarnings = 0;
+        let thisWeekEarnings = 0;
+        let thisMonthEarnings = 0;
+
+        for (const interview of completedInterviews) {
+            if (!interview.completedAt) continue;
+
+            const earnings = interview.earnings || 0;
+
+            // Compare timestamps directly
+            if (interview.completedAt >= startOfToday) {
+                todayEarnings += earnings;
+            }
+
+            if (interview.completedAt >= startOfThisWeek) {
+                thisWeekEarnings += earnings;
+            }
+
+            if (interview.completedAt >= startOfMonth) {
+                thisMonthEarnings += earnings;
+            }
+        }
+
         // Calculate streak using UTC-based logic (same as in updateUserStatsAfterInterview)
         const { currentStreak, longestStreak } = await calculateStreakFromInterviews(ctx, args.userId);
 
@@ -232,6 +292,9 @@ export const getUserInterviewStats = query({
             totalInterviews,
             averageScore,
             totalEarnings,
+            todayEarnings,
+            thisWeekEarnings,
+            thisMonthEarnings,
             currentStreak,
             longestStreak,
         };

@@ -158,7 +158,7 @@ function DashboardContent() {
                     <h2 className="text-lg font-semibold text-gold-400">Quick Actions</h2>
 
                     <div className="grid gap-3">
-git                        <Button
+                        <Button
                             variant="outline"
                             className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 h-12 rounded-xl"
                             onClick={() => setCurrentTab(TabType.INTERVIEW)}
