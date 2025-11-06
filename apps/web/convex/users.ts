@@ -128,6 +128,146 @@ export const updateEarnings = mutation({
     },
 });
 
+// Get user's total interview points
+export const getUserInterviewPoints = query({
+    args: {
+        userId: v.id("users"),
+    },
+    handler: async (ctx, args) => {
+        const interviews = await ctx.db
+            .query("interviews")
+            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .filter((q) => q.eq(q.field("status"), "completed"))
+            .collect();
+
+        const interviewPoints = interviews.reduce((sum, interview) => {
+            return sum + (interview.score || 0);
+        }, 0);
+
+        return interviewPoints;
+    },
+});
+
+// Get user's rank by calculating position in sorted leaderboard
+export const getUserRank = query({
+    args: {
+        userId: v.id("users"),
+    },
+    handler: async (ctx, args) => {
+        // Get all users
+        const allUsers = await ctx.db
+            .query("users")
+            .collect();
+
+        // Calculate interview points for each user (sum of all interview scores)
+        const usersWithPoints = await Promise.all(
+            allUsers.map(async (user) => {
+                const interviews = await ctx.db
+                    .query("interviews")
+                    .withIndex("by_user", (q) => q.eq("userId", user._id))
+                    .filter((q) => q.eq(q.field("status"), "completed"))
+                    .collect();
+
+                const interviewPoints = interviews.reduce((sum, interview) => {
+                    return sum + (interview.score || 0);
+                }, 0);
+
+                return {
+                    ...user,
+                    interviewPoints,
+                };
+            })
+        );
+
+        // Sort by interview points descending, then by currentStreak descending as tiebreaker
+        const sortedUsers = usersWithPoints.sort((a, b) => {
+            if (b.interviewPoints !== a.interviewPoints) {
+                return b.interviewPoints - a.interviewPoints;
+            }
+            return b.currentStreak - a.currentStreak;
+        });
+
+        // Find the user's position in the sorted list
+        const userIndex = sortedUsers.findIndex(user => user._id === args.userId);
+
+        // Return rank (1-based index, or null if user not found)
+        return userIndex >= 0 ? userIndex + 1 : null;
+    },
+});
+
+// Get leaderboard (top users by interview points)
+export const getLeaderboard = query({
+    args: {
+        limit: v.optional(v.number()),
+    },
+    handler: async (ctx, args) => {
+        const limit = args.limit || 10;
+
+        // Get all users
+        const allUsers = await ctx.db
+            .query("users")
+            .collect();
+
+        // Calculate interview points for each user (sum of all interview scores)
+        const usersWithPoints = await Promise.all(
+            allUsers.map(async (user) => {
+                const interviews = await ctx.db
+                    .query("interviews")
+                    .withIndex("by_user", (q) => q.eq("userId", user._id))
+                    .filter((q) => q.eq(q.field("status"), "completed"))
+                    .collect();
+
+                const interviewPoints = interviews.reduce((sum, interview) => {
+                    return sum + (interview.score || 0);
+                }, 0);
+
+                return {
+                    ...user,
+                    interviewPoints,
+                };
+            })
+        );
+
+        // Sort by interview points descending, then by currentStreak descending as tiebreaker
+        const sortedUsers = usersWithPoints.sort((a, b) => {
+            if (b.interviewPoints !== a.interviewPoints) {
+                return b.interviewPoints - a.interviewPoints;
+            }
+            return b.currentStreak - a.currentStreak;
+        });
+
+        // Take top N users and add rank
+        const leaderboard = sortedUsers.slice(0, limit).map((user, index) => {
+            // Format user name
+            const name = user.firstName && user.lastName
+                ? `${user.firstName} ${user.lastName}`
+                : user.firstName || user.lastName
+                    ? user.firstName || user.lastName
+                    : user.walletAddress
+                        ? `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`
+                        : 'Anonymous';
+
+            // Format skill level (capitalize first letter)
+            const skillLevel = user.skillLevel
+                ? user.skillLevel.charAt(0).toUpperCase() + user.skillLevel.slice(1)
+                : 'Beginner';
+
+            return {
+                _id: user._id,
+                rank: index + 1,
+                name,
+                interviewPoints: user.interviewPoints,
+                earnings: user.totalEarnings, // Keep for reference but not used for ranking
+                streak: user.currentStreak,
+                skillLevel,
+                walletAddress: user.walletAddress,
+            };
+        });
+
+        return leaderboard;
+    },
+});
+
 // Update user profile
 export const updateUserProfile = mutation({
     args: {

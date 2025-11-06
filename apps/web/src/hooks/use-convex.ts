@@ -60,6 +60,25 @@ export function useUserEarningsSummary(userId: Id<"users"> | undefined) {
     );
 }
 
+// Leaderboard hooks
+export function useLeaderboard(limit?: number) {
+    return useQuery(api.users.getLeaderboard, { limit });
+}
+
+export function useUserRank(userId: Id<"users"> | undefined) {
+    return useQuery(
+        api.users.getUserRank,
+        userId ? { userId } : "skip"
+    );
+}
+
+export function useUserInterviewPoints(userId: Id<"users"> | undefined) {
+    return useQuery(
+        api.users.getUserInterviewPoints,
+        userId ? { userId } : "skip"
+    );
+}
+
 // Combined hooks for common operations
 export function useUserOperations() {
     const upsertUser = useUpsertUser();
