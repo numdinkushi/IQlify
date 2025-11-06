@@ -20,6 +20,10 @@ export function useUpdateStreak() {
     return useMutation(api.users.updateStreak);
 }
 
+export function useRecalculateStreak() {
+    return useMutation(api.users.recalculateStreak);
+}
+
 export function useUpdateEarnings() {
     return useMutation(api.users.updateEarnings);
 }
