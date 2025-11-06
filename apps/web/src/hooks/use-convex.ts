@@ -79,6 +79,14 @@ export function useUserInterviewPoints(userId: Id<"users"> | undefined) {
     );
 }
 
+// Interview hooks
+export function useUserInterviews(userId: Id<"users"> | undefined, limit?: number) {
+    return useQuery(
+        api.interviews.getUserInterviews,
+        userId ? { userId, limit } : "skip"
+    );
+}
+
 // Combined hooks for common operations
 export function useUserOperations() {
     const upsertUser = useUpsertUser();

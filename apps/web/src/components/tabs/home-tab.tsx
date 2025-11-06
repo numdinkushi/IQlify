@@ -8,8 +8,10 @@ import { ClientOnly } from '@/components/client-only';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
 import { useEarnings } from '@/hooks/use-earnings';
+import { useUserByWallet, useUserInterviews } from '@/hooks/use-convex';
 import { TabType } from '@/lib/types';
-import { Target, TrendingUp, Clock, Zap } from 'lucide-react';
+import { formatTimeAgo } from '@/lib/app-utils';
+import { Target, TrendingUp, Clock, Zap, Trophy, CheckCircle, Coins } from 'lucide-react';
 
 export function HomeTab() {
     const { isConnected, address } = useAppState();
@@ -76,6 +78,8 @@ function DashboardContent() {
     const { isConnected, address, setCurrentTab } = useAppState();
     const { streakData, getStreakMultiplier, userData } = useStreak();
     const { earnings } = useEarnings();
+    const userDataFromWallet = useUserByWallet(address || '');
+    const recentInterviews = useUserInterviews(userDataFromWallet?._id, 5);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -154,8 +158,8 @@ function DashboardContent() {
                     <h2 className="text-lg font-semibold text-gold-400">Quick Actions</h2>
 
                     <div className="grid gap-3">
-                        <Button 
-                            variant="outline" 
+git                        <Button
+                            variant="outline"
                             className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 h-12 rounded-xl"
                             onClick={() => setCurrentTab(TabType.INTERVIEW)}
                         >
@@ -172,11 +176,85 @@ function DashboardContent() {
                             <CardTitle className="text-gold-400">Recent Activity</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-center py-8 text-muted-foreground">
-                                <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                                <p>No recent activity</p>
-                                <p className="text-sm">Start your first challenge to see activity here</p>
-                            </div>
+                            {recentInterviews && recentInterviews.length > 0 ? (
+                                <div className="space-y-3">
+                                    {recentInterviews.map((interview, index) => {
+                                        const isCompleted = interview.status === 'completed';
+                                        const isClaimed = interview.claimed === true;
+
+                                        return (
+                                            <motion.div
+                                                key={interview._id}
+                                                initial={{ x: -20, opacity: 0 }}
+                                                animate={{ x: 0, opacity: 1 }}
+                                                transition={{ delay: index * 0.1 }}
+                                                className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg border border-gold-400/10 hover:border-gold-400/20 transition-colors"
+                                            >
+                                                <div className="flex-shrink-0 mt-0.5">
+                                                    {isCompleted && isClaimed ? (
+                                                        <div className="w-10 h-10 rounded-full bg-green-400/20 flex items-center justify-center">
+                                                            <CheckCircle className="h-5 w-5 text-green-400" />
+                                                        </div>
+                                                    ) : isCompleted ? (
+                                                        <div className="w-10 h-10 rounded-full bg-gold-400/20 flex items-center justify-center">
+                                                            <Trophy className="h-5 w-5 text-gold-400" />
+                                                        </div>
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded-full bg-blue-400/20 flex items-center justify-center">
+                                                            <Target className="h-5 w-5 text-blue-400" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-start justify-between gap-2">
+                                                        <div className="flex-1">
+                                                            <p className="font-semibold text-foreground text-sm">
+                                                                {isCompleted
+                                                                    ? `Interview Completed${interview.score !== undefined ? ` - ${interview.score}%` : ''}`
+                                                                    : interview.status === 'in_progress'
+                                                                        ? 'Interview in Progress'
+                                                                        : 'Interview Started'
+                                                                }
+                                                            </p>
+                                                            <p className="text-xs text-muted-foreground mt-1">
+                                                                {interview.interviewType
+                                                                    ? interview.interviewType.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+                                                                    : 'Technical Interview'
+                                                                }
+                                                                {interview.skillLevel && ` • ${interview.skillLevel.charAt(0).toUpperCase() + interview.skillLevel.slice(1)}`}
+                                                            </p>
+                                                            {interview.completedAt && (
+                                                                <p className="text-xs text-muted-foreground mt-1">
+                                                                    {formatTimeAgo(interview.completedAt)}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        {isCompleted && interview.earnings && interview.earnings > 0 && (
+                                                            <div className="flex items-center gap-1 text-gold-400 text-sm font-semibold flex-shrink-0">
+                                                                <Coins className="h-4 w-4" />
+                                                                <span>{interview.earnings.toFixed(2)}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    {isCompleted && !isClaimed && interview.earnings && interview.earnings > 0 && (
+                                                        <div className="mt-2 pt-2 border-t border-gold-400/10">
+                                                            <p className="text-xs text-gold-400">
+                                                                💰 {interview.earnings.toFixed(2)} CELO reward available
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8 text-muted-foreground">
+                                    <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                                    <p>No recent activity</p>
+                                    <p className="text-sm">Start your first interview to see activity here</p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </motion.div>
