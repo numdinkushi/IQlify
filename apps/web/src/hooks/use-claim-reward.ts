@@ -67,6 +67,7 @@ export function useClaimReward() {
 
             // 3) Divvi data suffix (optional - skip if Divvi not configured)
             let suffix = undefined;
+            let shouldSubmitToDivvi = false;
             try {
                 if (Divvi && typeof Divvi.getDataSuffix === 'function') {
                     const divviConsumer = (args.consumer as any) || (DIVVI_CONSUMER || undefined);
@@ -77,23 +78,63 @@ export function useClaimReward() {
                             consumer: divviConsumer,
                             providers: divviProviders,
                         });
+
+                        // Validate suffix format
+                        if (suffix && typeof suffix === 'string' && suffix.length > 0) {
+                            shouldSubmitToDivvi = true;
+                            console.log("[claim] Divvi suffix generated successfully");
+                        } else {
+                            console.log("[claim] Divvi suffix is invalid, skipping Divvi integration");
+                            suffix = undefined;
+                        }
+                    } else {
+                        console.log("[claim] Divvi consumer/providers not configured, skipping");
                     }
                 } else {
                     console.log("[claim] Divvi SDK not available or getDataSuffix not a function, skipping");
                 }
             } catch (e) {
-                console.log("[claim] Divvi prefix generation failed, continuing without:", e);
+                console.log("[claim] Divvi suffix generation failed, continuing without:", e);
+                suffix = undefined;
             }
 
-            const combinedData = suffix ? (callData + (suffix.startsWith("0x") ? suffix.slice(2) : suffix)) as `0x${string}` : (callData as `0x${string}`);
-            console.log("[claim] Divvi suffix status:", { hasSuffix: !!suffix, suffix });
-            console.log("[claim] sending tx", { to: REWARD_CONTRACT_ADDRESS, chainId: args.chainId, dataLen: combinedData.length });
+            // Combine callData with suffix if valid
+            // callData already has "0x" prefix, suffix should be hex without "0x"
+            let combinedData: `0x${string}`;
+            if (suffix && shouldSubmitToDivvi) {
+                const suffixHex = suffix.startsWith("0x") ? suffix.slice(2) : suffix;
+                combinedData = (callData + suffixHex) as `0x${string}`;
+            } else {
+                combinedData = callData as `0x${string}`;
+            }
+
+            console.log("[claim] Divvi suffix status:", {
+                hasSuffix: !!suffix && shouldSubmitToDivvi,
+                suffixLength: suffix ? suffix.length : 0,
+                shouldSubmitToDivvi
+            });
+            console.log("[claim] sending tx", {
+                to: REWARD_CONTRACT_ADDRESS,
+                chainId: args.chainId,
+                dataLen: combinedData.length,
+                amountCelo: args.amountCelo,
+                amountWei: amountWei.toString()
+            });
+
+            // Validate amount is not zero
+            if (amountWei === BigInt(0)) {
+                throw new Error("Cannot claim zero amount. Please check the earnings value.");
+            }
 
             // 4) send tx
+            // Note: value is 0 because the user is NOT sending CELO to the contract.
+            // The contract will send the reward amount to the user via an internal transfer.
+            // This is why MetaMask/CeloScan show 0 CELO - they show the transaction value (what's sent TO the contract),
+            // not what the contract sends back. The actual reward is sent by the contract in claimWithSignature().
             const hash = await sendTransactionAsync({
                 to: REWARD_CONTRACT_ADDRESS as `0x${string}`,
                 data: combinedData,
-                value: BigInt(0), // No CELO value sent, contract will send the reward
+                value: BigInt(0), // Transaction value is 0 - contract sends reward via internal transfer
                 chainId: args.chainId,
             });
             console.log("[claim] tx hash", hash);
@@ -127,7 +168,8 @@ export function useClaimReward() {
                 "type": "event"
             };
 
-            // Find the RewardClaimed event in the logs
+            // Find the RewardClaimed event in the logs and extract the actual amount
+            let claimedAmountWei = amountWei; // Default to requested amount
             try {
                 for (const log of receipt.logs) {
                     try {
@@ -137,9 +179,15 @@ export function useClaimReward() {
                             topics: log.topics,
                         });
                         console.log("[claim] ✅ RewardClaimed event decoded:", decoded);
-                        console.log("[claim] Reward amount claimed:", amountWei.toString(), "wei");
-                        if (decoded.args && Array.isArray(decoded.args)) {
+
+                        // Extract the actual amount from the event
+                        if (decoded.args && Array.isArray(decoded.args) && decoded.args.length >= 2) {
+                            claimedAmountWei = BigInt(decoded.args[1] as string | bigint);
+                            console.log("[claim] Reward amount claimed:", claimedAmountWei.toString(), "wei");
+                            console.log("[claim] Reward amount claimed:", (Number(claimedAmountWei) / 1e18).toFixed(6), "CELO");
                             console.log("[claim] User who claimed:", (decoded.args as any)[0]);
+                        } else {
+                            console.log("[claim] Reward amount claimed:", amountWei.toString(), "wei");
                         }
                     } catch (e) {
                         // Not the RewardClaimed event, try next log
@@ -153,19 +201,37 @@ export function useClaimReward() {
             await markClaimed({ interviewId: args.interviewId as any, txHash: hash });
             console.log("[claim] marked claimed in Convex");
 
-            // 6) notify Divvi (optional)
-            try {
-                if (Divvi && typeof Divvi.submitReferral === 'function') {
-                    await Divvi.submitReferral({ txHash: hash, chainId: args.chainId });
-                    console.log("[claim] Divvi referral submitted");
-                } else {
-                    console.log("[claim] Divvi SDK not available for referral submission, skipping");
+            // Return the claimed amount in CELO for UI display
+            const claimedAmountCelo = (Number(claimedAmountWei) / 1e18).toFixed(6);
+
+            // Verify the internal transfer by checking if RewardClaimed event was emitted
+            // Note: The actual CELO transfer happens as an internal transaction, not visible
+            // in the main "Transactions" tab on CeloScan. Check "Internal Transactions" tab.
+            console.log("[claim] ✅ Claim successful!");
+            console.log("[claim] Amount claimed:", claimedAmountCelo, "CELO");
+            console.log("[claim] Transaction hash:", hash);
+            console.log("[claim] ⚠️ Note: CeloScan 'Transactions' tab shows 0 CELO because you're not sending CELO to the contract.");
+            console.log("[claim] ⚠️ The contract sends CELO to you via internal transfer. Check 'Internal Transactions' tab on CeloScan.");
+
+            // 6) notify Divvi (optional - only if suffix was successfully generated)
+            if (shouldSubmitToDivvi) {
+                try {
+                    if (Divvi && typeof Divvi.submitReferral === 'function') {
+                        await Divvi.submitReferral({ txHash: hash, chainId: args.chainId });
+                        console.log("[claim] Divvi referral submitted successfully");
+                    } else {
+                        console.log("[claim] Divvi SDK not available for referral submission, skipping");
+                    }
+                } catch (e) {
+                    // Log error but don't fail the claim - Divvi submission is non-critical
+                    console.log("[claim] Divvi referral submission error (non-critical):", e);
                 }
-            } catch (e) {
-                console.log("[claim] Divvi referral submission error (non-critical):", e);
+            } else {
+                console.log("[claim] Skipping Divvi referral submission (suffix not generated or invalid)");
             }
 
-            return hash;
+            // Return hash and claimed amount for UI display
+            return { hash, claimedAmountCelo };
         } finally {
             setLoading(false);
         }
