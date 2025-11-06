@@ -7,7 +7,7 @@ import { ShareModal } from '@/components/share-modal';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
 import { useEarnings } from '@/hooks/use-earnings';
-import { useLeaderboard, useUserRank, useUserInterviewPoints } from '@/hooks/use-convex';
+import { useLeaderboard, useUserRank, useUserInterviewPoints, useUserInterviewStats } from '@/hooks/use-convex';
 import { Trophy, Medal, Award, TrendingUp, Users, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -18,6 +18,7 @@ export function LeaderboardTab() {
     const leaderboardData = useLeaderboard(10);
     const userRank = useUserRank(userData?._id);
     const userInterviewPoints = useUserInterviewPoints(userData?._id);
+    const interviewStats = useUserInterviewStats(userData?._id);
     const [showShareModal, setShowShareModal] = useState(false);
 
     const containerVariants = {
@@ -278,6 +279,12 @@ export function LeaderboardTab() {
                     userRank={userRank ?? 0}
                     totalEarnings={earnings.total}
                     streak={streakData.currentStreak}
+                    userName={userData?.firstName && userData?.lastName
+                        ? `${userData.firstName} ${userData.lastName}`
+                        : userData?.firstName || userData?.lastName || undefined}
+                    walletAddress={address || ''}
+                    totalInterviews={interviewStats?.totalInterviews || 0}
+                    averageScore={interviewStats?.averageScore || 0}
                 />
             </div>
         </motion.div>

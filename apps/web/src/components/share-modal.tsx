@@ -8,9 +8,12 @@ import {
     Copy,
     Share2,
     Trophy,
-    TrendingUp
+    TrendingUp,
+    Download,
+    FileText
 } from 'lucide-react';
 import { useState } from 'react';
+import { generateCertificate } from '@/lib/certificate-generator';
 
 interface ShareModalProps {
     isOpen: boolean;
@@ -18,10 +21,25 @@ interface ShareModalProps {
     userRank?: number;
     totalEarnings?: number;
     streak?: number;
+    userName?: string;
+    walletAddress?: string;
+    totalInterviews?: number;
+    averageScore?: number;
 }
 
-export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0, streak = 0 }: ShareModalProps) {
+export function ShareModal({
+    isOpen,
+    onClose,
+    userRank = 127,
+    totalEarnings = 0,
+    streak = 0,
+    userName,
+    walletAddress = '',
+    totalInterviews = 0,
+    averageScore = 0
+}: ShareModalProps) {
     const [copied, setCopied] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const shareText = `🎯 Just ranked #${userRank} on IQlify! 
 💰 Earned ${totalEarnings} CELO so far
@@ -31,6 +49,12 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
 #IQlify #Celo #Web3 #InterviewPrep`;
 
     const shareUrl = typeof window !== 'undefined' ? window.location.origin : 'https://iqlify.app';
+
+    // Helper function to properly encode text with emojis for URLs
+    const encodeShareText = (text: string): string => {
+        // Use encodeURIComponent which properly handles emojis
+        return encodeURIComponent(text);
+    };
 
     // Custom social media icon components
     const TwitterIcon = () => (
@@ -64,7 +88,7 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
             color: 'text-blue-400',
             bgColor: 'hover:bg-blue-400/20',
             action: () => {
-                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeShareText(shareText)}&url=${encodeURIComponent(shareUrl)}`;
                 window.open(twitterUrl, '_blank');
                 onClose();
             }
@@ -75,7 +99,7 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
             color: 'text-blue-600',
             bgColor: 'hover:bg-blue-600/20',
             action: () => {
-                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+                const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeShareText(shareText)}`;
                 window.open(facebookUrl, '_blank');
                 onClose();
             }
@@ -86,7 +110,7 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
             color: 'text-green-500',
             bgColor: 'hover:bg-green-500/20',
             action: () => {
-                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+                const whatsappUrl = `https://wa.me/?text=${encodeShareText(shareText + ' ' + shareUrl)}`;
                 window.open(whatsappUrl, '_blank');
                 onClose();
             }
@@ -97,7 +121,7 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
             color: 'text-blue-500',
             bgColor: 'hover:bg-blue-500/20',
             action: () => {
-                const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+                const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeShareText(shareText)}`;
                 window.open(telegramUrl, '_blank');
                 onClose();
             }
@@ -111,6 +135,37 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error('Failed to copy: ', err);
+        }
+    };
+
+    const handleDownloadCertificate = async () => {
+        if (!walletAddress) {
+            console.error('Wallet address is required for certificate generation');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const issueDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            await generateCertificate({
+                userName: userName || walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4),
+                walletAddress,
+                totalInterviews,
+                averageScore,
+                totalEarnings,
+                currentStreak: streak,
+                rank: userRank,
+                issueDate
+            });
+        } catch (error) {
+            console.error('Failed to generate certificate:', error);
+        } finally {
+            setIsGenerating(false);
         }
     };
 
@@ -171,6 +226,31 @@ export function ShareModal({ isOpen, onClose, userRank = 127, totalEarnings = 0,
                             );
                         })}
                     </div>
+                </div>
+
+                {/* Download Certificate */}
+                <div className="space-y-3">
+                    <h3 className="text-sm font-semibold text-gold-400">Download Certificate</h3>
+                    <Button
+                        onClick={handleDownloadCertificate}
+                        disabled={isGenerating || !walletAddress}
+                        className="w-full h-12 iqlify-button-primary flex items-center gap-2"
+                    >
+                        {isGenerating ? (
+                            <>
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                <span>Generating Certificate...</span>
+                            </>
+                        ) : (
+                            <>
+                                <FileText className="h-4 w-4" />
+                                <span>Download PDF Certificate</span>
+                            </>
+                        )}
+                    </Button>
+                    <p className="text-xs text-muted-foreground text-center">
+                        Get a professional certificate as proof of your competence
+                    </p>
                 </div>
 
                 {/* Copy Link */}

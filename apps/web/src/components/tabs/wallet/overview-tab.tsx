@@ -8,6 +8,7 @@ import { ShareModal } from '@/components/share-modal';
 import { useAppState } from '@/hooks/use-app-state';
 import { useStreak } from '@/hooks/use-streak';
 import { useEarnings } from '@/hooks/use-earnings';
+import { useUserInterviewStats, useUserByWallet } from '@/hooks/use-convex';
 import { Wallet, TrendingUp, Download, Send, Copy, Check, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -15,6 +16,8 @@ export function OverviewTab() {
     const { address } = useAppState();
     const { streakData, userData } = useStreak();
     const { earnings } = useEarnings();
+    const userDataFromWallet = useUserByWallet(address || '');
+    const interviewStats = useUserInterviewStats(userDataFromWallet?._id);
     const [copied, setCopied] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
 
@@ -113,6 +116,12 @@ export function OverviewTab() {
                 userRank={userData?.rank || 127}
                 totalEarnings={earnings.total}
                 streak={streakData.currentStreak}
+                userName={userData?.firstName && userData?.lastName 
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : userData?.firstName || userData?.lastName || undefined}
+                walletAddress={address || ''}
+                totalInterviews={interviewStats?.totalInterviews || 0}
+                averageScore={interviewStats?.averageScore || 0}
             />
         </div>
     );
