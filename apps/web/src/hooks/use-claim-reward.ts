@@ -8,13 +8,30 @@ import { REWARD_ABI, REWARD_CONTRACT_ADDRESS, REWARD_CHAIN_ID } from "@/lib/rewa
 const Divvi = require("@divvi/referral-sdk") as any;
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { isValidAddress } from "@/lib/app-utils";
 
-// Defaults from env for Divvi
-const DIVVI_CONSUMER = (process.env.NEXT_PUBLIC_DIVVI_CONSUMER_ADDRESS || "") as `0x${string}` | "";
-const DIVVI_PROVIDERS = (process.env.NEXT_PUBLIC_DIVVI_PROVIDERS || "")
+// Defaults from env for Divvi - with validation
+const DIVVI_CONSUMER_RAW = process.env.NEXT_PUBLIC_DIVVI_CONSUMER_ADDRESS || "";
+const DIVVI_CONSUMER = DIVVI_CONSUMER_RAW && isValidAddress(DIVVI_CONSUMER_RAW)
+    ? (DIVVI_CONSUMER_RAW as `0x${string}`)
+    : "" as `0x${string}` | "";
+
+const DIVVI_PROVIDERS_RAW = (process.env.NEXT_PUBLIC_DIVVI_PROVIDERS || "")
     .split(",")
     .map((s) => s.trim())
-    .filter(Boolean) as `0x${string}`[];
+    .filter(Boolean);
+const DIVVI_PROVIDERS = DIVVI_PROVIDERS_RAW
+    .filter((addr) => isValidAddress(addr))
+    .map((addr) => addr as `0x${string}`);
+
+// Log invalid addresses for debugging
+if (DIVVI_CONSUMER_RAW && !DIVVI_CONSUMER) {
+    console.warn("[Divvi] Invalid consumer address:", DIVVI_CONSUMER_RAW);
+}
+const invalidProviders = DIVVI_PROVIDERS_RAW.filter((addr) => !isValidAddress(addr));
+if (invalidProviders.length > 0) {
+    console.warn("[Divvi] Invalid provider addresses filtered out:", invalidProviders);
+}
 
 type ClaimArgs = {
     interviewId: string;
@@ -65,54 +82,76 @@ export function useClaimReward() {
                 args: [amountWei, BigInt(args.nonce), BigInt(args.deadline), payload.referralTag, v, r, s],
             });
 
-            // 3) Divvi data suffix (optional - skip if Divvi not configured)
-            let suffix = undefined;
+            // 3) Divvi referral tag (optional - skip if Divvi not configured)
+            // Using Divvi SDK v2: getReferralTag() instead of getDataSuffix()
+            let referralTag = undefined;
             let shouldSubmitToDivvi = false;
             try {
-                if (Divvi && typeof Divvi.getDataSuffix === 'function') {
-                    const divviConsumer = (args.consumer as any) || (DIVVI_CONSUMER || undefined);
-                    const divviProviders = (args.providers as any) || (DIVVI_PROVIDERS.length ? (DIVVI_PROVIDERS as any) : undefined);
+                // Check for both v1 (getDataSuffix) and v2 (getReferralTag) methods for compatibility
+                const hasGetReferralTag = Divvi && typeof Divvi.getReferralTag === 'function';
+                const hasGetDataSuffix = Divvi && typeof Divvi.getDataSuffix === 'function';
 
-                    if (divviConsumer || divviProviders) {
-                        suffix = Divvi.getDataSuffix({
-                            consumer: divviConsumer,
-                            providers: divviProviders,
-                        });
+                if (hasGetReferralTag || hasGetDataSuffix) {
+                    // Validate and filter addresses
+                    const rawConsumer = (args.consumer as any) || DIVVI_CONSUMER;
+                    const rawProviders = (args.providers as any) || DIVVI_PROVIDERS;
 
-                        // Validate suffix format
-                        if (suffix && typeof suffix === 'string' && suffix.length > 0) {
-                            shouldSubmitToDivvi = true;
-                            console.log("[claim] Divvi suffix generated successfully");
-                        } else {
-                            console.log("[claim] Divvi suffix is invalid, skipping Divvi integration");
-                            suffix = undefined;
+                    // Validate consumer address
+                    const divviConsumer = rawConsumer && isValidAddress(rawConsumer)
+                        ? rawConsumer
+                        : undefined;
+
+                    // Validate and filter provider addresses
+                    const divviProviders = Array.isArray(rawProviders)
+                        ? rawProviders.filter((addr: any) => addr && isValidAddress(addr))
+                        : undefined;
+
+
+                    // Providers are optional - Divvi tracking works with just consumer address
+                    if (divviConsumer || (divviProviders && divviProviders.length > 0)) {
+                        // Prefer v2 API (getReferralTag) which requires user address
+                        if (hasGetReferralTag) {
+                            const tagParams: any = {
+                                user: address, // Required in v2: the user address making the transaction
+                            };
+                            // Consumer is required for Divvi tracking
+                            if (divviConsumer) tagParams.consumer = divviConsumer;
+                            // Providers are optional - only include if valid addresses exist
+                            if (divviProviders && divviProviders.length > 0) tagParams.providers = divviProviders;
+
+                            referralTag = Divvi.getReferralTag(tagParams);
+                        } else if (hasGetDataSuffix) {
+                            // Fallback to v1 API for backward compatibility
+                            const tagParams: any = {};
+                            if (divviConsumer) tagParams.consumer = divviConsumer;
+                            if (divviProviders && divviProviders.length > 0) tagParams.providers = divviProviders;
+
+                            referralTag = Divvi.getDataSuffix(tagParams);
                         }
-                    } else {
-                        console.log("[claim] Divvi consumer/providers not configured, skipping");
+
+                        // Validate tag format
+                        if (referralTag && typeof referralTag === 'string' && referralTag.length > 0) {
+                            shouldSubmitToDivvi = true;
+                        } else {
+                            referralTag = undefined;
+                        }
                     }
-                } else {
-                    console.log("[claim] Divvi SDK not available or getDataSuffix not a function, skipping");
                 }
             } catch (e) {
-                console.log("[claim] Divvi suffix generation failed, continuing without:", e);
-                suffix = undefined;
+                // Silently fail - Divvi is optional
+                referralTag = undefined;
             }
 
-            // Combine callData with suffix if valid
-            // callData already has "0x" prefix, suffix should be hex without "0x"
+            // Combine callData with referral tag if valid
+            // callData already has "0x" prefix, tag should be hex without "0x"
             let combinedData: `0x${string}`;
-            if (suffix && shouldSubmitToDivvi) {
-                const suffixHex = suffix.startsWith("0x") ? suffix.slice(2) : suffix;
-                combinedData = (callData + suffixHex) as `0x${string}`;
+            if (referralTag && shouldSubmitToDivvi) {
+                const tagHex = referralTag.startsWith("0x") ? referralTag.slice(2) : referralTag;
+                combinedData = (callData + tagHex) as `0x${string}`;
             } else {
                 combinedData = callData as `0x${string}`;
             }
 
-            console.log("[claim] Divvi suffix status:", {
-                hasSuffix: !!suffix && shouldSubmitToDivvi,
-                suffixLength: suffix ? suffix.length : 0,
-                shouldSubmitToDivvi
-            });
             console.log("[claim] sending tx", {
                 to: REWARD_CONTRACT_ADDRESS,
                 chainId: args.chainId,
@@ -213,25 +252,34 @@ export function useClaimReward() {
             console.log("[claim] ⚠️ Note: CeloScan 'Transactions' tab shows 0 CELO because you're not sending CELO to the contract.");
             console.log("[claim] ⚠️ The contract sends CELO to you via internal transfer. Check 'Internal Transactions' tab on CeloScan.");
 
-            // 6) notify Divvi (optional - only if suffix was successfully generated)
+            // 6) notify Divvi (optional - only if referral tag was successfully generated)
+            let divviSubmissionResult = null;
             if (shouldSubmitToDivvi) {
                 try {
                     if (Divvi && typeof Divvi.submitReferral === 'function') {
-                        await Divvi.submitReferral({ txHash: hash, chainId: args.chainId });
-                        console.log("[claim] Divvi referral submitted successfully");
-                    } else {
-                        console.log("[claim] Divvi SDK not available for referral submission, skipping");
+                        divviSubmissionResult = await Divvi.submitReferral({
+                            txHash: hash,
+                            chainId: args.chainId
+                        });
                     }
                 } catch (e) {
                     // Log error but don't fail the claim - Divvi submission is non-critical
-                    console.log("[claim] Divvi referral submission error (non-critical):", e);
+                    console.error("[claim] Divvi referral submission error (non-critical):", e);
+                    divviSubmissionResult = { error: e instanceof Error ? e.message : String(e) };
                 }
-            } else {
-                console.log("[claim] Skipping Divvi referral submission (suffix not generated or invalid)");
             }
 
-            // Return hash and claimed amount for UI display
-            return { hash, claimedAmountCelo };
+            // Return hash, claimed amount, and Divvi tracking info for UI display
+            return {
+                hash,
+                claimedAmountCelo,
+                divviTracking: {
+                    enabled: shouldSubmitToDivvi,
+                    tagGenerated: !!referralTag,
+                    submitted: divviSubmissionResult !== null && !divviSubmissionResult?.error,
+                    submissionResult: divviSubmissionResult,
+                }
+            };
         } finally {
             setLoading(false);
         }
