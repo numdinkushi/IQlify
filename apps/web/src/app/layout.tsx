@@ -5,8 +5,8 @@ import './globals.css';
 import { Providers } from "@/providers";
 import { Navbar } from '@/components/navbar';
 
-const inter = Inter({ subsets: ['latin'] });
-const orbitron = Orbitron({ 
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const orbitron = Orbitron({
   subsets: ['latin'],
   variable: '--font-orbitron',
   weight: ['400', '500', '600', '700', '800', '900']
