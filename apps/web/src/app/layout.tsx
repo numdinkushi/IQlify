@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Orbitron } from 'next/font/google';
 import './globals.css';
 
 import { Providers } from "@/providers";
 import { Navbar } from '@/components/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
+const orbitron = Orbitron({ 
+  subsets: ['latin'],
+  variable: '--font-orbitron',
+  weight: ['400', '500', '600', '700', '800', '900']
+});
 
 export const metadata: Metadata = {
   title: 'IQlify',
@@ -19,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${orbitron.variable}`}>
         {/* Navbar is included on all pages */}
         <Providers>
           <div className="relative flex min-h-screen flex-col">
