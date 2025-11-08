@@ -11,11 +11,20 @@ import { useEarnings } from '@/hooks/use-earnings';
 import { useUserByWallet, useUserInterviews } from '@/hooks/use-convex';
 import { TabType } from '@/lib/types';
 import { formatTimeAgo } from '@/lib/app-utils';
-import { Target, TrendingUp, Clock, Zap, Trophy, CheckCircle, Coins } from 'lucide-react';
+import { Target, TrendingUp, Clock, Zap, Trophy, CheckCircle, Coins, Sparkles, Brain, Wallet2, ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function HomeTab() {
     const { isConnected, address } = useAppState();
     const { streakData, getStreakMultiplier, userData } = useStreak();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Always show welcome screen when wallet is disconnected (fix rendering bug)
+    const showWelcomeScreen = !mounted || !isConnected || !address;
 
     return (
         <ClientOnly
@@ -28,49 +37,278 @@ export function HomeTab() {
                 </div>
             }
         >
-            {/* Show connect wallet screen when not connected */}
-            {(!isConnected || !address) ? (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="min-h-screen p-4 iqlify-grid-bg"
-                >
-                    <div className="max-w-md mx-auto space-y-8">
-                        {/* Header */}
-                        <motion.div
-                            initial={{ y: -20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2, duration: 0.5 }}
-                            className="text-center space-y-4"
-                        >
-                            <h1 className="text-4xl font-bold">
-                                Welcome to <span className="iqlify-gold-text">IQlify</span>
-                            </h1>
-                            <p className="text-muted-foreground text-lg">
-                                Master interviews while earning real money
-                            </p>
-                        </motion.div>
-
-                        {/* Connect Wallet Section */}
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.4, duration: 0.5 }}
-                            className="iqlify-card border-gold-400/20 p-6 text-center space-y-4"
-                        >
-                            <h2 className="text-xl font-semibold">Connect Your Wallet</h2>
-                            <p className="text-muted-foreground text-sm">
-                                Connect your wallet to view your balance and start earning rewards!
-                            </p>
-                            <ConnectButton />
-                        </motion.div>
-                    </div>
-                </motion.div>
+            {showWelcomeScreen ? (
+                <WelcomeScreen />
             ) : (
                 <DashboardContent />
             )}
         </ClientOnly>
+    );
+}
+
+function WelcomeScreen() {
+    return (
+        <div className="min-h-screen relative overflow-hidden">
+            {/* Animated Background */}
+            <div className="absolute inset-0 iqlify-grid-bg">
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background" />
+
+                {/* Animated Gradient Orbs */}
+                <motion.div
+                    className="absolute top-20 left-10 w-72 h-72 bg-gold-400/10 rounded-full blur-3xl"
+                    animate={{
+                        x: [0, 100, 0],
+                        y: [0, 50, 0],
+                        scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                        duration: 20,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                />
+                <motion.div
+                    className="absolute bottom-20 right-10 w-96 h-96 bg-gold-400/5 rounded-full blur-3xl"
+                    animate={{
+                        x: [0, -80, 0],
+                        y: [0, -60, 0],
+                        scale: [1, 1.3, 1],
+                    }}
+                    transition={{
+                        duration: 25,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                />
+                <motion.div
+                    className="absolute top-1/2 left-1/2 w-64 h-64 bg-gold-400/5 rounded-full blur-3xl"
+                    animate={{
+                        x: [0, 50, 0],
+                        y: [0, -50, 0],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                        duration: 18,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+                <div className="max-w-md mx-auto w-full space-y-8">
+                    {/* Logo/Brain Icon with Animation */}
+                    <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 200,
+                            damping: 15,
+                            delay: 0.2
+                        }}
+                        className="flex justify-center"
+                    >
+                        <div className="relative">
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0"
+                            >
+                                <div className="w-24 h-24 border-2 border-gold-400/30 rounded-full" />
+                            </motion.div>
+                            <div className="relative w-24 h-24 bg-gradient-to-br from-gold-400/20 to-gold-400/5 rounded-full flex items-center justify-center backdrop-blur-sm border border-gold-400/20">
+                                <Brain className="w-12 h-12 text-gold-400" />
+                            </div>
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.5, 0.8, 0.5]
+                                }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="absolute inset-0 bg-gold-400/20 rounded-full blur-xl"
+                            />
+                        </div>
+                    </motion.div>
+
+                    {/* Welcome Text */}
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.4, duration: 0.6 }}
+                        className="text-center space-y-4"
+                    >
+                        <motion.h1
+                            className="text-5xl md:text-6xl font-bold iqlify-robotic-font"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                        >
+                            Welcome to{' '}
+                            <motion.span
+                                className="iqlify-gold-text inline-block"
+                                animate={{
+                                    backgroundPosition: ['0%', '100%', '0%'],
+                                }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                                style={{
+                                    backgroundSize: '200%',
+                                }}
+                            >
+                                IQlify
+                            </motion.span>
+                        </motion.h1>
+                        <motion.p
+                            className="text-muted-foreground text-lg md:text-xl iqlify-robotic-font-light"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.7 }}
+                        >
+                            Master interviews while earning real money
+                        </motion.p>
+                    </motion.div>
+
+                    {/* Feature Cards */}
+                    <motion.div
+                        initial={{ y: 30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.6, duration: 0.6 }}
+                        className="grid grid-cols-3 gap-3"
+                    >
+                        {[
+                            { icon: Brain, text: 'AI Interviews' },
+                            { icon: Trophy, text: 'Earn Rewards' },
+                            { icon: Zap, text: 'Get Better' },
+                        ].map((feature, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ scale: 0, rotate: -180 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{
+                                    delay: 0.8 + index * 0.1,
+                                    type: "spring",
+                                    stiffness: 200
+                                }}
+                                whileHover={{ scale: 1.05, y: -5 }}
+                                className="iqlify-card border-gold-400/20 p-4 text-center space-y-2"
+                            >
+                                <feature.icon className="w-6 h-6 text-gold-400 mx-auto" />
+                                <p className="text-xs text-muted-foreground iqlify-robotic-font-light">{feature.text}</p>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+
+                    {/* Connect Wallet Card */}
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        transition={{ delay: 1, duration: 0.6 }}
+                        className="relative"
+                    >
+                        {/* Glow effect */}
+                        <motion.div
+                            animate={{
+                                opacity: [0.3, 0.6, 0.3],
+                                scale: [1, 1.02, 1]
+                            }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="absolute inset-0 bg-gold-400/20 rounded-2xl blur-xl"
+                        />
+
+                        <Card className="iqlify-card border-gold-400/30 relative z-10 overflow-hidden">
+                            {/* Animated background pattern */}
+                            <div className="absolute inset-0 opacity-5">
+                                <motion.div
+                                    animate={{ x: [0, 100, 0] }}
+                                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-400 to-transparent w-1/2 h-full"
+                                />
+                            </div>
+
+                            <CardContent className="p-8 text-center space-y-6 relative z-10">
+                                <motion.div
+                                    animate={{ rotate: [0, 10, -10, 0] }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                    className="flex justify-center"
+                                >
+                                    <div className="w-16 h-16 bg-gradient-to-br from-gold-400/20 to-gold-400/5 rounded-full flex items-center justify-center border border-gold-400/30">
+                                        <Wallet2 className="w-8 h-8 text-gold-400" />
+                                    </div>
+                                </motion.div>
+
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-bold iqlify-robotic-font">Connect Your Wallet</h2>
+                                    <p className="text-muted-foreground text-sm iqlify-robotic-font-light">
+                                        Connect your wallet to view your balance and start earning rewards!
+                                    </p>
+                                </div>
+
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <ConnectButton />
+                                </motion.div>
+
+                                {/* Sparkle effects */}
+                                {[...Array(3)].map((_, i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="absolute"
+                                        style={{
+                                            top: `${20 + i * 30}%`,
+                                            left: `${10 + i * 40}%`,
+                                        }}
+                                        animate={{
+                                            opacity: [0, 1, 0],
+                                            scale: [0, 1, 0],
+                                            rotate: [0, 180, 360],
+                                        }}
+                                        transition={{
+                                            duration: 2,
+                                            repeat: Infinity,
+                                            delay: i * 0.5,
+                                        }}
+                                    >
+                                        <Sparkles className="w-4 h-4 text-gold-400" />
+                                    </motion.div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    {/* Bottom decorative elements */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.2 }}
+                        className="flex justify-center gap-2 pt-4"
+                    >
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                className="w-1.5 h-1.5 rounded-full bg-gold-400/40"
+                                animate={{
+                                    scale: [1, 1.5, 1],
+                                    opacity: [0.4, 1, 0.4],
+                                }}
+                                transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                    delay: i * 0.2,
+                                }}
+                            />
+                        ))}
+                    </motion.div>
+                </div>
+            </div>
+        </div>
     );
 }
 
