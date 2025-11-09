@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useState, useEffect } from "react";
-import { useAccount, usePublicClient, useSendTransaction } from "wagmi";
+import { useCallback, useState } from "react";
+import { useAccount, usePublicClient, useSendTransaction, useChainId } from "wagmi";
 import { encodeFunctionData, parseUnits, decodeEventLog } from "viem";
 import { REWARD_ABI, REWARD_CONTRACT_ADDRESS, REWARD_CHAIN_ID } from "@/lib/rewards-contract";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -49,16 +49,8 @@ export function useClaimReward() {
     const publicClient = usePublicClient();
     const { sendTransactionAsync } = useSendTransaction();
     const markClaimed = useMutation(api.interviews.markInterviewClaimed);
-    const [isMiniPay, setIsMiniPay] = useState(false);
-
+    const chainId = useChainId();
     const [loading, setLoading] = useState(false);
-
-    // Detect MiniPay environment
-    useEffect(() => {
-        if (typeof window !== 'undefined' && window.ethereum?.isMiniPay) {
-            setIsMiniPay(true);
-        }
-    }, []);
 
     const claim = useCallback(async (args: ClaimArgs) => {
         if (!address) throw new Error("Wallet not connected");
@@ -178,15 +170,24 @@ export function useClaimReward() {
             // injected Ethereum provider (window.ethereum.isMiniPay), ensuring all payments go through MiniPay
             // as required by the Celo MiniPay Hackathon requirements.
             // 
+            // IMPORTANT: For MiniPay test mode, we must use the ACTUAL wallet chain ID (11142220 or 11144787)
+            // instead of the normalized one (42220 or 44787). Wagmi needs the actual chain ID that MiniPay is on.
+            // The normalization is only for validation/comparison, not for the transaction itself.
+            // 
             // Note: value is 0 because the user is NOT sending CELO to the contract.
             // The contract will send the reward amount to the user via an internal transfer.
             // This is why MetaMask/CeloScan show 0 CELO - they show the transaction value (what's sent TO the contract),
             // not what the contract sends back. The actual reward is sent by the contract in claimWithSignature().
+
+            // Use the actual chain ID from the wallet (not normalized) for the transaction
+            // This ensures MiniPay test mode (11142220) works correctly with wagmi
+            const txChainId = chainId || args.chainId;
+
             const hash = await sendTransactionAsync({
                 to: REWARD_CONTRACT_ADDRESS as `0x${string}`,
                 data: combinedData,
                 value: BigInt(0), // Transaction value is 0 - contract sends reward via internal transfer
-                chainId: args.chainId,
+                chainId: txChainId, // Use actual wallet chain ID (supports MiniPay test mode 11142220)
             });
             console.log("[claim] tx hash", hash);
 
@@ -269,9 +270,10 @@ export function useClaimReward() {
             if (shouldSubmitToDivvi) {
                 try {
                     if (Divvi && typeof Divvi.submitReferral === 'function') {
+                        // Use the actual chain ID for Divvi submission (same as transaction)
                         divviSubmissionResult = await Divvi.submitReferral({
                             txHash: hash,
-                            chainId: args.chainId
+                            chainId: txChainId
                         });
                     }
                 } catch (e) {
@@ -295,7 +297,7 @@ export function useClaimReward() {
         } finally {
             setLoading(false);
         }
-    }, [address, publicClient, sendTransactionAsync, markClaimed]);
+    }, [address, publicClient, sendTransactionAsync, markClaimed, chainId]);
 
     return { claim, loading };
 }
