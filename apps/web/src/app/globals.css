@@ -89,7 +89,7 @@
     --secondary-foreground: 0 0% 10%; /* Dark text - increased contrast */
 
     --muted: 0 0% 95%; /* Light gray */
-    --muted-foreground: 0 0% 15%; /* Much darker gray text for better contrast */
+    --muted-foreground: 0 0% 0%; /* Black - will be used with opacity */
 
     --accent: 45 100% 51%; /* #D4AF37 */
     --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
@@ -114,7 +114,27 @@
   :root:not(.dark) h4,
   :root:not(.dark) h5,
   :root:not(.dark) h6 {
-    color: hsl(var(--foreground));
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Ensure headings with text-foreground class are dark in light mode */
+  :root:not(.dark) h1.text-foreground,
+  :root:not(.dark) h2.text-foreground,
+  :root:not(.dark) h3.text-foreground,
+  :root:not(.dark) h4.text-foreground,
+  :root:not(.dark) h5.text-foreground,
+  :root:not(.dark) h6.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure headings with font-semibold and text-foreground are dark in light mode */
+  :root:not(.dark) h1.font-semibold.text-foreground,
+  :root:not(.dark) h2.font-semibold.text-foreground,
+  :root:not(.dark) h3.font-semibold.text-foreground,
+  :root:not(.dark) h4.font-semibold.text-foreground,
+  :root:not(.dark) h5.font-semibold.text-foreground,
+  :root:not(.dark) h6.font-semibold.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
   }
   
   /* Ensure font-semibold and font-bold text without explicit color use foreground */
@@ -137,6 +157,20 @@
   :root:not(.dark) .iqlify-card h3.text-gold-400,
   :root:not(.dark) [class*="CardHeader"] h3.text-gold-400 {
     color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Ensure all headings with text-foreground are dark in light mode, especially in cards */
+  :root:not(.dark) .iqlify-card h2.text-foreground,
+  :root:not(.dark) .iqlify-card h3.text-foreground,
+  :root:not(.dark) .iqlify-card h4.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure headings without explicit color classes are dark in cards */
+  :root:not(.dark) .iqlify-card h2,
+  :root:not(.dark) .iqlify-card h3,
+  :root:not(.dark) .iqlify-card h4 {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
   }
   
   /* Make paragraphs, spans, and divs with text-gold-400 darker in light mode (but exclude buttons) */
@@ -167,6 +201,22 @@
     color: hsl(45, 100%, 51%) !important; /* Keep original gold for icons */
   }
   
+  /* Make leaderboard text darker for better contrast on gray backgrounds */
+  :root:not(.dark) [class*="bg-secondary"] p.font-semibold.text-foreground,
+  :root:not(.dark) [class*="bg-secondary"] p.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black text */
+  }
+  
+  :root:not(.dark) [class*="bg-secondary"] p.text-muted-foreground,
+  :root:not(.dark) [class*="bg-secondary"] span.text-muted-foreground {
+    color: rgba(0, 0, 0, 0.8) !important; /* Black with 80% opacity */
+  }
+  
+  :root:not(.dark) [class*="bg-secondary"] p.text-gold-400,
+  :root:not(.dark) [class*="bg-secondary"] span.text-gold-400 {
+    color: hsl(45, 100%, 30%) !important; /* Darker gold for better contrast */
+  }
+  
   /* Ensure user names, addresses, and other important text are visible */
   :root:not(.dark) p:not([class*="text-"]),
   :root:not(.dark) span:not([class*="text-"]):not([class*="icon"]),
@@ -179,6 +229,11 @@
   :root:not(.dark) .text-gray-300,
   :root:not(.dark) .text-gray-500 {
     color: hsl(var(--muted-foreground)) !important;
+  }
+  
+  /* Use black with reduced opacity for muted-foreground text in light mode */
+  :root:not(.dark) .text-muted-foreground {
+    color: rgba(0, 0, 0, 0.8) !important; /* Black with 80% opacity */
   }
   
   /* Fix text-white in light mode (but keep for buttons) */
