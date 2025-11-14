@@ -6,7 +6,6 @@ import { useAppState } from '@/hooks/use-app-state';
 import { WalletTabs, WalletTabType } from './wallet/wallet-tabs';
 import { OverviewTab } from './wallet/overview-tab';
 import { TransactionsTab } from './wallet/transactions-tab';
-import { SettingsTab } from './wallet/settings-tab';
 import { Wallet } from 'lucide-react';
 
 export function WalletTab() {
@@ -78,8 +77,6 @@ export function WalletTab() {
                 return <OverviewTab />;
             case WalletTabType.TRANSACTIONS:
                 return <TransactionsTab />;
-            case WalletTabType.SETTINGS:
-                return <SettingsTab />;
             default:
                 return <OverviewTab />;
         }

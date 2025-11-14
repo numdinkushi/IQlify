@@ -8,13 +8,15 @@ import { ChallengesTab } from './challenges-tab';
 import { InterviewTab } from './interview';
 import { WalletTab } from './wallet-tab';
 import { LeaderboardTab } from './leaderboard-tab';
+import { SettingsTab } from './settings-tab';
 
 const tabComponents = {
     [TabType.HOME]: HomeTab,
     [TabType.CHALLENGES]: ChallengesTab,
     [TabType.INTERVIEW]: InterviewTab,
     [TabType.WALLET]: WalletTab,
-    [TabType.LEADERBOARD]: LeaderboardTab
+    [TabType.LEADERBOARD]: LeaderboardTab,
+    [TabType.SETTINGS]: SettingsTab
 };
 
 export function TabContent() {

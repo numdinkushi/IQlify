@@ -5,7 +5,8 @@ export enum TabType {
     CHALLENGES = 'challenges',
     INTERVIEW = 'interview',
     WALLET = 'wallet',
-    LEADERBOARD = 'leaderboard'
+    LEADERBOARD = 'leaderboard',
+    SETTINGS = 'settings'
 }
 
 export enum SkillLevel {
