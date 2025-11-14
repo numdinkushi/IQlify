@@ -37,7 +37,7 @@ export function BottomTabs() {
                         <motion.div
                             key={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
-                            className="flex items-center justify-center transition-all duration-200 relative bg-transparent border-none"
+                            className="flex flex-col items-center justify-center gap-1 transition-all duration-200 relative bg-transparent border-none cursor-pointer"
                             whileTap={{ scale: 0.95 }}
                             whileHover={{ scale: 1.05 }}
                         >
@@ -46,6 +46,10 @@ export function BottomTabs() {
                                 size={28}
                                 className={isActive ? 'text-gold-400' : 'text-white'}
                             />
+                            {/* Label */}
+                            <span className={`text-xs ${isActive ? 'text-gold-400' : 'text-white'}`}>
+                                {tab.label}
+                            </span>
                         </motion.div>
                     );
                 })}
