@@ -1,11 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Settings, Bell, Shield, Palette, Info } from 'lucide-react';
+import { PrivacyPolicyContent } from '@/components/settings/privacy-policy-content';
+import { TermsOfServiceContent } from '@/components/settings/terms-content';
+import { SupportContent } from '@/components/settings/support-content';
 
 export function SettingsTab() {
+    const [privacyOpen, setPrivacyOpen] = useState(false);
+    const [termsOpen, setTermsOpen] = useState(false);
+    const [supportOpen, setSupportOpen] = useState(false);
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -159,13 +167,25 @@ export function SettingsTab() {
                                 </p>
                             </div>
                             <div className="space-y-2">
-                                <Button variant="outline" className="w-full border-gold-400/30 text-gold-400">
+                                <Button 
+                                    variant="outline" 
+                                    className="w-full border-gold-400/30 text-gold-400"
+                                    onClick={() => setPrivacyOpen(true)}
+                                >
                                     Privacy Policy
                                 </Button>
-                                <Button variant="outline" className="w-full border-gold-400/30 text-gold-400">
+                                <Button 
+                                    variant="outline" 
+                                    className="w-full border-gold-400/30 text-gold-400"
+                                    onClick={() => setTermsOpen(true)}
+                                >
                                     Terms of Service
                                 </Button>
-                                <Button variant="outline" className="w-full border-gold-400/30 text-gold-400">
+                                <Button 
+                                    variant="outline" 
+                                    className="w-full border-gold-400/30 text-gold-400"
+                                    onClick={() => setSupportOpen(true)}
+                                >
                                     Support
                                 </Button>
                             </div>
@@ -173,6 +193,19 @@ export function SettingsTab() {
                     </Card>
                 </motion.div>
             </div>
+
+            {/* Bottom Sheets */}
+            <BottomSheet isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title="Privacy Policy">
+                <PrivacyPolicyContent />
+            </BottomSheet>
+
+            <BottomSheet isOpen={termsOpen} onClose={() => setTermsOpen(false)} title="Terms of Service">
+                <TermsOfServiceContent />
+            </BottomSheet>
+
+            <BottomSheet isOpen={supportOpen} onClose={() => setSupportOpen(false)} title="Support">
+                <SupportContent />
+            </BottomSheet>
         </motion.div>
     );
 }

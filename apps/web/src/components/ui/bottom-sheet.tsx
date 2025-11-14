@@ -31,7 +31,7 @@ export function BottomSheet({ isOpen, onClose, children, title }: BottomSheetPro
                         animate={{ y: 0 }}
                         exit={{ y: '100%' }}
                         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                        className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gold-400/20 rounded-t-2xl shadow-2xl max-h-[80vh] flex flex-col"
+                        className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gold-400/20 rounded-t-2xl shadow-2xl max-h-[90vh] flex flex-col"
                     >
                         {/* Handle */}
                         <div className="flex justify-center pt-3 pb-2 flex-shrink-0">
@@ -52,7 +52,7 @@ export function BottomSheet({ isOpen, onClose, children, title }: BottomSheetPro
                         )}
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-6">
+                        <div className="flex-1 overflow-y-auto overscroll-contain p-6 pb-8">
                             {children}
                         </div>
                     </motion.div>
