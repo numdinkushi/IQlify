@@ -6,6 +6,7 @@ import { WalletProvider } from './wallet-provider';
 import { SplashProvider } from './splash-provider';
 import { ProfileProvider } from './profile-provider';
 import { ToastProvider } from './toast-provider';
+import { ThemeProvider } from './theme-provider';
 import { AppProvider } from '@/hooks/use-app-state';
 
 interface ProvidersProps {
@@ -14,18 +15,20 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
     return (
-        <SplashProvider>
-            <ConvexProviderWrapper>
-                <WalletProvider>
-                    <ToastProvider>
-                        <ProfileProvider>
-                            <AppProvider>
-                                {children}
-                            </AppProvider>
-                        </ProfileProvider>
-                    </ToastProvider>
-                </WalletProvider>
-            </ConvexProviderWrapper>
-        </SplashProvider>
+        <ThemeProvider>
+            <SplashProvider>
+                <ConvexProviderWrapper>
+                    <WalletProvider>
+                        <ToastProvider>
+                            <ProfileProvider>
+                                <AppProvider>
+                                    {children}
+                                </AppProvider>
+                            </ProfileProvider>
+                        </ToastProvider>
+                    </WalletProvider>
+                </ConvexProviderWrapper>
+            </SplashProvider>
+        </ThemeProvider>
     );
 }

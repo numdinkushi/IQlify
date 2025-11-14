@@ -9,11 +9,15 @@ import { Settings, Bell, Shield, Palette, Info } from 'lucide-react';
 import { PrivacyPolicyContent } from '@/components/settings/privacy-policy-content';
 import { TermsOfServiceContent } from '@/components/settings/terms-content';
 import { SupportContent } from '@/components/settings/support-content';
+import { ThemeSelector } from '@/components/settings/theme-selector';
+import { useTheme } from '@/providers/theme-provider';
 
 export function SettingsTab() {
     const [privacyOpen, setPrivacyOpen] = useState(false);
     const [termsOpen, setTermsOpen] = useState(false);
     const [supportOpen, setSupportOpen] = useState(false);
+    const [themeOpen, setThemeOpen] = useState(false);
+    const { theme } = useTheme();
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -127,9 +131,16 @@ export function SettingsTab() {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium text-foreground">Theme</p>
-                                    <p className="text-xs text-muted-foreground">Dark (Default)</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {theme === 'dark' ? 'Dark (Default)' : 'Light'}
+                                    </p>
                                 </div>
-                                <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="border-gold-400/30 text-gold-400"
+                                    onClick={() => setThemeOpen(true)}
+                                >
                                     Change
                                 </Button>
                             </div>
@@ -205,6 +216,10 @@ export function SettingsTab() {
 
             <BottomSheet isOpen={supportOpen} onClose={() => setSupportOpen(false)} title="Support">
                 <SupportContent />
+            </BottomSheet>
+
+            <BottomSheet isOpen={themeOpen} onClose={() => setThemeOpen(false)} title="Select Theme">
+                <ThemeSelector />
             </BottomSheet>
         </motion.div>
     );

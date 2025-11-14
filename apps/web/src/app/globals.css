@@ -66,6 +66,37 @@
     --destructive: 0 84.2% 60.2%; /* #EF4444 */
     --destructive-foreground: 0 0% 98%; /* #FFFFFF */
   }
+
+  /* Light theme */
+  :root:not(.dark) {
+    --border: 0 0% 85%; /* Light border */
+    --input: 0 0% 85%; /* Light input */
+    --ring: 45 100% 51%; /* #D4AF37 - Gold stays same */
+
+    --background: 0 0% 98%; /* Very light background */
+    --foreground: 0 0% 10%; /* Dark text on light - increased contrast */
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 0 0% 10%; /* Dark text - increased contrast */
+
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 0 0% 10%; /* Dark text - increased contrast */
+
+    --primary: 45 100% 51%; /* #D4AF37 - Main gold */
+    --primary-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --secondary: 0 0% 95%; /* Light gray */
+    --secondary-foreground: 0 0% 10%; /* Dark text - increased contrast */
+
+    --muted: 0 0% 95%; /* Light gray */
+    --muted-foreground: 0 0% 0%; /* Black - will be used with opacity */
+
+    --accent: 45 100% 51%; /* #D4AF37 */
+    --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF */
+  }
 }
 
 @layer base {
@@ -74,6 +105,148 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Ensure headings are dark in light mode */
+  :root:not(.dark) h1,
+  :root:not(.dark) h2,
+  :root:not(.dark) h3,
+  :root:not(.dark) h4,
+  :root:not(.dark) h5,
+  :root:not(.dark) h6 {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Ensure headings with text-foreground class are dark in light mode */
+  :root:not(.dark) h1.text-foreground,
+  :root:not(.dark) h2.text-foreground,
+  :root:not(.dark) h3.text-foreground,
+  :root:not(.dark) h4.text-foreground,
+  :root:not(.dark) h5.text-foreground,
+  :root:not(.dark) h6.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure headings with font-semibold and text-foreground are dark in light mode */
+  :root:not(.dark) h1.font-semibold.text-foreground,
+  :root:not(.dark) h2.font-semibold.text-foreground,
+  :root:not(.dark) h3.font-semibold.text-foreground,
+  :root:not(.dark) h4.font-semibold.text-foreground,
+  :root:not(.dark) h5.font-semibold.text-foreground,
+  :root:not(.dark) h6.font-semibold.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure font-semibold and font-bold text without explicit color use foreground */
+  :root:not(.dark) .font-semibold:not([class*="text-"]),
+  :root:not(.dark) .font-bold:not([class*="text-"]) {
+    color: hsl(var(--foreground));
+  }
+  
+  /* Override text-gold-400 on headings (including CardTitle which renders as h3) in light mode */
+  :root:not(.dark) h1.text-gold-400,
+  :root:not(.dark) h2.text-gold-400,
+  :root:not(.dark) h3.text-gold-400,
+  :root:not(.dark) h4.text-gold-400,
+  :root:not(.dark) h5.text-gold-400,
+  :root:not(.dark) h6.text-gold-400 {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Make CardTitle headings darker in light mode - CardTitle renders as h3 */
+  :root:not(.dark) .iqlify-card h3.text-gold-400,
+  :root:not(.dark) [class*="CardHeader"] h3.text-gold-400 {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Ensure all headings with text-foreground are dark in light mode, especially in cards */
+  :root:not(.dark) .iqlify-card h2.text-foreground,
+  :root:not(.dark) .iqlify-card h3.text-foreground,
+  :root:not(.dark) .iqlify-card h4.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure headings without explicit color classes are dark in cards */
+  :root:not(.dark) .iqlify-card h2,
+  :root:not(.dark) .iqlify-card h3,
+  :root:not(.dark) .iqlify-card h4 {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Make paragraphs, spans, and divs with text-gold-400 darker in light mode (but exclude buttons) */
+  :root:not(.dark) p.text-gold-400,
+  :root:not(.dark) span.text-gold-400,
+  :root:not(.dark) div.text-gold-400 {
+    color: hsl(45, 100%, 35%) !important; /* Darker gold for better contrast */
+  }
+  
+  /* Buttons with gold styling should have white text and gold background in light mode */
+  :root:not(.dark) button.text-gold-400,
+  :root:not(.dark) [role="button"].text-gold-400 {
+    color: white !important; /* White text for buttons */
+  }
+  
+  /* Buttons with gold border should have gold background in light mode for visibility */
+  :root:not(.dark) button[class*="border-gold-400"] {
+    background-color: hsl(45, 100%, 51%) !important; /* Gold background */
+    border-color: hsl(45, 100%, 51%) !important; /* Solid gold border */
+  }
+  
+  :root:not(.dark) button[class*="border-gold-400"]:hover {
+    background-color: hsl(45, 100%, 45%) !important; /* Darker gold on hover */
+  }
+  
+  /* Keep gold color for icons only */
+  :root:not(.dark) svg.text-gold-400 {
+    color: hsl(45, 100%, 51%) !important; /* Keep original gold for icons */
+  }
+  
+  /* Make leaderboard text darker for better contrast on gray backgrounds */
+  :root:not(.dark) [class*="bg-secondary"] p.font-semibold.text-foreground,
+  :root:not(.dark) [class*="bg-secondary"] p.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black text */
+  }
+  
+  :root:not(.dark) [class*="bg-secondary"] p.text-muted-foreground,
+  :root:not(.dark) [class*="bg-secondary"] span.text-muted-foreground {
+    color: rgba(0, 0, 0, 0.8) !important; /* Black with 80% opacity */
+  }
+  
+  :root:not(.dark) [class*="bg-secondary"] p.text-gold-400,
+  :root:not(.dark) [class*="bg-secondary"] span.text-gold-400 {
+    color: hsl(45, 100%, 30%) !important; /* Darker gold for better contrast */
+  }
+  
+  /* Ensure user names, addresses, and other important text are visible */
+  :root:not(.dark) p:not([class*="text-"]),
+  :root:not(.dark) span:not([class*="text-"]):not([class*="icon"]),
+  :root:not(.dark) div:not([class*="text-"]) {
+    color: hsl(var(--foreground));
+  }
+  
+  /* Override any light gray text in light mode */
+  :root:not(.dark) .text-gray-400,
+  :root:not(.dark) .text-gray-300,
+  :root:not(.dark) .text-gray-500 {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+  
+  /* Use black with reduced opacity for muted-foreground text in light mode */
+  :root:not(.dark) .text-muted-foreground {
+    color: rgba(0, 0, 0, 0.8) !important; /* Black with 80% opacity */
+  }
+  
+  /* Fix text-white in light mode (but keep for buttons) */
+  :root:not(.dark) p.text-white,
+  :root:not(.dark) span.text-white,
+  :root:not(.dark) div.text-white,
+  :root:not(.dark) h1.text-white,
+  :root:not(.dark) h2.text-white,
+  :root:not(.dark) h3.text-white,
+  :root:not(.dark) h4.text-white,
+  :root:not(.dark) h5.text-white,
+  :root:not(.dark) h6.text-white {
+    color: hsl(var(--foreground)) !important;
   }
 }
 

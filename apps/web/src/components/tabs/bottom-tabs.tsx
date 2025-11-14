@@ -46,10 +46,10 @@ export function BottomTabs() {
                             {/* Icon */}
                             <Icon
                                 size={28}
-                                className={isActive ? 'text-gold-400' : 'text-white'}
+                                className={isActive ? 'text-gold-400' : 'text-foreground dark:text-white'}
                             />
                             {/* Label */}
-                            <span className={`text-xs ${isActive ? 'text-gold-400' : 'text-white'}`}>
+                            <span className={`text-xs ${isActive ? 'text-gold-400' : 'text-foreground dark:text-white'}`}>
                                 {tab.label}
                             </span>
                         </motion.div>

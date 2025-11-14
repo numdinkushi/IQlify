@@ -153,7 +153,7 @@ export function LeaderboardTab() {
                                                 {getRankIcon(user.rank)}
                                             </div>
                                             <div>
-                                                <p className="font-semibold">{user.name}</p>
+                                                <p className="font-semibold text-foreground">{user.name}</p>
                                                 <p className="text-xs text-muted-foreground">
                                                     {user.streak} day streak •
                                                     <span className={getSkillLevelColor(user.skillLevel)}> {user.skillLevel}</span>
@@ -172,102 +172,6 @@ export function LeaderboardTab() {
                                     <p className="text-sm">Start earning to see top performers!</p>
                                 </div>
                             )}
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
-                {/* Skill Categories */}
-                <motion.div variants={itemVariants} className="space-y-4">
-                    <h2 className="text-lg font-semibold text-gold-400">Skill Categories</h2>
-
-                    <div className="grid gap-3">
-                        <Card className="iqlify-card">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-blue-400/20 rounded-lg flex items-center justify-center">
-                                            <span className="text-blue-400 font-bold">R</span>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">React Leaders</h3>
-                                            <p className="text-sm text-muted-foreground">Top React developers</p>
-                                        </div>
-                                    </div>
-                                    <Button size="sm" variant="outline" className="border-gold-400/30 text-gold-400">
-                                        View
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="iqlify-card">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-green-400/20 rounded-lg flex items-center justify-center">
-                                            <span className="text-green-400 font-bold">N</span>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">Node.js Masters</h3>
-                                            <p className="text-sm text-muted-foreground">Backend experts</p>
-                                        </div>
-                                    </div>
-                                    <Button size="sm" variant="outline" className="border-gold-400/30 text-gold-400">
-                                        View
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="iqlify-card">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-yellow-400/20 rounded-lg flex items-center justify-center">
-                                            <span className="text-yellow-400 font-bold">JS</span>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">JavaScript Gurus</h3>
-                                            <p className="text-sm text-muted-foreground">JS specialists</p>
-                                        </div>
-                                    </div>
-                                    <Button size="sm" variant="outline" className="border-gold-400/30 text-gold-400">
-                                        View
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </motion.div>
-
-                {/* Weekly Competition */}
-                <motion.div variants={itemVariants}>
-                    <Card className="iqlify-card border-purple-400/30">
-                        <CardHeader>
-                            <div className="flex items-center gap-2">
-                                <Award className="h-5 w-5 text-purple-400" />
-                                <CardTitle className="text-purple-400">Weekly Competition</CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="text-muted-foreground text-sm">
-                                Compete in this week's JavaScript challenge and win big prizes!
-                            </p>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Prize Pool</span>
-                                <span className="font-semibold text-purple-400">500 CELO</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Participants</span>
-                                <span className="font-semibold">156</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Time Left</span>
-                                <span className="font-semibold text-warning">4d 12h</span>
-                            </div>
-                            <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                                Join Competition
-                            </Button>
                         </CardContent>
                     </Card>
                 </motion.div>
