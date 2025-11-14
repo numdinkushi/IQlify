@@ -1,0 +1,414 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* IQlify Brand Colors */
+    --border: 0 0% 29.4%; /* #4A4A4A */
+    --input: 0 0% 29.4%; /* #4A4A4A */
+    --ring: 45 100% 51%; /* #D4AF37 */
+
+    --background: 0 0% 21.2%; /* #363636 - Logo background */
+    --foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --card: 0 0% 17.6%; /* #2D2D2D */
+    --card-foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --popover: 0 0% 17.6%; /* #2D2D2D */
+    --popover-foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --primary: 45 100% 51%; /* #D4AF37 - Main gold */
+    --primary-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --secondary: 0 0% 17.6%; /* #2D2D2D */
+    --secondary-foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --muted: 0 0% 17.6%; /* #2D2D2D */
+    --muted-foreground: 0 0% 60%; /* #999999 */
+
+    --accent: 45 100% 51%; /* #D4AF37 */
+    --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF */
+
+    --radius: 0.5rem;
+  }
+
+  /* Dark theme is the default for IQlify */
+  .dark {
+    --border: 0 0% 29.4%; /* #4A4A4A */
+    --input: 0 0% 29.4%; /* #4A4A4A */
+    --ring: 45 100% 51%; /* #D4AF37 */
+
+    --background: 0 0% 21.2%; /* #363636 - Logo background */
+    --foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --card: 0 0% 17.6%; /* #2D2D2D */
+    --card-foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --popover: 0 0% 17.6%; /* #2D2D2D */
+    --popover-foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --primary: 45 100% 51%; /* #D4AF37 - Main gold */
+    --primary-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --secondary: 0 0% 17.6%; /* #2D2D2D */
+    --secondary-foreground: 0 0% 97.6%; /* #F9F9F9 */
+
+    --muted: 0 0% 17.6%; /* #2D2D2D */
+    --muted-foreground: 0 0% 60%; /* #999999 */
+
+    --accent: 45 100% 51%; /* #D4AF37 */
+    --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF */
+  }
+
+  /* Light theme */
+  :root:not(.dark) {
+    --border: 0 0% 85%; /* Light border */
+    --input: 0 0% 85%; /* Light input */
+    --ring: 45 100% 51%; /* #D4AF37 - Gold stays same */
+
+    --background: 0 0% 98%; /* Very light background */
+    --foreground: 0 0% 10%; /* Dark text on light - increased contrast */
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 0 0% 10%; /* Dark text - increased contrast */
+
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 0 0% 10%; /* Dark text - increased contrast */
+
+    --primary: 45 100% 51%; /* #D4AF37 - Main gold */
+    --primary-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --secondary: 0 0% 95%; /* Light gray */
+    --secondary-foreground: 0 0% 10%; /* Dark text - increased contrast */
+
+    --muted: 0 0% 95%; /* Light gray */
+    --muted-foreground: 0 0% 0%; /* Black - will be used with opacity */
+
+    --accent: 45 100% 51%; /* #D4AF37 */
+    --accent-foreground: 0 0% 10.2%; /* #1A1A1A */
+
+    --destructive: 0 84.2% 60.2%; /* #EF4444 */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Ensure headings are dark in light mode */
+  :root:not(.dark) h1,
+  :root:not(.dark) h2,
+  :root:not(.dark) h3,
+  :root:not(.dark) h4,
+  :root:not(.dark) h5,
+  :root:not(.dark) h6 {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Ensure headings with text-foreground class are dark in light mode */
+  :root:not(.dark) h1.text-foreground,
+  :root:not(.dark) h2.text-foreground,
+  :root:not(.dark) h3.text-foreground,
+  :root:not(.dark) h4.text-foreground,
+  :root:not(.dark) h5.text-foreground,
+  :root:not(.dark) h6.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure headings with font-semibold and text-foreground are dark in light mode */
+  :root:not(.dark) h1.font-semibold.text-foreground,
+  :root:not(.dark) h2.font-semibold.text-foreground,
+  :root:not(.dark) h3.font-semibold.text-foreground,
+  :root:not(.dark) h4.font-semibold.text-foreground,
+  :root:not(.dark) h5.font-semibold.text-foreground,
+  :root:not(.dark) h6.font-semibold.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure font-semibold and font-bold text without explicit color use foreground */
+  :root:not(.dark) .font-semibold:not([class*="text-"]),
+  :root:not(.dark) .font-bold:not([class*="text-"]) {
+    color: hsl(var(--foreground));
+  }
+  
+  /* Override text-gold-400 on headings (including CardTitle which renders as h3) in light mode */
+  :root:not(.dark) h1.text-gold-400,
+  :root:not(.dark) h2.text-gold-400,
+  :root:not(.dark) h3.text-gold-400,
+  :root:not(.dark) h4.text-gold-400,
+  :root:not(.dark) h5.text-gold-400,
+  :root:not(.dark) h6.text-gold-400 {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Make CardTitle headings darker in light mode - CardTitle renders as h3 */
+  :root:not(.dark) .iqlify-card h3.text-gold-400,
+  :root:not(.dark) [class*="CardHeader"] h3.text-gold-400 {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Ensure all headings with text-foreground are dark in light mode, especially in cards */
+  :root:not(.dark) .iqlify-card h2.text-foreground,
+  :root:not(.dark) .iqlify-card h3.text-foreground,
+  :root:not(.dark) .iqlify-card h4.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Ensure headings without explicit color classes are dark in cards */
+  :root:not(.dark) .iqlify-card h2,
+  :root:not(.dark) .iqlify-card h3,
+  :root:not(.dark) .iqlify-card h4 {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black */
+  }
+  
+  /* Make paragraphs, spans, and divs with text-gold-400 darker in light mode (but exclude buttons) */
+  :root:not(.dark) p.text-gold-400,
+  :root:not(.dark) span.text-gold-400,
+  :root:not(.dark) div.text-gold-400 {
+    color: hsl(45, 100%, 35%) !important; /* Darker gold for better contrast */
+  }
+  
+  /* Buttons with gold styling should have white text and gold background in light mode */
+  :root:not(.dark) button.text-gold-400,
+  :root:not(.dark) [role="button"].text-gold-400 {
+    color: white !important; /* White text for buttons */
+  }
+  
+  /* Buttons with gold border should have gold background in light mode for visibility */
+  :root:not(.dark) button[class*="border-gold-400"] {
+    background-color: hsl(45, 100%, 51%) !important; /* Gold background */
+    border-color: hsl(45, 100%, 51%) !important; /* Solid gold border */
+  }
+  
+  :root:not(.dark) button[class*="border-gold-400"]:hover {
+    background-color: hsl(45, 100%, 45%) !important; /* Darker gold on hover */
+  }
+  
+  /* Keep gold color for icons only */
+  :root:not(.dark) svg.text-gold-400 {
+    color: hsl(45, 100%, 51%) !important; /* Keep original gold for icons */
+  }
+  
+  /* Make leaderboard text darker for better contrast on gray backgrounds */
+  :root:not(.dark) [class*="bg-secondary"] p.font-semibold.text-foreground,
+  :root:not(.dark) [class*="bg-secondary"] p.text-foreground {
+    color: hsl(0, 0%, 10%) !important; /* Very dark/black text */
+  }
+  
+  :root:not(.dark) [class*="bg-secondary"] p.text-muted-foreground,
+  :root:not(.dark) [class*="bg-secondary"] span.text-muted-foreground {
+    color: rgba(0, 0, 0, 0.8) !important; /* Black with 80% opacity */
+  }
+  
+  :root:not(.dark) [class*="bg-secondary"] p.text-gold-400,
+  :root:not(.dark) [class*="bg-secondary"] span.text-gold-400 {
+    color: hsl(45, 100%, 30%) !important; /* Darker gold for better contrast */
+  }
+  
+  /* Ensure user names, addresses, and other important text are visible */
+  :root:not(.dark) p:not([class*="text-"]),
+  :root:not(.dark) span:not([class*="text-"]):not([class*="icon"]),
+  :root:not(.dark) div:not([class*="text-"]) {
+    color: hsl(var(--foreground));
+  }
+  
+  /* Override any light gray text in light mode */
+  :root:not(.dark) .text-gray-400,
+  :root:not(.dark) .text-gray-300,
+  :root:not(.dark) .text-gray-500 {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+  
+  /* Use black with reduced opacity for muted-foreground text in light mode */
+  :root:not(.dark) .text-muted-foreground {
+    color: rgba(0, 0, 0, 0.8) !important; /* Black with 80% opacity */
+  }
+  
+  /* Fix text-white in light mode (but keep for buttons) */
+  :root:not(.dark) p.text-white,
+  :root:not(.dark) span.text-white,
+  :root:not(.dark) div.text-white,
+  :root:not(.dark) h1.text-white,
+  :root:not(.dark) h2.text-white,
+  :root:not(.dark) h3.text-white,
+  :root:not(.dark) h4.text-white,
+  :root:not(.dark) h5.text-white,
+  :root:not(.dark) h6.text-white {
+    color: hsl(var(--foreground)) !important;
+  }
+}
+
+@layer components {
+  /* IQlify Custom Components */
+  .iqlify-grid-bg {
+    background-image: 
+      linear-gradient(rgba(74, 74, 74, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74, 74, 74, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .iqlify-gold-gradient {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 50%, #A67C00 100%);
+  }
+  
+  .iqlify-gold-text {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .iqlify-robotic-font {
+    font-family: var(--font-orbitron), sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  
+  .iqlify-robotic-font-light {
+    font-family: var(--font-orbitron), sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  
+  .iqlify-card {
+    @apply bg-card border border-border/50 backdrop-blur-sm rounded-xl;
+    background: rgba(45, 45, 45, 0.8);
+  }
+  
+  .iqlify-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%);
+    color: #1A1A1A;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .iqlify-button-primary:hover {
+    background: linear-gradient(135deg, #B8961F 0%, #D4AF37 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  }
+
+  /* RainbowKit Custom Styling - IQlify Theme - AGGRESSIVE OVERRIDE */
+  
+  /* Target ALL RainbowKit buttons with maximum specificity */
+  [data-rk] button,
+  [data-rk] button[data-testid="rk-connect-button"],
+  [data-rk] button[data-testid="rk-account-button"],
+  [data-rk] button[data-testid="rk-wallet-option"],
+  .rainbowkit-custom button,
+  .rainbowkit-custom [data-rk] button {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    background-color: #D4AF37 !important;
+    color: #1A1A1A !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 8px 16px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2) !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  [data-rk] button:hover,
+  [data-rk] button[data-testid="rk-connect-button"]:hover,
+  [data-rk] button[data-testid="rk-account-button"]:hover,
+  [data-rk] button[data-testid="rk-wallet-option"]:hover,
+  .rainbowkit-custom button:hover,
+  .rainbowkit-custom [data-rk] button:hover {
+    background: linear-gradient(135deg, #B8961F 0%, #D4AF37 100%) !important;
+    background-color: #B8961F !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
+    border-color: rgba(212, 175, 55, 0.5) !important;
+  }
+
+  [data-rk] button:active,
+  [data-rk] button[data-testid="rk-connect-button"]:active,
+  [data-rk] button[data-testid="rk-account-button"]:active,
+  [data-rk] button[data-testid="rk-wallet-option"]:active,
+  .rainbowkit-custom button:active,
+  .rainbowkit-custom [data-rk] button:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3) !important;
+  }
+
+  /* Override any inline styles */
+  [data-rk] button[style*="background"],
+  [data-rk] button[style*="background-color"],
+  .rainbowkit-custom button[style*="background"],
+  .rainbowkit-custom button[style*="background-color"] {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    background-color: #D4AF37 !important;
+  }
+
+  /* Target specific RainbowKit elements */
+  [data-rk] div[role="button"],
+  [data-rk] div[data-testid="rk-connect-button"],
+  .rainbowkit-custom div[role="button"],
+  .rainbowkit-custom div[data-testid="rk-connect-button"] {
+    background: linear-gradient(135deg, #D4AF37 0%, #E0B94F 100%) !important;
+    background-color: #D4AF37 !important;
+    color: #1A1A1A !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+  }
+
+  /* Modal and overlay styling */
+  [data-rk] div[data-testid="rk-modal"],
+  .rainbowkit-custom div[data-testid="rk-modal"] {
+    backdrop-filter: blur(10px) !important;
+    background: rgba(45, 45, 45, 0.95) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* Text styling */
+  [data-rk] h1, [data-rk] h2, [data-rk] h3,
+  .rainbowkit-custom h1, .rainbowkit-custom h2, .rainbowkit-custom h3 {
+    color: #F9F9F9 !important;
+  }
+
+  [data-rk] p,
+  .rainbowkit-custom p {
+    color: #CCCCCC !important;
+  }
+
+  /* Network selector specific overrides */
+  [data-rk] div[role="button"],
+  [data-rk] div[data-testid="rk-chain-button"],
+  .rainbowkit-custom div[role="button"],
+  .rainbowkit-custom div[data-testid="rk-chain-button"] {
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+  }
+
+  /* Icon sizing */
+  [data-rk] svg,
+  .rainbowkit-custom svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
