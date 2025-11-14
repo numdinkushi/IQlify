@@ -23,32 +23,32 @@ export function StatsGrid({ stats }: StatsGridProps) {
             <Card className="iqlify-card border-green-400/30">
                 <div className="p-4 text-center">
                     <Target className="h-8 w-8 text-green-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{stats.totalInterviews}</div>
-                    <div className="text-sm text-gray-400">Total Interviews</div>
+                    <div className="text-2xl font-bold text-foreground">{stats.totalInterviews}</div>
+                    <div className="text-sm text-muted-foreground">Total Interviews</div>
                 </div>
             </Card>
 
             <Card className="iqlify-card border-blue-400/30">
                 <div className="p-4 text-center">
                     <TrendingUp className="h-8 w-8 text-blue-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{stats.averageScore.toFixed(1)}%</div>
-                    <div className="text-sm text-gray-400">Average Score</div>
+                    <div className="text-2xl font-bold text-foreground">{stats.averageScore.toFixed(1)}%</div>
+                    <div className="text-sm text-muted-foreground">Average Score</div>
                 </div>
             </Card>
 
             <Card className="iqlify-card border-gold-400/30">
                 <div className="p-4 text-center">
                     <Coins className="h-8 w-8 text-gold-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{stats.totalEarnings.toFixed(2)}</div>
-                    <div className="text-sm text-gray-400">Total Earnings (CELO)</div>
+                    <div className="text-2xl font-bold text-foreground">{stats.totalEarnings.toFixed(2)}</div>
+                    <div className="text-sm text-muted-foreground">Total Earnings (CELO)</div>
                 </div>
             </Card>
 
             <Card className="iqlify-card border-purple-400/30">
                 <div className="p-4 text-center">
                     <Trophy className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-white">{stats.currentStreak}</div>
-                    <div className="text-sm text-gray-400">Current Streak</div>
+                    <div className="text-2xl font-bold text-foreground">{stats.currentStreak}</div>
+                    <div className="text-sm text-muted-foreground">Current Streak</div>
                 </div>
             </Card>
         </div>

@@ -53,8 +53,8 @@ export function InterviewHistory({
                     <div className="w-16 h-16 bg-gray-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <History className="w-8 h-8 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">No Interviews Yet</h3>
-                    <p className="text-gray-400 mb-6">
+                    <h3 className="text-xl font-semibold text-foreground mb-2">No Interviews Yet</h3>
+                    <p className="text-muted-foreground mb-6">
                         Start your first interview to see your history here.
                     </p>
                     <Button
@@ -90,7 +90,7 @@ export function InterviewHistory({
             <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                     <History className="h-5 w-5 text-gold-400" />
-                    <h3 className="text-lg font-semibold text-white">Interview Records</h3>
+                    <h3 className="text-lg font-semibold text-foreground">Interview Records</h3>
                 </div>
 
                 {/* Tabs */}
@@ -99,7 +99,7 @@ export function InterviewHistory({
                         onClick={() => handleTabChange('recent')}
                         className={`px-4 py-2 font-medium transition-colors ${activeTab === 'recent'
                             ? 'text-gold-400 border-b-2 border-gold-400'
-                            : 'text-gray-400 hover:text-gray-300'
+                            : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
                         Recent
@@ -108,7 +108,7 @@ export function InterviewHistory({
                         onClick={() => handleTabChange('all')}
                         className={`px-4 py-2 font-medium transition-colors ${activeTab === 'all'
                             ? 'text-gold-400 border-b-2 border-gold-400'
-                            : 'text-gray-400 hover:text-gray-300'
+                            : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
                         All
@@ -119,7 +119,7 @@ export function InterviewHistory({
                 {isLoadingAll && userId && !history.length ? (
                     <div className="text-center py-8">
                         <div className="w-8 h-8 border-4 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-gray-400">Loading interviews...</p>
+                        <p className="text-muted-foreground">Loading interviews...</p>
                     </div>
                 ) : (
                     <>
@@ -161,10 +161,10 @@ export function InterviewHistory({
                                             )}
                                         </div>
                                         <div>
-                                            <div className="text-white font-medium capitalize">
+                                            <div className="text-foreground font-medium capitalize">
                                                 {interview.interviewType?.replace('_', ' ') || interview.type || 'Interview'}
                                             </div>
-                                            <div className="text-sm text-gray-400">
+                                            <div className="text-sm text-muted-foreground">
                                                 {interview.skillLevel || 'Unknown'} • {interview.duration} min
                                             </div>
                                         </div>
@@ -187,7 +187,7 @@ export function InterviewHistory({
                                                 <div className="text-red-400 text-sm">Failed</div>
                                             </div>
                                         ) : (
-                                            <div className="text-gray-400 text-sm">
+                                            <div className="text-muted-foreground text-sm">
                                                 {interview.status === 'in_progress' ? 'In Progress' :
                                                     interview.status === 'grading' ? 'Grading...' :
                                                         interview.status === 'partial' ? 'Partial' :
@@ -217,7 +217,7 @@ export function InterviewHistory({
                         {displayedInterviews.length === 0 && (
                             <div className="text-center py-8">
                                 <History className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                                <p className="text-gray-400">No interviews found</p>
+                                <p className="text-muted-foreground">No interviews found</p>
                             </div>
                         )}
                     </>

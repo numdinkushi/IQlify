@@ -129,8 +129,8 @@ export function InterviewTab() {
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <h3 className="text-lg font-semibold text-white mb-2">Loading Interview Data</h3>
-                    <p className="text-gray-400">Fetching your interview history and statistics...</p>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">Loading Interview Data</h3>
+                    <p className="text-muted-foreground">Fetching your interview history and statistics...</p>
                 </div>
             </div>
         );
@@ -146,7 +146,7 @@ export function InterviewTab() {
             <div className="max-w-4xl mx-auto space-y-6">
                 <motion.div variants={itemVariants} className="text-center space-y-2">
                     <h1 className="text-3xl font-bold iqlify-gold-text">Interview</h1>
-                    <p className="text-gray-400">Take interviews with AI and earn rewards</p>
+                    <p className="text-muted-foreground">Take interviews with AI and earn rewards</p>
                 </motion.div>
 
                 {error && (

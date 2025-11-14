@@ -153,7 +153,7 @@ export function LeaderboardTab() {
                                                 {getRankIcon(user.rank)}
                                             </div>
                                             <div>
-                                                <p className="font-semibold">{user.name}</p>
+                                                <p className="font-semibold text-foreground">{user.name}</p>
                                                 <p className="text-xs text-muted-foreground">
                                                     {user.streak} day streak •
                                                     <span className={getSkillLevelColor(user.skillLevel)}> {user.skillLevel}</span>
@@ -189,7 +189,7 @@ export function LeaderboardTab() {
                                             <span className="text-blue-400 font-bold">R</span>
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold">React Leaders</h3>
+                                            <h3 className="font-semibold text-foreground">React Leaders</h3>
                                             <p className="text-sm text-muted-foreground">Top React developers</p>
                                         </div>
                                     </div>
@@ -208,7 +208,7 @@ export function LeaderboardTab() {
                                             <span className="text-green-400 font-bold">N</span>
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold">Node.js Masters</h3>
+                                            <h3 className="font-semibold text-foreground">Node.js Masters</h3>
                                             <p className="text-sm text-muted-foreground">Backend experts</p>
                                         </div>
                                     </div>
@@ -227,7 +227,7 @@ export function LeaderboardTab() {
                                             <span className="text-yellow-400 font-bold">JS</span>
                                         </div>
                                         <div>
-                                            <h3 className="font-semibold">JavaScript Gurus</h3>
+                                            <h3 className="font-semibold text-foreground">JavaScript Gurus</h3>
                                             <p className="text-sm text-muted-foreground">JS specialists</p>
                                         </div>
                                     </div>
@@ -259,7 +259,7 @@ export function LeaderboardTab() {
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Participants</span>
-                                <span className="font-semibold">156</span>
+                                <span className="font-semibold text-foreground">156</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-muted-foreground">Time Left</span>

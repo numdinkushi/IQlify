@@ -16,9 +16,9 @@ export function QuickStart({ onStart, isLoading, isDisabled }: QuickStartProps) 
             <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                     <Mic className="h-6 w-6 text-gold-400" />
-                    <h2 className="text-xl font-semibold text-gold-400">Start New Interview</h2>
+                    <h2 className="text-xl font-semibold text-foreground">Start New Interview</h2>
                 </div>
-                <p className="text-gray-400 mb-6">
+                <p className="text-muted-foreground mb-6">
                     Choose your skill level, interview type, and duration. Take interviews with AI and earn CELO rewards.
                 </p>
                 <Button
