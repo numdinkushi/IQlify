@@ -25,6 +25,12 @@ export const TAB_CONFIGS: TabConfig[] = [
         label: 'Leaderboard',
         icon: 'Trophy',
         path: '/leaderboard'
+    },
+    {
+        id: TabType.SETTINGS,
+        label: 'Settings',
+        icon: 'Settings',
+        path: '/settings'
     }
 ];
 

@@ -5,7 +5,8 @@ import {
     Home,
     Mic,
     Wallet,
-    Trophy
+    Trophy,
+    Settings
 } from 'lucide-react';
 import { TabType } from '@/lib/types';
 import { TAB_CONFIGS } from '@/lib/constants';
@@ -15,7 +16,8 @@ const iconMap = {
     Home,
     Mic,
     Wallet,
-    Trophy
+    Trophy,
+    Settings
 };
 
 export function BottomTabs() {

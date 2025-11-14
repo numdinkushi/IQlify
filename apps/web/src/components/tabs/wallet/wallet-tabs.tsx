@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Wallet, TrendingUp, History, Settings } from 'lucide-react';
+import { Wallet, TrendingUp, History } from 'lucide-react';
 
 export enum WalletTabType {
     OVERVIEW = 'overview',
     TRANSACTIONS = 'transactions',
-    SETTINGS = 'settings',
 }
 
 const walletTabConfigs = [
@@ -20,11 +19,6 @@ const walletTabConfigs = [
         id: WalletTabType.TRANSACTIONS,
         label: 'Transactions',
         icon: History,
-    },
-    {
-        id: WalletTabType.SETTINGS,
-        label: 'Settings',
-        icon: Settings,
     },
 ];
 
