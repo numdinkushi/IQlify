@@ -1,8 +1,11 @@
 import { InterviewConfiguration } from './interview-types';
 
+import { LanguageCode } from '@/lib/language-constants';
+
 export interface VapiCallConfig {
     assistantId: string;
     duration?: number; // Duration in minutes
+    language?: LanguageCode; // Language for the interview
     onCallStart?: () => void;
     onCallEnd?: () => void;
     onError?: (error: any) => void;

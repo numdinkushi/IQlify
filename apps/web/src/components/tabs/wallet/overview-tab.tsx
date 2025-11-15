@@ -11,6 +11,7 @@ import { useEarnings } from '@/hooks/use-earnings';
 import { useUserInterviewStats, useUserByWallet } from '@/hooks/use-convex';
 import { Wallet, TrendingUp, Download, Send, Copy, Check, Share2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export function OverviewTab() {
     const { address } = useAppState();
@@ -20,6 +21,7 @@ export function OverviewTab() {
     const interviewStats = useUserInterviewStats(userDataFromWallet?._id);
     const [copied, setCopied] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
+    const t = useTranslations();
 
 
     const copyToClipboard = async (text: string) => {
@@ -53,15 +55,15 @@ export function OverviewTab() {
 
             {/* Quick Actions */}
             <motion.div variants={itemVariants} className="space-y-4">
-                <h2 className="text-lg font-semibold text-gold-400">Quick Actions</h2>
+                <h2 className="text-lg font-semibold text-gold-400">{t('wallet.quickActions')}</h2>
                 <div className="grid grid-cols-2 gap-3">
                     <Button className="iqlify-button-primary h-16 rounded-xl">
                         <Download className="h-5 w-5 mr-2" />
-                        Withdraw
+                        {t('wallet.withdraw')}
                     </Button>
                     <Button variant="outline" className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 h-16 rounded-xl">
                         <Send className="h-5 w-5 mr-2" />
-                        Send
+                        {t('wallet.send')}
                     </Button>
                 </div>
             </motion.div>
@@ -73,7 +75,7 @@ export function OverviewTab() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <TrendingUp className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Earnings Summary</CardTitle>
+                                <CardTitle className="text-gold-400">{t('wallet.earningsSummary')}</CardTitle>
                             </div>
                             <Button
                                 onClick={() => setShowShareModal(true)}
@@ -82,26 +84,26 @@ export function OverviewTab() {
                                 className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 flex items-center gap-2"
                             >
                                 <Share2 className="h-4 w-4" />
-                                <span className="text-sm">Share</span>
+                                <span className="text-sm">{t('wallet.share')}</span>
                             </Button>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                                <p className="text-sm text-muted-foreground">Today</p>
+                                <p className="text-sm text-muted-foreground">{t('wallet.today')}</p>
                                 <p className="text-xl font-bold text-gold-400">{earnings.today.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                                <p className="text-sm text-muted-foreground">This Week</p>
+                                <p className="text-sm text-muted-foreground">{t('wallet.thisWeek')}</p>
                                 <p className="text-xl font-bold text-gold-400">{earnings.thisWeek.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                                <p className="text-sm text-muted-foreground">This Month</p>
+                                <p className="text-sm text-muted-foreground">{t('wallet.thisMonth')}</p>
                                 <p className="text-xl font-bold text-gold-400">{earnings.thisMonth.toFixed(2)} CELO</p>
                             </div>
                             <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                                <p className="text-sm text-muted-foreground">Total</p>
+                                <p className="text-sm text-muted-foreground">{t('wallet.total')}</p>
                                 <p className="text-xl font-bold text-gold-400">{earnings.total.toFixed(2)} CELO</p>
                             </div>
                         </div>

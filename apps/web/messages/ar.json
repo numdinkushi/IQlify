@@ -1,0 +1,145 @@
+{
+  "tabs": {
+    "home": "الرئيسية",
+    "interview": "المقابلة",
+    "wallet": "المحفظة",
+    "leaderboard": "لوحة المتصدرين",
+    "settings": "الإعدادات",
+    "challenges": "التحديات"
+  },
+  "home": {
+    "welcome": {
+      "title": "مرحبًا بك في",
+      "tagline": "أتقن المقابلات بينما تكسب أموالًا حقيقية",
+      "aiInterviews": "مقابلات ذكية",
+      "earnRewards": "اكسب المكافآت",
+      "getBetter": "تحسن",
+      "connectWallet": "اتصل بمحفظتك",
+      "connectWalletDesc": "اتصل بمحفظتك لعرض رصيدك وبدء كسب المكافآت!",
+      "loading": "جاري تحميل IQlify..."
+    },
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "subtitle": "تتبع تقدمك وأرباحك",
+      "totalEarnings": "إجمالي الأرباح",
+      "currentStreak": "السلسلة الحالية",
+      "days": "أيام",
+      "streakBonus": "مكافأة السلسلة",
+      "earnings": "الأرباح",
+      "keepStreak": "استمر في سلسلتك!",
+      "quickActions": "إجراءات سريعة",
+      "takeInterview": "أجرِ مقابلة",
+      "recentActivity": "النشاط الأخير",
+      "noActivity": "لا يوجد نشاط حديث",
+      "startFirst": "ابدأ مقابلتك الأولى لرؤية النشاط هنا",
+      "interviewCompleted": "اكتملت المقابلة",
+      "interviewInProgress": "المقابلة قيد التقدم",
+      "interviewStarted": "بدأت المقابلة",
+      "rewardAvailable": "مكافأة CELO متاحة"
+    }
+  },
+  "interview": {
+    "title": "المقابلة",
+    "subtitle": "أجرِ مقابلات مع الذكاء الاصطناعي واكسب المكافآت",
+    "connectWallet": "اتصل بمحفظتك",
+    "connectWalletDesc": "يرجى الاتصال بمحفظتك للوصول إلى المقابلات وبدء كسب المكافآت!",
+    "loadingData": "جاري تحميل بيانات المقابلة",
+    "loadingDesc": "جاري جلب تاريخ المقابلات والإحصائيات..."
+  },
+  "wallet": {
+    "title": "المحفظة",
+    "subtitle": "إدارة أرباحك ومكافآتك",
+    "connectWallet": "اتصل بمحفظتك",
+    "connectWalletDesc": "اتصل بمحفظتك لعرض معلومات محفظتك",
+    "loading": "جاري تحميل IQlify...",
+    "quickActions": "إجراءات سريعة",
+    "withdraw": "سحب",
+    "send": "إرسال",
+    "earningsSummary": "ملخص الأرباح",
+    "today": "اليوم",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "total": "الإجمالي",
+    "share": "مشاركة"
+  },
+  "leaderboard": {
+    "title": "لوحة المتصدرين",
+    "subtitle": "مرتبة حسب نقاط المقابلة",
+    "yourRank": "رتبتك",
+    "interviewPoints": "نقاط المقابلة",
+    "keepPracticing": "استمر في التدريب للصعود في الرتب!",
+    "topPerformers": "أفضل الأداء",
+    "viewAll": "عرض الكل",
+    "noData": "لا توجد بيانات في لوحة المتصدرين بعد",
+    "startEarning": "ابدأ في الكسب لرؤية أفضل الأداء!",
+    "dayStreak": "يوم متتالي",
+    "share": "مشاركة"
+  },
+  "challenges": {
+    "title": "التحديات",
+    "subtitle": "تنافس واكسب المكافآت",
+    "dailyChallenge": "التحدي اليومي",
+    "weeklyChallenge": "التحدي الأسبوعي",
+    "skillChallenges": "تحديات المهارات",
+    "entryFee": "رسوم الدخول",
+    "prizePool": "جائزة",
+    "participants": "المشاركون",
+    "timeLeft": "الوقت المتبقي",
+    "joinChallenge": "انضم للتحدي",
+    "join": "انضم"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "إدارة تفضيلاتك وحسابك",
+    "appearance": {
+      "title": "المظهر",
+      "theme": "المظهر",
+      "language": "اللغة",
+      "change": "تغيير"
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "earnings": "إشعارات الأرباح",
+      "earningsDesc": "احصل على إشعار عند كسب المكافآت",
+      "challenges": "تذكيرات التحديات",
+      "challengesDesc": "تذكيرات يومية للتحديات",
+      "enable": "تفعيل"
+    },
+    "security": {
+      "title": "الأمان",
+      "twoFactor": "المصادقة الثنائية",
+      "twoFactorDesc": "أضف أمانًا إضافيًا لحسابك",
+      "sessions": "إدارة الجلسات",
+      "sessionsDesc": "إدارة الجلسات النشطة",
+      "setup": "إعداد",
+      "manage": "إدارة"
+    },
+    "about": {
+      "title": "حول",
+      "version": "الإصدار 1.0.0",
+      "tagline": "أتقن المقابلات بينما تكسب أموالًا حقيقية"
+    },
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "support": "الدعم"
+  },
+  "language": {
+    "selectTitle": "اختر اللغة",
+    "selectDescription": "اختر لغتك المفضلة. سيتم تطبيق التغييرات فورًا.",
+    "theme": {
+      "selectTitle": "اختر المظهر",
+      "selectDescription": "اختر مظهرك المفضل. سيتم تطبيق التغييرات فورًا."
+    }
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "close": "إغلاق"
+  }
+}

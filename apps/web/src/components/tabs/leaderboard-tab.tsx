@@ -10,6 +10,7 @@ import { useEarnings } from '@/hooks/use-earnings';
 import { useLeaderboard, useUserRank, useUserInterviewPoints, useUserInterviewStats } from '@/hooks/use-convex';
 import { Trophy, Medal, Award, TrendingUp, Users, Share2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export function LeaderboardTab() {
     const { address, isConnected } = useAppState();
@@ -20,6 +21,7 @@ export function LeaderboardTab() {
     const userInterviewPoints = useUserInterviewPoints(userData?._id);
     const interviewStats = useUserInterviewStats(userData?._id);
     const [showShareModal, setShowShareModal] = useState(false);
+    const t = useTranslations();
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -89,8 +91,8 @@ export function LeaderboardTab() {
             <div className="max-w-md mx-auto space-y-6">
                 {/* Header */}
                 <motion.div variants={itemVariants} className="text-center space-y-2">
-                    <h1 className="text-2xl font-bold iqlify-gold-text">Leaderboard</h1>
-                    <p className="text-muted-foreground">Ranked by interview points</p>
+                    <h1 className="text-2xl font-bold iqlify-gold-text">{t('leaderboard.title')}</h1>
+                    <p className="text-muted-foreground">{t('leaderboard.subtitle')}</p>
                 </motion.div>
 
                 {/* Your Rank */}
@@ -100,7 +102,7 @@ export function LeaderboardTab() {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <TrendingUp className="h-5 w-5 text-gold-400" />
-                                    <CardTitle className="text-gold-400">Your Rank</CardTitle>
+                                    <CardTitle className="text-gold-400">{t('leaderboard.yourRank')}</CardTitle>
                                 </div>
                                 <Button
                                     onClick={() => setShowShareModal(true)}
@@ -109,15 +111,15 @@ export function LeaderboardTab() {
                                     className="border-gold-400/30 text-gold-400 hover:bg-gold-400/10 flex items-center gap-2"
                                 >
                                     <Share2 className="h-4 w-4" />
-                                    <span className="text-sm">Share</span>
+                                    <span className="text-sm">{t('leaderboard.share')}</span>
                                 </Button>
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="text-center space-y-2">
                                 <p className="text-3xl font-bold text-gold-400">#{userRank ?? '—'}</p>
-                                <p className="text-muted-foreground">{(userInterviewPoints ?? 0).toLocaleString()} interview points</p>
-                                <p className="text-sm text-muted-foreground">Keep practicing to climb the ranks!</p>
+                                <p className="text-muted-foreground">{(userInterviewPoints ?? 0).toLocaleString()} {t('leaderboard.interviewPoints')}</p>
+                                <p className="text-sm text-muted-foreground">{t('leaderboard.keepPracticing')}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -130,11 +132,11 @@ export function LeaderboardTab() {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Trophy className="h-5 w-5 text-gold-400" />
-                                    <CardTitle className="text-gold-400">Top Performers</CardTitle>
+                                    <CardTitle className="text-gold-400">{t('leaderboard.topPerformers')}</CardTitle>
                                 </div>
                                 <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
                                     <Users className="h-4 w-4 mr-1" />
-                                    View All
+                                    {t('leaderboard.viewAll')}
                                 </Button>
                             </div>
                         </CardHeader>
@@ -155,7 +157,7 @@ export function LeaderboardTab() {
                                             <div>
                                                 <p className="font-semibold text-foreground">{user.name}</p>
                                                 <p className="text-xs text-muted-foreground">
-                                                    {user.streak} day streak •
+                                                    {user.streak} {t('leaderboard.dayStreak')} •
                                                     <span className={getSkillLevelColor(user.skillLevel)}> {user.skillLevel}</span>
                                                 </p>
                                             </div>
@@ -168,8 +170,8 @@ export function LeaderboardTab() {
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground">
                                     <Trophy className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                                    <p>No leaderboard data yet</p>
-                                    <p className="text-sm">Start earning to see top performers!</p>
+                                    <p>{t('leaderboard.noData')}</p>
+                                    <p className="text-sm">{t('leaderboard.startEarning')}</p>
                                 </div>
                             )}
                         </CardContent>

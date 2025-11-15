@@ -1,0 +1,145 @@
+{
+  "tabs": {
+    "home": "Home",
+    "interview": "Interview",
+    "wallet": "Wallet",
+    "leaderboard": "Leaderboard",
+    "settings": "Settings",
+    "challenges": "Challenges"
+  },
+  "home": {
+    "welcome": {
+      "title": "Welcome to",
+      "tagline": "Master interviews while earning real money",
+      "aiInterviews": "AI Interviews",
+      "earnRewards": "Earn Rewards",
+      "getBetter": "Get Better",
+      "connectWallet": "Connect Your Wallet",
+      "connectWalletDesc": "Connect your wallet to view your balance and start earning rewards!",
+      "loading": "Loading IQlify..."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Track your progress and earnings",
+      "totalEarnings": "Total Earnings",
+      "currentStreak": "Current Streak",
+      "days": "days",
+      "streakBonus": "Streak Bonus",
+      "earnings": "Earnings",
+      "keepStreak": "Keep your streak going!",
+      "quickActions": "Quick Actions",
+      "takeInterview": "Take Interview",
+      "recentActivity": "Recent Activity",
+      "noActivity": "No recent activity",
+      "startFirst": "Start your first interview to see activity here",
+      "interviewCompleted": "Interview Completed",
+      "interviewInProgress": "Interview in Progress",
+      "interviewStarted": "Interview Started",
+      "rewardAvailable": "CELO reward available"
+    }
+  },
+  "interview": {
+    "title": "Interview",
+    "subtitle": "Take interviews with AI and earn rewards",
+    "connectWallet": "Connect Your Wallet",
+    "connectWalletDesc": "Please connect your wallet to access interviews and start earning rewards!",
+    "loadingData": "Loading Interview Data",
+    "loadingDesc": "Fetching your interview history and statistics..."
+  },
+  "wallet": {
+    "title": "Wallet",
+    "subtitle": "Manage your earnings and rewards",
+    "connectWallet": "Connect Your Wallet",
+    "connectWalletDesc": "Connect your wallet to view your wallet information",
+    "loading": "Loading IQlify...",
+    "quickActions": "Quick Actions",
+    "withdraw": "Withdraw",
+    "send": "Send",
+    "earningsSummary": "Earnings Summary",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "total": "Total",
+    "share": "Share"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Ranked by interview points",
+    "yourRank": "Your Rank",
+    "interviewPoints": "interview points",
+    "keepPracticing": "Keep practicing to climb the ranks!",
+    "topPerformers": "Top Performers",
+    "viewAll": "View All",
+    "noData": "No leaderboard data yet",
+    "startEarning": "Start earning to see top performers!",
+    "dayStreak": "day streak"
+  },
+  "challenges": {
+    "title": "Challenges",
+    "subtitle": "Compete and earn rewards",
+    "dailyChallenge": "Daily Challenge",
+    "weeklyChallenge": "Weekly Challenge",
+    "skillChallenges": "Skill Challenges",
+    "entryFee": "Entry Fee",
+    "prizePool": "Prize Pool",
+    "participants": "Participants",
+    "timeLeft": "Time Left",
+    "joinChallenge": "Join Challenge",
+    "join": "Join"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "language": "Language",
+      "change": "Change"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "earnings": "Earnings Notifications",
+      "earningsDesc": "Get notified when you earn rewards",
+      "challenges": "Challenge Reminders",
+      "challengesDesc": "Daily reminders for challenges",
+      "enable": "Enable"
+    },
+    "security": {
+      "title": "Security",
+      "twoFactor": "Two-Factor Authentication",
+      "twoFactorDesc": "Add extra security to your account",
+      "sessions": "Session Management",
+      "sessionsDesc": "Manage active sessions",
+      "setup": "Setup",
+      "manage": "Manage"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version 1.0.0",
+      "tagline": "Master interviews while earning real money"
+    },
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "support": "Support"
+  },
+  "language": {
+    "selectTitle": "Select Language",
+    "selectDescription": "Choose your preferred language. Changes will be applied immediately.",
+    "theme": {
+      "selectTitle": "Select Theme",
+      "selectDescription": "Choose your preferred theme. Changes will be applied immediately."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  }
+}
+
