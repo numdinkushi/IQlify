@@ -10,14 +10,21 @@ import { PrivacyPolicyContent } from '@/components/settings/privacy-policy-conte
 import { TermsOfServiceContent } from '@/components/settings/terms-content';
 import { SupportContent } from '@/components/settings/support-content';
 import { ThemeSelector } from '@/components/settings/theme-selector';
+import { LanguageSelector } from '@/components/settings/language-selector';
 import { useTheme } from '@/providers/theme-provider';
+import { useLanguage } from '@/providers/language-provider';
+import { useTranslations } from 'next-intl';
+import { SUPPORTED_LANGUAGES } from '@/lib/language-constants';
 
 export function SettingsTab() {
     const [privacyOpen, setPrivacyOpen] = useState(false);
     const [termsOpen, setTermsOpen] = useState(false);
     const [supportOpen, setSupportOpen] = useState(false);
     const [themeOpen, setThemeOpen] = useState(false);
+    const [languageOpen, setLanguageOpen] = useState(false);
     const { theme } = useTheme();
+    const { language } = useLanguage();
+    const t = useTranslations();
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -50,8 +57,8 @@ export function SettingsTab() {
             <div className="max-w-md mx-auto space-y-6">
                 {/* Header */}
                 <motion.div variants={itemVariants} className="text-center space-y-2 mb-8">
-                    <h1 className="text-2xl font-bold iqlify-gold-text">Settings</h1>
-                    <p className="text-muted-foreground">Manage your preferences and account</p>
+                    <h1 className="text-2xl font-bold iqlify-gold-text">{t('settings.title')}</h1>
+                    <p className="text-muted-foreground">{t('settings.subtitle')}</p>
                 </motion.div>
 
                 {/* Notifications */}
@@ -60,26 +67,26 @@ export function SettingsTab() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Bell className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Notifications</CardTitle>
+                                <CardTitle className="text-gold-400">{t('settings.notifications.title')}</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-foreground">Earnings Notifications</p>
-                                    <p className="text-xs text-muted-foreground">Get notified when you earn rewards</p>
+                                    <p className="text-sm font-medium text-foreground">{t('settings.notifications.earnings')}</p>
+                                    <p className="text-xs text-muted-foreground">{t('settings.notifications.earningsDesc')}</p>
                                 </div>
                                 <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
-                                    Enable
+                                    {t('settings.notifications.enable')}
                                 </Button>
                             </div>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-foreground">Challenge Reminders</p>
-                                    <p className="text-xs text-muted-foreground">Daily reminders for challenges</p>
+                                    <p className="text-sm font-medium text-foreground">{t('settings.notifications.challenges')}</p>
+                                    <p className="text-xs text-muted-foreground">{t('settings.notifications.challengesDesc')}</p>
                                 </div>
                                 <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
-                                    Enable
+                                    {t('settings.notifications.enable')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -92,26 +99,26 @@ export function SettingsTab() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Shield className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Security</CardTitle>
+                                <CardTitle className="text-gold-400">{t('settings.security.title')}</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-foreground">Two-Factor Authentication</p>
-                                    <p className="text-xs text-muted-foreground">Add extra security to your account</p>
+                                    <p className="text-sm font-medium text-foreground">{t('settings.security.twoFactor')}</p>
+                                    <p className="text-xs text-muted-foreground">{t('settings.security.twoFactorDesc')}</p>
                                 </div>
                                 <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
-                                    Setup
+                                    {t('settings.security.setup')}
                                 </Button>
                             </div>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-foreground">Session Management</p>
-                                    <p className="text-xs text-muted-foreground">Manage active sessions</p>
+                                    <p className="text-sm font-medium text-foreground">{t('settings.security.sessions')}</p>
+                                    <p className="text-xs text-muted-foreground">{t('settings.security.sessionsDesc')}</p>
                                 </div>
                                 <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
-                                    Manage
+                                    {t('settings.security.manage')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -124,33 +131,40 @@ export function SettingsTab() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Palette className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Appearance</CardTitle>
+                                <CardTitle className="text-gold-400">{t('settings.appearance.title')}</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-foreground">Theme</p>
+                                    <p className="text-sm font-medium text-foreground">{t('settings.appearance.theme')}</p>
                                     <p className="text-xs text-muted-foreground">
                                         {theme === 'dark' ? 'Dark (Default)' : 'Light'}
                                     </p>
                                 </div>
-                                <Button 
-                                    variant="outline" 
-                                    size="sm" 
+                                <Button
+                                    variant="outline"
+                                    size="sm"
                                     className="border-gold-400/30 text-gold-400"
                                     onClick={() => setThemeOpen(true)}
                                 >
-                                    Change
+                                    {t('settings.appearance.change')}
                                 </Button>
                             </div>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-foreground">Language</p>
-                                    <p className="text-xs text-muted-foreground">English</p>
+                                    <p className="text-sm font-medium text-foreground">{t('settings.appearance.language')}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {SUPPORTED_LANGUAGES[language].nativeName}
+                                    </p>
                                 </div>
-                                <Button variant="outline" size="sm" className="border-gold-400/30 text-gold-400">
-                                    Change
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="border-gold-400/30 text-gold-400"
+                                    onClick={() => setLanguageOpen(true)}
+                                >
+                                    {t('settings.appearance.change')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -163,7 +177,7 @@ export function SettingsTab() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Info className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">About</CardTitle>
+                                <CardTitle className="text-gold-400">{t('settings.about.title')}</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -172,32 +186,32 @@ export function SettingsTab() {
                                     <span className="text-2xl">🎯</span>
                                 </div>
                                 <h3 className="text-lg font-semibold text-gold-400">IQlify</h3>
-                                <p className="text-sm text-muted-foreground">Version 1.0.0</p>
+                                <p className="text-sm text-muted-foreground">{t('settings.about.version')}</p>
                                 <p className="text-xs text-muted-foreground mt-2">
-                                    Master interviews while earning real money
+                                    {t('settings.about.tagline')}
                                 </p>
                             </div>
                             <div className="space-y-2">
-                                <Button 
-                                    variant="outline" 
+                                <Button
+                                    variant="outline"
                                     className="w-full border-gold-400/30 text-gold-400"
                                     onClick={() => setPrivacyOpen(true)}
                                 >
-                                    Privacy Policy
+                                    {t('settings.privacy')}
                                 </Button>
-                                <Button 
-                                    variant="outline" 
+                                <Button
+                                    variant="outline"
                                     className="w-full border-gold-400/30 text-gold-400"
                                     onClick={() => setTermsOpen(true)}
                                 >
-                                    Terms of Service
+                                    {t('settings.terms')}
                                 </Button>
-                                <Button 
-                                    variant="outline" 
+                                <Button
+                                    variant="outline"
                                     className="w-full border-gold-400/30 text-gold-400"
                                     onClick={() => setSupportOpen(true)}
                                 >
-                                    Support
+                                    {t('settings.support')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -206,20 +220,24 @@ export function SettingsTab() {
             </div>
 
             {/* Bottom Sheets */}
-            <BottomSheet isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title="Privacy Policy">
+            <BottomSheet isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title={t('settings.privacy')}>
                 <PrivacyPolicyContent />
             </BottomSheet>
 
-            <BottomSheet isOpen={termsOpen} onClose={() => setTermsOpen(false)} title="Terms of Service">
+            <BottomSheet isOpen={termsOpen} onClose={() => setTermsOpen(false)} title={t('settings.terms')}>
                 <TermsOfServiceContent />
             </BottomSheet>
 
-            <BottomSheet isOpen={supportOpen} onClose={() => setSupportOpen(false)} title="Support">
+            <BottomSheet isOpen={supportOpen} onClose={() => setSupportOpen(false)} title={t('settings.support')}>
                 <SupportContent />
             </BottomSheet>
 
-            <BottomSheet isOpen={themeOpen} onClose={() => setThemeOpen(false)} title="Select Theme">
+            <BottomSheet isOpen={themeOpen} onClose={() => setThemeOpen(false)} title={t('language.theme.selectTitle')}>
                 <ThemeSelector />
+            </BottomSheet>
+
+            <BottomSheet isOpen={languageOpen} onClose={() => setLanguageOpen(false)} title={t('language.selectTitle')}>
+                <LanguageSelector />
             </BottomSheet>
         </motion.div>
     );

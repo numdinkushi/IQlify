@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useLanguage } from '@/providers/language-provider';
 import { GradingScreen } from '../grading-screen';
 import { ConnectionStatus } from './connection-status';
 import { AudioControls } from './audio-controls';
@@ -42,6 +43,7 @@ export const InterviewInterface = ({
     onFailed
 }: InterviewInterfaceProps) => {
     const router = useRouter();
+    const { language } = useLanguage();
 
     const [isConnected, setIsConnected] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -117,6 +119,7 @@ export const InterviewInterface = ({
             const vapiCall = await vapiService.startCall({
                 assistantId: assistantId,
                 duration: interview.duration,
+                language: language,
                 onCallStart: () => {
                     clearTimeout(connectionTimeout);
                     setIsConnected(true);

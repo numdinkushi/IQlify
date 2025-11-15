@@ -2,10 +2,12 @@
 
 import { Moon, Sun, Check } from 'lucide-react';
 import { useTheme } from '@/providers/theme-provider';
+import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 
 export function ThemeSelector() {
     const { theme, setTheme } = useTheme();
+    const t = useTranslations();
 
     const themes = [
         {
@@ -25,7 +27,7 @@ export function ThemeSelector() {
     return (
         <div className="space-y-3 pb-8">
             <p className="text-sm text-muted-foreground mb-4">
-                Choose your preferred theme. Changes will be applied immediately.
+                {t('language.theme.selectDescription')}
             </p>
             {themes.map((themeOption) => {
                 const Icon = themeOption.icon;

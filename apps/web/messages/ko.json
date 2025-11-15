@@ -1,0 +1,182 @@
+{
+  "tabs": {
+    "home": "홈",
+    "interview": "면접",
+    "wallet": "지갑",
+    "leaderboard": "리더보드",
+    "settings": "설정",
+    "challenges": "챌린지"
+  },
+  "home": {
+    "welcome": {
+      "title": "환영합니다",
+      "tagline": "면접을 마스터하면서 실제 돈을 벌어보세요",
+      "aiInterviews": "AI 면접",
+      "earnRewards": "보상 받기",
+      "getBetter": "더 나아지기",
+      "connectWallet": "지갑 연결",
+      "connectWalletDesc": "지갑을 연결하여 잔액을 확인하고 보상을 받기 시작하세요!",
+      "loading": "IQlify 로딩 중..."
+    },
+    "dashboard": {
+      "title": "대시보드",
+      "subtitle": "진행 상황과 수익 추적",
+      "totalEarnings": "총 수익",
+      "currentStreak": "현재 연속",
+      "days": "일",
+      "streakBonus": "연속 보너스",
+      "earnings": "수익",
+      "keepStreak": "연속 기록을 유지하세요!",
+      "quickActions": "빠른 작업",
+      "takeInterview": "면접 보기",
+      "recentActivity": "최근 활동",
+      "noActivity": "최근 활동 없음",
+      "startFirst": "첫 면접을 시작하여 여기서 활동을 확인하세요",
+      "interviewCompleted": "면접 완료",
+      "interviewInProgress": "면접 진행 중",
+      "interviewStarted": "면접 시작됨",
+      "rewardAvailable": "CELO 보상 사용 가능"
+    }
+  },
+  "interview": {
+    "title": "면접",
+    "subtitle": "AI와 함께 면접을 보고 보상을 받으세요",
+    "connectWallet": "지갑 연결",
+    "connectWalletDesc": "면접에 액세스하고 보상을 받기 시작하려면 지갑을 연결해주세요!",
+    "loadingData": "면접 데이터 로딩 중",
+    "loadingDesc": "면접 기록 및 통계를 가져오는 중...",
+    "startNew": "새 면접 시작",
+    "startNewDesc": "기술 수준, 면접 유형 및 시간을 선택하세요. AI와 함께 면접을 보고 CELO 보상을 받으세요.",
+    "launchSetup": "면접 설정 시작",
+    "starting": "시작 중...",
+    "loadingUser": "사용자 로딩 중...",
+    "records": "면접 기록",
+    "recent": "최근",
+    "all": "전체",
+    "noInterviews": "아직 면접이 없습니다",
+    "noInterviewsDesc": "첫 면접을 시작하여 여기서 기록을 확인하세요.",
+    "startFirst": "첫 면접 시작",
+    "loadingInterviews": "면접 로딩 중...",
+    "loadMore": "더 보기",
+    "noInterviewsFound": "면접을 찾을 수 없습니다",
+    "types": {
+      "technical": "기술",
+      "soft_skills": "소프트 스킬",
+      "behavioral": "행동",
+      "system_design": "시스템 설계"
+    },
+    "skillLevels": {
+      "beginner": "초급",
+      "intermediate": "중급",
+      "advanced": "고급"
+    },
+    "statuses": {
+      "in_progress": "진행 중",
+      "failed": "실패",
+      "grading": "평가 중...",
+      "partial": "부분",
+      "technical_issue": "기술적 문제",
+      "insufficient_data": "데이터 부족",
+      "not_started": "시작 안 함",
+      "completed": "완료"
+    },
+    "min": "분"
+  },
+  "wallet": {
+    "title": "지갑",
+    "subtitle": "수익 및 보상 관리",
+    "connectWallet": "지갑 연결",
+    "connectWalletDesc": "지갑 정보를 보려면 지갑을 연결하세요",
+    "loading": "IQlify 로딩 중...",
+    "quickActions": "빠른 작업",
+    "withdraw": "출금",
+    "send": "보내기",
+    "earningsSummary": "수익 요약",
+    "today": "오늘",
+    "thisWeek": "이번 주",
+    "thisMonth": "이번 달",
+    "total": "총계",
+    "share": "공유"
+  },
+  "leaderboard": {
+    "title": "리더보드",
+    "subtitle": "면접 점수로 순위 매김",
+    "yourRank": "귀하의 순위",
+    "interviewPoints": "면접 점수",
+    "keepPracticing": "순위를 올리기 위해 계속 연습하세요!",
+    "topPerformers": "최고 성과자",
+    "viewAll": "전체 보기",
+    "noData": "아직 리더보드 데이터 없음",
+    "startEarning": "수익을 얻기 시작하여 최고 성과자를 확인하세요!",
+    "dayStreak": "일 연속",
+    "share": "공유"
+  },
+  "challenges": {
+    "title": "챌린지",
+    "subtitle": "경쟁하고 보상 받기",
+    "dailyChallenge": "일일 챌린지",
+    "weeklyChallenge": "주간 챌린지",
+    "skillChallenges": "기술 챌린지",
+    "entryFee": "참가비",
+    "prizePool": "상금",
+    "participants": "참가자",
+    "timeLeft": "남은 시간",
+    "joinChallenge": "챌린지 참가",
+    "join": "참가"
+  },
+  "settings": {
+    "title": "설정",
+    "subtitle": "환경 설정 및 계정 관리",
+    "appearance": {
+      "title": "외관",
+      "theme": "테마",
+      "language": "언어",
+      "change": "변경"
+    },
+    "notifications": {
+      "title": "알림",
+      "earnings": "수익 알림",
+      "earningsDesc": "보상을 받을 때 알림 받기",
+      "challenges": "챌린지 알림",
+      "challengesDesc": "챌린지 일일 알림",
+      "enable": "활성화"
+    },
+    "security": {
+      "title": "보안",
+      "twoFactor": "2단계 인증",
+      "twoFactorDesc": "계정에 추가 보안 추가",
+      "sessions": "세션 관리",
+      "sessionsDesc": "활성 세션 관리",
+      "setup": "설정",
+      "manage": "관리"
+    },
+    "about": {
+      "title": "정보",
+      "version": "버전 1.0.0",
+      "tagline": "면접을 마스터하면서 실제 돈을 벌어보세요"
+    },
+    "privacy": "개인정보 보호정책",
+    "terms": "서비스 약관",
+    "support": "지원"
+  },
+  "language": {
+    "selectTitle": "언어 선택",
+    "selectDescription": "원하는 언어를 선택하세요. 변경 사항이 즉시 적용됩니다.",
+    "theme": {
+      "selectTitle": "테마 선택",
+      "selectDescription": "원하는 테마를 선택하세요. 변경 사항이 즉시 적용됩니다."
+    }
+  },
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기"
+  }
+}
+

@@ -13,11 +13,13 @@ import { TabType } from '@/lib/types';
 import { formatTimeAgo } from '@/lib/app-utils';
 import { Target, TrendingUp, Clock, Zap, Trophy, CheckCircle, Coins, Sparkles, Brain, Wallet2, ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export function HomeTab() {
     const { isConnected, address } = useAppState();
     const { streakData, getStreakMultiplier, userData } = useStreak();
     const [mounted, setMounted] = useState(false);
+    const t = useTranslations();
 
     useEffect(() => {
         setMounted(true);
@@ -30,10 +32,10 @@ export function HomeTab() {
         <ClientOnly
             fallback={
                 <div className="min-h-screen p-4 iqlify-grid-bg flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-400 mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Loading IQlify...</p>
-                    </div>
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-400 mx-auto mb-4"></div>
+                            <p className="text-muted-foreground">{t('home.welcome.loading')}</p>
+                        </div>
                 </div>
             }
         >
@@ -47,6 +49,7 @@ export function HomeTab() {
 }
 
 function WelcomeScreen() {
+    const t = useTranslations();
     return (
         <div className="min-h-screen relative overflow-hidden">
             {/* Animated Background */}
@@ -146,7 +149,7 @@ function WelcomeScreen() {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5 }}
                         >
-                            Welcome to{' '}
+                            {t('home.welcome.title')}{' '}
                             <motion.span
                                 className="iqlify-gold-text inline-block"
                                 animate={{
@@ -170,7 +173,7 @@ function WelcomeScreen() {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.7 }}
                         >
-                            Master interviews while earning real money
+                            {t('home.welcome.tagline')}
                         </motion.p>
                     </motion.div>
 
@@ -182,9 +185,9 @@ function WelcomeScreen() {
                         className="grid grid-cols-3 gap-3"
                     >
                         {[
-                            { icon: Brain, text: 'AI Interviews' },
-                            { icon: Trophy, text: 'Earn Rewards' },
-                            { icon: Zap, text: 'Get Better' },
+                            { icon: Brain, text: t('home.welcome.aiInterviews') },
+                            { icon: Trophy, text: t('home.welcome.earnRewards') },
+                            { icon: Zap, text: t('home.welcome.getBetter') },
                         ].map((feature, index) => (
                             <motion.div
                                 key={index}
@@ -243,9 +246,9 @@ function WelcomeScreen() {
                                 </motion.div>
 
                                 <div className="space-y-2">
-                                    <h2 className="text-2xl font-bold iqlify-robotic-font">Connect Your Wallet</h2>
+                                    <h2 className="text-2xl font-bold iqlify-robotic-font">{t('home.welcome.connectWallet')}</h2>
                                     <p className="text-muted-foreground text-sm iqlify-robotic-font-light">
-                                        Connect your wallet to view your balance and start earning rewards!
+                                        {t('home.welcome.connectWalletDesc')}
                                     </p>
                                 </div>
 
@@ -318,6 +321,7 @@ function DashboardContent() {
     const { earnings } = useEarnings();
     const userDataFromWallet = useUserByWallet(address || '');
     const recentInterviews = useUserInterviews(userDataFromWallet?._id, 5);
+    const t = useTranslations();
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -352,8 +356,8 @@ function DashboardContent() {
             <div className="max-w-md mx-auto space-y-6">
                 {/* Header */}
                 <motion.div variants={itemVariants} className="text-center space-y-2">
-                    <h1 className="text-2xl font-bold iqlify-gold-text">Dashboard</h1>
-                    <p className="text-muted-foreground">Track your progress and earnings</p>
+                    <h1 className="text-2xl font-bold iqlify-gold-text">{t('home.dashboard.title')}</h1>
+                    <p className="text-muted-foreground">{t('home.dashboard.subtitle')}</p>
                 </motion.div>
 
                 {/* Stats Cards */}
@@ -361,7 +365,7 @@ function DashboardContent() {
                     <Card className="iqlify-card">
                         <CardContent className="p-4 text-center">
                             <TrendingUp className="h-8 w-8 text-gold-400 mx-auto mb-2" />
-                            <p className="text-sm text-muted-foreground">Total Earnings</p>
+                            <p className="text-sm text-muted-foreground">{t('home.dashboard.totalEarnings')}</p>
                             <p className="text-xl font-bold text-gold-400">{earnings.total.toFixed(2)} CELO</p>
                         </CardContent>
                     </Card>
@@ -369,8 +373,8 @@ function DashboardContent() {
                     <Card className="iqlify-card">
                         <CardContent className="p-4 text-center">
                             <Clock className="h-8 w-8 text-success mx-auto mb-2" />
-                            <p className="text-sm text-muted-foreground">Current Streak</p>
-                            <p className="text-xl font-bold text-success">{streakData.currentStreak} days</p>
+                            <p className="text-sm text-muted-foreground">{t('home.dashboard.currentStreak')}</p>
+                            <p className="text-xl font-bold text-success">{streakData.currentStreak} {t('home.dashboard.days')}</p>
                         </CardContent>
                     </Card>
                 </motion.div>
@@ -382,10 +386,10 @@ function DashboardContent() {
                             <CardContent className="p-4 text-center">
                                 <div className="flex items-center justify-center gap-2 mb-2">
                                     <Zap className="h-5 w-5 text-gold-400" />
-                                    <span className="font-semibold text-gold-400">Streak Bonus</span>
+                                    <span className="font-semibold text-gold-400">{t('home.dashboard.streakBonus')}</span>
                                 </div>
-                                <p className="text-2xl font-bold text-gold-400">{getStreakMultiplier()}x Earnings</p>
-                                <p className="text-sm text-muted-foreground">Keep your streak going!</p>
+                                <p className="text-2xl font-bold text-gold-400">{getStreakMultiplier()}x {t('home.dashboard.earnings')}</p>
+                                <p className="text-sm text-muted-foreground">{t('home.dashboard.keepStreak')}</p>
                             </CardContent>
                         </Card>
                     </motion.div>
@@ -393,7 +397,7 @@ function DashboardContent() {
 
                 {/* Quick Actions */}
                 <motion.div variants={itemVariants} className="space-y-4">
-                    <h2 className="text-lg font-semibold text-gold-400">Quick Actions</h2>
+                    <h2 className="text-lg font-semibold text-gold-400">{t('home.dashboard.quickActions')}</h2>
 
                     <div className="grid gap-3">
                         <Button
@@ -402,7 +406,7 @@ function DashboardContent() {
                             onClick={() => setCurrentTab(TabType.INTERVIEW)}
                         >
                             <Zap className="h-5 w-5 mr-2" />
-                            Take Interview
+                            {t('home.dashboard.takeInterview')}
                         </Button>
                     </div>
                 </motion.div>
@@ -411,7 +415,7 @@ function DashboardContent() {
                 <motion.div variants={itemVariants}>
                     <Card className="iqlify-card">
                         <CardHeader>
-                            <CardTitle className="text-gold-400">Recent Activity</CardTitle>
+                            <CardTitle className="text-gold-400">{t('home.dashboard.recentActivity')}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             {recentInterviews && recentInterviews.length > 0 ? (
@@ -448,10 +452,10 @@ function DashboardContent() {
                                                         <div className="flex-1">
                                                             <p className="font-semibold text-foreground text-sm">
                                                                 {isCompleted
-                                                                    ? `Interview Completed${interview.score !== undefined ? ` - ${interview.score}%` : ''}`
+                                                                    ? `${t('home.dashboard.interviewCompleted')}${interview.score !== undefined ? ` - ${interview.score}%` : ''}`
                                                                     : interview.status === 'in_progress'
-                                                                        ? 'Interview in Progress'
-                                                                        : 'Interview Started'
+                                                                        ? t('home.dashboard.interviewInProgress')
+                                                                        : t('home.dashboard.interviewStarted')
                                                                 }
                                                             </p>
                                                             <p className="text-xs text-muted-foreground mt-1">
@@ -477,7 +481,7 @@ function DashboardContent() {
                                                     {isCompleted && !isClaimed && interview.earnings && interview.earnings > 0 && (
                                                         <div className="mt-2 pt-2 border-t border-gold-400/10">
                                                             <p className="text-xs text-gold-400">
-                                                                💰 {interview.earnings.toFixed(2)} CELO reward available
+                                                                💰 {interview.earnings.toFixed(2)} {t('home.dashboard.rewardAvailable')}
                                                             </p>
                                                         </div>
                                                     )}
@@ -489,8 +493,8 @@ function DashboardContent() {
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground">
                                     <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                                    <p>No recent activity</p>
-                                    <p className="text-sm">Start your first interview to see activity here</p>
+                                    <p>{t('home.dashboard.noActivity')}</p>
+                                    <p className="text-sm">{t('home.dashboard.startFirst')}</p>
                                 </div>
                             )}
                         </CardContent>

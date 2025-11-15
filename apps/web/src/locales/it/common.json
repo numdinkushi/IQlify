@@ -1,0 +1,57 @@
+{
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "language": "Language",
+      "change": "Change"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "earnings": "Earnings Notifications",
+      "earningsDesc": "Get notified when you earn rewards",
+      "challenges": "Challenge Reminders",
+      "challengesDesc": "Daily reminders for challenges",
+      "enable": "Enable"
+    },
+    "security": {
+      "title": "Security",
+      "twoFactor": "Two-Factor Authentication",
+      "twoFactorDesc": "Add extra security to your account",
+      "sessions": "Session Management",
+      "sessionsDesc": "Manage active sessions",
+      "setup": "Setup",
+      "manage": "Manage"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version 1.0.0",
+      "tagline": "Master interviews while earning real money"
+    },
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "support": "Support"
+  },
+  "language": {
+    "selectTitle": "Select Language",
+    "selectDescription": "Choose your preferred language. Changes will be applied immediately.",
+    "theme": {
+      "selectTitle": "Select Theme",
+      "selectDescription": "Choose your preferred theme. Changes will be applied immediately."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  }
+}
+

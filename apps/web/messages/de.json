@@ -1,0 +1,182 @@
+{
+  "tabs": {
+    "home": "Startseite",
+    "interview": "Vorstellungsgespräch",
+    "wallet": "Brieftasche",
+    "leaderboard": "Bestenliste",
+    "settings": "Einstellungen",
+    "challenges": "Herausforderungen"
+  },
+  "home": {
+    "welcome": {
+      "title": "Willkommen bei",
+      "tagline": "Meistern Sie Vorstellungsgespräche und verdienen Sie echtes Geld",
+      "aiInterviews": "KI-Interviews",
+      "earnRewards": "Belohnungen Verdienen",
+      "getBetter": "Verbessern Sie sich",
+      "connectWallet": "Brieftasche Verbinden",
+      "connectWalletDesc": "Verbinden Sie Ihre Brieftasche, um Ihr Guthaben zu sehen und Belohnungen zu verdienen!",
+      "loading": "IQlify wird geladen..."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Verfolgen Sie Ihren Fortschritt und Ihre Einnahmen",
+      "totalEarnings": "Gesamteinnahmen",
+      "currentStreak": "Aktuelle Serie",
+      "days": "Tage",
+      "streakBonus": "Serien-Bonus",
+      "earnings": "Einnahmen",
+      "keepStreak": "Halten Sie Ihre Serie aufrecht!",
+      "quickActions": "Schnellaktionen",
+      "takeInterview": "Vorstellungsgespräch Führen",
+      "recentActivity": "Letzte Aktivität",
+      "noActivity": "Keine letzte Aktivität",
+      "startFirst": "Beginnen Sie Ihr erstes Vorstellungsgespräch, um hier Aktivität zu sehen",
+      "interviewCompleted": "Vorstellungsgespräch Abgeschlossen",
+      "interviewInProgress": "Vorstellungsgespräch läuft",
+      "interviewStarted": "Vorstellungsgespräch Gestartet",
+      "rewardAvailable": "CELO-Belohnung verfügbar"
+    }
+  },
+  "interview": {
+    "title": "Vorstellungsgespräch",
+    "subtitle": "Führen Sie Vorstellungsgespräche mit KI und verdienen Sie Belohnungen",
+    "connectWallet": "Brieftasche Verbinden",
+    "connectWalletDesc": "Bitte verbinden Sie Ihre Brieftasche, um auf Vorstellungsgespräche zuzugreifen und Belohnungen zu verdienen!",
+    "loadingData": "Interviewdaten werden geladen",
+    "loadingDesc": "Ihr Interviewverlauf und Statistiken werden abgerufen...",
+    "startNew": "Neues Vorstellungsgespräch Starten",
+    "startNewDesc": "Wählen Sie Ihr Fähigkeitsniveau, Interviewtyp und Dauer. Führen Sie Vorstellungsgespräche mit KI und verdienen Sie CELO-Belohnungen.",
+    "launchSetup": "Interview-Einrichtung Starten",
+    "starting": "Wird gestartet...",
+    "loadingUser": "Benutzer wird geladen...",
+    "records": "Interview-Aufzeichnungen",
+    "recent": "Kürzlich",
+    "all": "Alle",
+    "noInterviews": "Noch Keine Interviews",
+    "noInterviewsDesc": "Starten Sie Ihr erstes Vorstellungsgespräch, um Ihren Verlauf hier zu sehen.",
+    "startFirst": "Starten Sie Ihr Erstes Interview",
+    "loadingInterviews": "Interviews werden geladen...",
+    "loadMore": "Mehr Laden",
+    "noInterviewsFound": "Keine Interviews gefunden",
+    "types": {
+      "technical": "Technisch",
+      "soft_skills": "Soft Skills",
+      "behavioral": "Verhaltensbezogen",
+      "system_design": "Systemdesign"
+    },
+    "skillLevels": {
+      "beginner": "Anfänger",
+      "intermediate": "Mittelstufe",
+      "advanced": "Fortgeschritten"
+    },
+    "statuses": {
+      "in_progress": "Läuft",
+      "failed": "Fehlgeschlagen",
+      "grading": "Wird bewertet...",
+      "partial": "Teilweise",
+      "technical_issue": "Technisches Problem",
+      "insufficient_data": "Unzureichende Daten",
+      "not_started": "Nicht Gestartet",
+      "completed": "Abgeschlossen"
+    },
+    "min": "Min"
+  },
+  "wallet": {
+    "title": "Brieftasche",
+    "subtitle": "Verwalten Sie Ihre Einnahmen und Belohnungen",
+    "connectWallet": "Brieftasche Verbinden",
+    "connectWalletDesc": "Verbinden Sie Ihre Brieftasche, um Ihre Brieftascheninformationen anzuzeigen",
+    "loading": "IQlify wird geladen...",
+    "quickActions": "Schnellaktionen",
+    "withdraw": "Abheben",
+    "send": "Senden",
+    "earningsSummary": "Einnahmenübersicht",
+    "today": "Heute",
+    "thisWeek": "Diese Woche",
+    "thisMonth": "Diesen Monat",
+    "total": "Gesamt",
+    "share": "Teilen"
+  },
+  "leaderboard": {
+    "title": "Bestenliste",
+    "subtitle": "Nach Interviewpunkten sortiert",
+    "yourRank": "Ihr Rang",
+    "interviewPoints": "Interviewpunkte",
+    "keepPracticing": "Üben Sie weiter, um im Rang aufzusteigen!",
+    "topPerformers": "Top-Leistungen",
+    "viewAll": "Alle Anzeigen",
+    "noData": "Noch keine Bestenlistendaten",
+    "startEarning": "Beginnen Sie zu verdienen, um die Besten zu sehen!",
+    "dayStreak": "Tage Serie",
+    "share": "Teilen"
+  },
+  "challenges": {
+    "title": "Herausforderungen",
+    "subtitle": "Wetteifern Sie und verdienen Sie Belohnungen",
+    "dailyChallenge": "Tägliche Herausforderung",
+    "weeklyChallenge": "Wöchentliche Herausforderung",
+    "skillChallenges": "Fähigkeits-Herausforderungen",
+    "entryFee": "Eintrittsgebühr",
+    "prizePool": "Preisgeld",
+    "participants": "Teilnehmer",
+    "timeLeft": "Verbleibende Zeit",
+    "joinChallenge": "Herausforderung Beitreten",
+    "join": "Beitreten"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Verwalten Sie Ihre Präferenzen und Ihr Konto",
+    "appearance": {
+      "title": "Erscheinungsbild",
+      "theme": "Design",
+      "language": "Sprache",
+      "change": "Ändern"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "earnings": "Einnahmen-Benachrichtigungen",
+      "earningsDesc": "Erhalten Sie Benachrichtigungen, wenn Sie Belohnungen verdienen",
+      "challenges": "Herausforderungs-Erinnerungen",
+      "challengesDesc": "Tägliche Erinnerungen für Herausforderungen",
+      "enable": "Aktivieren"
+    },
+    "security": {
+      "title": "Sicherheit",
+      "twoFactor": "Zwei-Faktor-Authentifizierung",
+      "twoFactorDesc": "Fügen Sie zusätzliche Sicherheit zu Ihrem Konto hinzu",
+      "sessions": "Sitzungsverwaltung",
+      "sessionsDesc": "Verwalten Sie aktive Sitzungen",
+      "setup": "Einrichten",
+      "manage": "Verwalten"
+    },
+    "about": {
+      "title": "Über",
+      "version": "Version 1.0.0",
+      "tagline": "Meistern Sie Vorstellungsgespräche und verdienen Sie echtes Geld"
+    },
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "support": "Support"
+  },
+  "language": {
+    "selectTitle": "Sprache Auswählen",
+    "selectDescription": "Wählen Sie Ihre bevorzugte Sprache. Änderungen werden sofort angewendet.",
+    "theme": {
+      "selectTitle": "Design Auswählen",
+      "selectDescription": "Wählen Sie Ihr bevorzugtes Design. Änderungen werden sofort angewendet."
+    }
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen"
+  }
+}
+

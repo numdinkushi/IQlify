@@ -1,0 +1,57 @@
+{
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra tus preferencias y cuenta",
+    "appearance": {
+      "title": "Apariencia",
+      "theme": "Tema",
+      "language": "Idioma",
+      "change": "Cambiar"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "earnings": "Notificaciones de Ganancias",
+      "earningsDesc": "Recibe notificaciones cuando ganes recompensas",
+      "challenges": "Recordatorios de Desafíos",
+      "challengesDesc": "Recordatorios diarios para desafíos",
+      "enable": "Habilitar"
+    },
+    "security": {
+      "title": "Seguridad",
+      "twoFactor": "Autenticación de Dos Factores",
+      "twoFactorDesc": "Añade seguridad adicional a tu cuenta",
+      "sessions": "Gestión de Sesiones",
+      "sessionsDesc": "Administra sesiones activas",
+      "setup": "Configurar",
+      "manage": "Administrar"
+    },
+    "about": {
+      "title": "Acerca de",
+      "version": "Versión 1.0.0",
+      "tagline": "Domina entrevistas mientras ganas dinero real"
+    },
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "support": "Soporte"
+  },
+  "language": {
+    "selectTitle": "Seleccionar Idioma",
+    "selectDescription": "Elige tu idioma preferido. Los cambios se aplicarán inmediatamente.",
+    "theme": {
+      "selectTitle": "Seleccionar Tema",
+      "selectDescription": "Elige tu tema preferido. Los cambios se aplicarán inmediatamente."
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar"
+  }
+}
+
