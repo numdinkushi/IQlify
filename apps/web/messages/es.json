@@ -44,7 +44,43 @@
     "connectWallet": "Conecta tu Billetera",
     "connectWalletDesc": "¡Por favor conecta tu billetera para acceder a entrevistas y comenzar a ganar recompensas!",
     "loadingData": "Cargando Datos de Entrevista",
-    "loadingDesc": "Obteniendo tu historial de entrevistas y estadísticas..."
+    "loadingDesc": "Obteniendo tu historial de entrevistas y estadísticas...",
+    "startNew": "Iniciar Nueva Entrevista",
+    "startNewDesc": "Elige tu nivel de habilidad, tipo de entrevista y duración. Toma entrevistas con IA y gana recompensas CELO.",
+    "launchSetup": "Iniciar Configuración de Entrevista",
+    "starting": "Iniciando...",
+    "loadingUser": "Cargando Usuario...",
+    "records": "Registros de Entrevistas",
+    "recent": "Recientes",
+    "all": "Todas",
+    "noInterviews": "Aún No Hay Entrevistas",
+    "noInterviewsDesc": "Comienza tu primera entrevista para ver tu historial aquí.",
+    "startFirst": "Inicia Tu Primera Entrevista",
+    "loadingInterviews": "Cargando entrevistas...",
+    "loadMore": "Cargar Más",
+    "noInterviewsFound": "No se encontraron entrevistas",
+    "types": {
+      "technical": "Técnica",
+      "soft_skills": "Habilidades Blandas",
+      "behavioral": "Conductual",
+      "system_design": "Diseño de Sistemas"
+    },
+    "skillLevels": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    },
+    "statuses": {
+      "in_progress": "En Progreso",
+      "failed": "Fallida",
+      "grading": "Calificando...",
+      "partial": "Parcial",
+      "technical_issue": "Problema Técnico",
+      "insufficient_data": "Datos Insuficientes",
+      "not_started": "No Iniciada",
+      "completed": "Completada"
+    },
+    "min": "min"
   },
   "wallet": {
     "title": "Billetera",

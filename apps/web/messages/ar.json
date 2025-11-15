@@ -44,7 +44,43 @@
     "connectWallet": "اتصل بمحفظتك",
     "connectWalletDesc": "يرجى الاتصال بمحفظتك للوصول إلى المقابلات وبدء كسب المكافآت!",
     "loadingData": "جاري تحميل بيانات المقابلة",
-    "loadingDesc": "جاري جلب تاريخ المقابلات والإحصائيات..."
+    "loadingDesc": "جاري جلب تاريخ المقابلات والإحصائيات...",
+    "startNew": "بدء مقابلة جديدة",
+    "startNewDesc": "اختر مستوى مهارتك ونوع المقابلة والمدة. أجرِ مقابلات مع الذكاء الاصطناعي واكسب مكافآت CELO.",
+    "launchSetup": "بدء إعداد المقابلة",
+    "starting": "جاري البدء...",
+    "loadingUser": "جاري تحميل المستخدم...",
+    "records": "سجل المقابلات",
+    "recent": "حديث",
+    "all": "الكل",
+    "noInterviews": "لا توجد مقابلات بعد",
+    "noInterviewsDesc": "ابدأ مقابلتك الأولى لرؤية تاريخك هنا.",
+    "startFirst": "ابدأ مقابلتك الأولى",
+    "loadingInterviews": "جاري تحميل المقابلات...",
+    "loadMore": "تحميل المزيد",
+    "noInterviewsFound": "لم يتم العثور على مقابلات",
+    "types": {
+      "technical": "تقنية",
+      "soft_skills": "المهارات الناعمة",
+      "behavioral": "سلوكية",
+      "system_design": "تصميم الأنظمة"
+    },
+    "skillLevels": {
+      "beginner": "مبتدئ",
+      "intermediate": "متوسط",
+      "advanced": "متقدم"
+    },
+    "statuses": {
+      "in_progress": "قيد التقدم",
+      "failed": "فشلت",
+      "grading": "جاري التقييم...",
+      "partial": "جزئية",
+      "technical_issue": "مشكلة تقنية",
+      "insufficient_data": "بيانات غير كافية",
+      "not_started": "لم تبدأ",
+      "completed": "مكتملة"
+    },
+    "min": "دقيقة"
   },
   "wallet": {
     "title": "المحفظة",

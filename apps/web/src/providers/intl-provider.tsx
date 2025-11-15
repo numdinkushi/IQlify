@@ -12,13 +12,13 @@ import enMessages from '../../messages/en.json';
 const messageLoaders: Record<LanguageCode, () => Promise<any>> = {
   en: () => Promise.resolve({ default: enMessages }),
   es: () => import('../../messages/es.json'),
-  fr: () => Promise.resolve({ default: enMessages }), // Fallback to English
-  pt: () => Promise.resolve({ default: enMessages }),
-  de: () => Promise.resolve({ default: enMessages }),
-  it: () => Promise.resolve({ default: enMessages }),
-  zh: () => Promise.resolve({ default: enMessages }),
+  fr: () => import('../../messages/fr.json'),
+  pt: () => import('../../messages/pt.json'),
+  de: () => import('../../messages/de.json'),
+  it: () => import('../../messages/it.json'),
+  zh: () => import('../../messages/zh.json'),
   ja: () => import('../../messages/ja.json'),
-  ko: () => Promise.resolve({ default: enMessages }),
+  ko: () => import('../../messages/ko.json'),
   ar: () => import('../../messages/ar.json'),
 };
 

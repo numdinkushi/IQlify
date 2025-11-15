@@ -1,0 +1,182 @@
+{
+  "tabs": {
+    "home": "Accueil",
+    "interview": "Entretien",
+    "wallet": "Portefeuille",
+    "leaderboard": "Classement",
+    "settings": "Paramètres",
+    "challenges": "Défis"
+  },
+  "home": {
+    "welcome": {
+      "title": "Bienvenue sur",
+      "tagline": "Maîtrisez les entretiens tout en gagnant de l'argent réel",
+      "aiInterviews": "Entretiens IA",
+      "earnRewards": "Gagnez des Récompenses",
+      "getBetter": "Améliorez-vous",
+      "connectWallet": "Connectez votre Portefeuille",
+      "connectWalletDesc": "Connectez votre portefeuille pour voir votre solde et commencer à gagner des récompenses !",
+      "loading": "Chargement de IQlify..."
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "subtitle": "Suivez vos progrès et vos gains",
+      "totalEarnings": "Gains Totaux",
+      "currentStreak": "Série Actuelle",
+      "days": "jours",
+      "streakBonus": "Bonus de Série",
+      "earnings": "Gains",
+      "keepStreak": "Maintenez votre série !",
+      "quickActions": "Actions Rapides",
+      "takeInterview": "Passer un Entretien",
+      "recentActivity": "Activité Récente",
+      "noActivity": "Aucune activité récente",
+      "startFirst": "Commencez votre premier entretien pour voir l'activité ici",
+      "interviewCompleted": "Entretien Terminé",
+      "interviewInProgress": "Entretien en Cours",
+      "interviewStarted": "Entretien Démarré",
+      "rewardAvailable": "Récompense CELO disponible"
+    }
+  },
+  "interview": {
+    "title": "Entretien",
+    "subtitle": "Passez des entretiens avec l'IA et gagnez des récompenses",
+    "connectWallet": "Connectez votre Portefeuille",
+    "connectWalletDesc": "Veuillez connecter votre portefeuille pour accéder aux entretiens et commencer à gagner des récompenses !",
+    "loadingData": "Chargement des Données d'Entretien",
+    "loadingDesc": "Récupération de votre historique d'entretiens et statistiques...",
+    "startNew": "Démarrer un Nouvel Entretien",
+    "startNewDesc": "Choisissez votre niveau de compétence, le type d'entretien et la durée. Passez des entretiens avec l'IA et gagnez des récompenses CELO.",
+    "launchSetup": "Lancer la Configuration de l'Entretien",
+    "starting": "Démarrage...",
+    "loadingUser": "Chargement de l'Utilisateur...",
+    "records": "Historique des Entretiens",
+    "recent": "Récent",
+    "all": "Tous",
+    "noInterviews": "Aucun Entretien pour le Moment",
+    "noInterviewsDesc": "Commencez votre premier entretien pour voir votre historique ici.",
+    "startFirst": "Démarrer Votre Premier Entretien",
+    "loadingInterviews": "Chargement des entretiens...",
+    "loadMore": "Charger Plus",
+    "noInterviewsFound": "Aucun entretien trouvé",
+    "types": {
+      "technical": "Technique",
+      "soft_skills": "Compétences Générales",
+      "behavioral": "Comportemental",
+      "system_design": "Conception de Système"
+    },
+    "skillLevels": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé"
+    },
+    "statuses": {
+      "in_progress": "En Cours",
+      "failed": "Échoué",
+      "grading": "Évaluation...",
+      "partial": "Partiel",
+      "technical_issue": "Problème Technique",
+      "insufficient_data": "Données Insuffisantes",
+      "not_started": "Non Démarré",
+      "completed": "Terminé"
+    },
+    "min": "min"
+  },
+  "wallet": {
+    "title": "Portefeuille",
+    "subtitle": "Gérez vos gains et récompenses",
+    "connectWallet": "Connectez votre Portefeuille",
+    "connectWalletDesc": "Connectez votre portefeuille pour voir les informations de votre portefeuille",
+    "loading": "Chargement de IQlify...",
+    "quickActions": "Actions Rapides",
+    "withdraw": "Retirer",
+    "send": "Envoyer",
+    "earningsSummary": "Résumé des Gains",
+    "today": "Aujourd'hui",
+    "thisWeek": "Cette Semaine",
+    "thisMonth": "Ce Mois",
+    "total": "Total",
+    "share": "Partager"
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "subtitle": "Classé par points d'entretien",
+    "yourRank": "Votre Rang",
+    "interviewPoints": "points d'entretien",
+    "keepPracticing": "Continuez à pratiquer pour monter dans les rangs !",
+    "topPerformers": "Meilleurs Performances",
+    "viewAll": "Voir Tout",
+    "noData": "Aucune donnée de classement pour le moment",
+    "startEarning": "Commencez à gagner pour voir les meilleurs !",
+    "dayStreak": "jours de série",
+    "share": "Partager"
+  },
+  "challenges": {
+    "title": "Défis",
+    "subtitle": "Rivalisez et gagnez des récompenses",
+    "dailyChallenge": "Défi Quotidien",
+    "weeklyChallenge": "Défi Hebdomadaire",
+    "skillChallenges": "Défis de Compétences",
+    "entryFee": "Frais d'Inscription",
+    "prizePool": "Prix",
+    "participants": "Participants",
+    "timeLeft": "Temps Restant",
+    "joinChallenge": "Rejoindre le Défi",
+    "join": "Rejoindre"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Gérez vos préférences et votre compte",
+    "appearance": {
+      "title": "Apparence",
+      "theme": "Thème",
+      "language": "Langue",
+      "change": "Changer"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "earnings": "Notifications de Gains",
+      "earningsDesc": "Recevez des notifications lorsque vous gagnez des récompenses",
+      "challenges": "Rappels de Défis",
+      "challengesDesc": "Rappels quotidiens pour les défis",
+      "enable": "Activer"
+    },
+    "security": {
+      "title": "Sécurité",
+      "twoFactor": "Authentification à Deux Facteurs",
+      "twoFactorDesc": "Ajoutez une sécurité supplémentaire à votre compte",
+      "sessions": "Gestion des Sessions",
+      "sessionsDesc": "Gérez les sessions actives",
+      "setup": "Configurer",
+      "manage": "Gérer"
+    },
+    "about": {
+      "title": "À Propos",
+      "version": "Version 1.0.0",
+      "tagline": "Maîtrisez les entretiens tout en gagnant de l'argent réel"
+    },
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "support": "Support"
+  },
+  "language": {
+    "selectTitle": "Sélectionner la Langue",
+    "selectDescription": "Choisissez votre langue préférée. Les changements seront appliqués immédiatement.",
+    "theme": {
+      "selectTitle": "Sélectionner le Thème",
+      "selectDescription": "Choisissez votre thème préféré. Les changements seront appliqués immédiatement."
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer"
+  }
+}
+

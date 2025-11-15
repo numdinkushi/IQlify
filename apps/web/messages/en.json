@@ -44,7 +44,43 @@
     "connectWallet": "Connect Your Wallet",
     "connectWalletDesc": "Please connect your wallet to access interviews and start earning rewards!",
     "loadingData": "Loading Interview Data",
-    "loadingDesc": "Fetching your interview history and statistics..."
+    "loadingDesc": "Fetching your interview history and statistics...",
+    "startNew": "Start New Interview",
+    "startNewDesc": "Choose your skill level, interview type, and duration. Take interviews with AI and earn CELO rewards.",
+    "launchSetup": "Launch Interview Setup",
+    "starting": "Starting...",
+    "loadingUser": "Loading User...",
+    "records": "Interview Records",
+    "recent": "Recent",
+    "all": "All",
+    "noInterviews": "No Interviews Yet",
+    "noInterviewsDesc": "Start your first interview to see your history here.",
+    "startFirst": "Start Your First Interview",
+    "loadingInterviews": "Loading interviews...",
+    "loadMore": "Load More",
+    "noInterviewsFound": "No interviews found",
+    "types": {
+      "technical": "Technical",
+      "soft_skills": "Soft Skills",
+      "behavioral": "Behavioral",
+      "system_design": "System Design"
+    },
+    "skillLevels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "statuses": {
+      "in_progress": "In Progress",
+      "failed": "Failed",
+      "grading": "Grading...",
+      "partial": "Partial",
+      "technical_issue": "Technical Issue",
+      "insufficient_data": "Insufficient Data",
+      "not_started": "Not Started",
+      "completed": "Completed"
+    },
+    "min": "min"
   },
   "wallet": {
     "title": "Wallet",
