@@ -63,39 +63,149 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
                 console.log('⚠️ [GRADING] No stored results found, generating new ones...');
             }
 
-            // If no stored results, use intelligent grading directly
+            // If no stored results, fetch actual interview data and generate grading
             if (!gradingData) {
-                console.log('🔄 [GRADING] No stored results, using intelligent grading directly...');
+                console.log('🔄 [GRADING] No stored results, fetching actual interview data...');
 
-                // Import intelligent grading system
+                // Import required services
                 const { IntelligentGradingSystem } = await import('@/lib/intelligent-grading');
 
-                // Create interview metrics (we'll use reasonable defaults since we don't have the actual data)
+                let transcript = '';
+                let actualDuration = 0;
+                let transcriptWords = 0;
+                let candidateMessageCount = 0;
+
+                // Try to fetch VAPI call data if we have a vapiCallId
+                if (interview?.vapiCallId) {
+                    try {
+                        console.log('📞 [GRADING] Fetching VAPI call data for:', interview.vapiCallId);
+                        const callResponse = await fetch(`/api/vapi/call?callId=${interview.vapiCallId}`);
+                        if (!callResponse.ok) {
+                            throw new Error('Failed to fetch call data');
+                        }
+                        const callResult = await callResponse.json();
+                        const callData = callResult.callData;
+
+                        console.log('📞 [GRADING] VAPI call data received:', {
+                            id: callData.id,
+                            status: callData.status,
+                            duration: callData.duration,
+                            hasTranscript: !!callData.transcript
+                        });
+
+                        // Extract transcript from call data
+                        if (callData.transcript && Array.isArray(callData.transcript)) {
+                            transcript = callData.transcript
+                                .map((msg: any) => `${msg.role || 'Unknown'}: ${msg.content || msg.text || ''}`)
+                                .join('\n');
+                        } else if (typeof callData.transcript === 'string') {
+                            transcript = callData.transcript;
+                        } else if (callData.messages && Array.isArray(callData.messages)) {
+                            transcript = callData.messages
+                                .map((msg: any) => `${msg.role || 'Unknown'}: ${msg.content || msg.text || ''}`)
+                                .join('\n');
+                        }
+
+                        // Calculate actual metrics
+                        actualDuration = callData.duration || 0; // Duration in seconds
+                        transcriptWords = transcript.split(/\s+/).filter((w: string) => w.length > 0).length;
+                        const candidateContent = transcript.toLowerCase();
+                        candidateMessageCount = (candidateContent.match(/candidate:/g) || []).length;
+
+                        console.log('📊 [GRADING] Actual interview metrics:', {
+                            duration: actualDuration,
+                            transcriptWords,
+                            candidateMessageCount,
+                            transcriptLength: transcript.length
+                        });
+                    } catch (vapiError) {
+                        console.warn('⚠️ [GRADING] Failed to fetch VAPI call data:', vapiError);
+                    }
+                }
+
+                // Use actual interview data or fallback to defaults
+                const interviewDuration = actualDuration || (interview?.duration ? interview.duration * 60 : 60); // Convert minutes to seconds if needed
+                const interviewType = interview?.interviewType || interview?.type || 'technical';
+                const skillLevel = interview?.skillLevel || 'intermediate';
+                const expectedDuration = (interview?.duration || 15) * 60; // Expected duration in seconds
+
+                // Create interview metrics with actual data
                 const interviewMetrics = {
-                    duration: 60, // Assume 1 minute for fallback
-                    transcriptLength: 100,
-                    transcriptWords: 20,
-                    candidateMessageCount: 2,
-                    transcript: 'Sample interview transcript - user participated briefly',
-                    interviewType: 'technical',
-                    skillLevel: 'intermediate',
-                    expectedDuration: 15 * 60 // 15 minutes
+                    duration: interviewDuration,
+                    transcriptLength: transcript.length || 100,
+                    transcriptWords: transcriptWords || Math.max(1, Math.floor(transcript.length / 5)),
+                    candidateMessageCount: candidateMessageCount || 1,
+                    transcript: transcript || 'Interview transcript not available',
+                    interviewType: interviewType,
+                    skillLevel: skillLevel,
+                    expectedDuration: expectedDuration
                 };
 
-                // Use intelligent grading
-                const intelligentResult = IntelligentGradingSystem.gradeInterview(interviewMetrics);
+                console.log('📊 [GRADING] Using interview metrics:', interviewMetrics);
+
+                // Try to get AI analysis if there's sufficient content
+                let aiScore: number | undefined;
+                if (transcriptWords >= 50 && candidateMessageCount >= 2 && transcript.length > 100) {
+                    try {
+                        console.log('🤖 [GRADING] Getting AI analysis from Gemini...');
+                        const role = 'Software Engineer'; // Could be extracted from interview metadata
+                        const level = skillLevel === 'beginner' ? 'Junior' : skillLevel === 'advanced' ? 'Senior' : 'Mid-level';
+                        const techstack: string[] = interview?.skills || [];
+
+                        const analyzeResponse = await fetch('/api/vapi/analyze', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                transcript,
+                                role,
+                                level,
+                                techstack,
+                            }),
+                        });
+
+                        if (analyzeResponse.ok) {
+                            const analyzeResult = await analyzeResponse.json();
+                            if (analyzeResult.success && analyzeResult.grading) {
+                                aiScore = analyzeResult.grading.overallScore;
+                                console.log('✅ [GRADING] AI analysis completed:', { aiScore });
+                            }
+                        }
+                    } catch (geminiError) {
+                        console.warn('⚠️ [GRADING] AI analysis failed, proceeding with intelligent grading only:', geminiError);
+                    }
+                } else {
+                    console.log('⚠️ [GRADING] Insufficient content for AI analysis:', {
+                        transcriptWords,
+                        candidateMessageCount,
+                        transcriptLength: transcript.length
+                    });
+                }
+
+                // Use intelligent grading with actual metrics and AI score
+                const intelligentResult = IntelligentGradingSystem.gradeInterview(interviewMetrics, aiScore);
+
+                console.log('🎯 [GRADING] Intelligent grading result:', {
+                    score: intelligentResult.score,
+                    status: intelligentResult.status,
+                    feedback: intelligentResult.feedback
+                });
 
                 // Convert to expected format
                 gradingData = {
                     overallScore: intelligentResult.score / 10, // Convert to 0-10 scale
                     summary: intelligentResult.feedback,
-                    keyHighlights: intelligentResult.strengths,
-                    areasForImprovement: intelligentResult.areasForImprovement,
+                    keyHighlights: intelligentResult.strengths || [],
+                    areasForImprovement: intelligentResult.areasForImprovement || [],
                     recommendation: intelligentResult.recommendation,
-                    isFailedInterview: intelligentResult.status === 'technical_issue' || intelligentResult.status === 'insufficient_data'
+                    isFailedInterview: intelligentResult.status === 'technical_issue' || intelligentResult.status === 'insufficient_data',
+                    transcriptLength: transcript.length,
+                    transcriptWordCount: transcriptWords,
+                    candidateMessageCount: candidateMessageCount
                 };
 
-                console.log('✅ [GRADING] Intelligent grading fallback completed:', gradingData);
+                console.log('✅ [GRADING] Grading completed with actual data:', gradingData);
             }
 
             // Process the grading result
