@@ -126,8 +126,11 @@ export class VapiService {
                 console.log('🌐 [VAPI] Setting transcriber language:', config.language, 'Config:', transcriberConfig);
 
                 // Override model to ensure AI responds in the selected language
-                // This adds a language instruction to the system prompt
+                // IMPORTANT: Must include provider field for VAPI validation
+                // Using OpenAI as default provider (matches assistant configuration)
                 assistantOverrides.model = {
+                    provider: 'openai',
+                    model: 'gpt-4o-mini',
                     messages: [
                         {
                             role: 'system',
@@ -144,6 +147,7 @@ Be conversational and interactive. Ask ONE question at a time and WAIT for their
                         }
                     ]
                 };
+                console.log('🌐 [VAPI] Model override configured with provider:', assistantOverrides.model.provider);
 
                 // Override first message to be in the selected language
                 const firstMessages: Record<LanguageCode, string> = {
