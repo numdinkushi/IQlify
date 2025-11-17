@@ -148,13 +148,20 @@ export const InterviewInterface = ({
             });
 
             try {
-                await updateInterview({
-                    interviewId: interview._id as any,
-                    status: 'in_progress',
-                    vapiCallId: vapiCall.id || `call_${Date.now()}`
-                });
+                // Only update with vapiCallId if it's a valid UUID (VAPI requires UUID format)
+                // Don't create fallback IDs as they won't work with VAPI API
+                if (vapiCall.id) {
+                    await updateInterview({
+                        interviewId: interview._id as any,
+                        status: 'in_progress',
+                        vapiCallId: vapiCall.id
+                    });
+                } else {
+                    console.warn('⚠️ [VAPI] No call ID received from VAPI, skipping interview update');
+                }
             } catch (updateError) {
                 // Silent fail - interview can continue
+                console.warn('⚠️ [VAPI] Failed to update interview with call ID:', updateError);
             }
 
         } catch (error) {

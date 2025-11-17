@@ -75,13 +75,18 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
                 let transcriptWords = 0;
                 let candidateMessageCount = 0;
 
-                // Try to fetch VAPI call data if we have a vapiCallId
-                if (interview?.vapiCallId) {
+                // Try to fetch actual VAPI call data if we have a valid UUID call ID
+                // VAPI requires UUID format, so skip if it's a fallback timestamp ID
+                const isValidUUID = (str: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+
+                if (interview?.vapiCallId && isValidUUID(interview.vapiCallId)) {
                     try {
                         console.log('📞 [GRADING] Fetching VAPI call data for:', interview.vapiCallId);
                         const callResponse = await fetch(`/api/vapi/call?callId=${interview.vapiCallId}`);
                         if (!callResponse.ok) {
-                            throw new Error('Failed to fetch call data');
+                            const errorData = await callResponse.json().catch(() => ({}));
+                            console.warn('⚠️ [GRADING] Failed to fetch VAPI call data:', errorData);
+                            throw new Error(errorData.error || 'Failed to fetch call data');
                         }
                         const callResult = await callResponse.json();
                         const callData = callResult.callData;
@@ -120,7 +125,11 @@ export const GradingScreen = ({ interviewId, interview, onComplete, onBack }: Gr
                         });
                     } catch (vapiError) {
                         console.warn('⚠️ [GRADING] Failed to fetch VAPI call data:', vapiError);
+                        // Continue with grading using available data
                     }
+                } else if (interview?.vapiCallId) {
+                    console.warn('⚠️ [GRADING] Invalid call ID format (not UUID), skipping VAPI fetch:', interview.vapiCallId.substring(0, 20));
+                    // Continue with grading using available data from interview record
                 }
 
                 // Use actual interview data or fallback to defaults

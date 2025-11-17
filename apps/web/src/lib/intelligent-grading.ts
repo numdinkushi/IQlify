@@ -265,10 +265,33 @@ export class IntelligentGradingSystem {
             participationCompletion * weights.participation
         ) * 100;
 
+        console.log('📊 [PARTIAL SCORING] Base score calculation:', {
+            baseScore: baseScore.toFixed(2),
+            durationCompletion: (durationCompletion * 100).toFixed(1) + '%',
+            contentCompletion: (contentCompletion * 100).toFixed(1) + '%',
+            participationCompletion: (participationCompletion * 100).toFixed(1) + '%',
+            aiScore: aiScore !== undefined ? aiScore : 'not available'
+        });
+
         // Apply AI score if available (normalized to 0-100)
-        if (aiScore !== undefined && aiScore > 0) {
-            const normalizedAiScore = Math.min(aiScore * 10, 100); // Convert 0-10 to 0-100
-            baseScore = baseScore * (1 - weights.aiScore) + normalizedAiScore * weights.aiScore;
+        // AI score should have significant weight when available
+        if (aiScore !== undefined && aiScore > 0 && !isNaN(aiScore)) {
+            // Ensure AI score is in 0-10 range
+            const clampedAiScore = Math.max(0, Math.min(10, aiScore));
+            const normalizedAiScore = clampedAiScore * 10; // Convert 0-10 to 0-100
+
+            console.log('🤖 [PARTIAL SCORING] Applying AI score:', {
+                originalAiScore: aiScore,
+                clampedAiScore,
+                normalizedAiScore,
+                baseScoreBefore: baseScore.toFixed(2)
+            });
+
+            // Weighted combination: AI score gets 30% weight when available (more than default 10%)
+            const aiWeight = 0.3;
+            baseScore = baseScore * (1 - aiWeight) + normalizedAiScore * aiWeight;
+
+            console.log('🤖 [PARTIAL SCORING] Base score after AI:', baseScore.toFixed(2));
         }
 
         // Apply completion bonus/penalty
@@ -276,11 +299,24 @@ export class IntelligentGradingSystem {
         let finalScore = Math.round(baseScore * completionMultiplier);
 
         // Apply intelligent minimum scoring based on participation quality
+        // This ensures that even partial interviews get fair credit for participation
         if (metrics.duration > 0 && metrics.transcriptWords > 0) {
-            // Calculate participation quality score
+            // Calculate participation quality score (0-1 scale)
             const participationQuality = this.calculateParticipationQuality(metrics);
-            const qualityBasedMinScore = Math.round(participationQuality * 20); // 0-20 points based on quality
-            finalScore = Math.max(qualityBasedMinScore, finalScore);
+
+            // Quality-based minimum should be proportional but not override good scores
+            // Use a smaller multiplier to avoid inflating scores artificially
+            const qualityBasedMinScore = Math.round(participationQuality * 15); // 0-15 points based on quality
+
+            // Only apply minimum if base score is very low (below 20)
+            // This prevents the minimum from capping good performances
+            if (finalScore < 20) {
+                finalScore = Math.max(qualityBasedMinScore, finalScore);
+            } else {
+                // For better performances, add a small quality bonus (0-5 points)
+                const qualityBonus = Math.round(participationQuality * 5);
+                finalScore = Math.min(100, finalScore + qualityBonus);
+            }
         }
 
         // Ensure score is within bounds
@@ -315,20 +351,30 @@ export class IntelligentGradingSystem {
 
     /**
      * Calculates completion multiplier for partial credit
+     * This should be more lenient to avoid penalizing partial interviews too harshly
      */
     private static calculateCompletionMultiplier(durationCompletion: number, contentCompletion: number): number {
         const overallCompletion = (durationCompletion + contentCompletion) / 2;
 
+        console.log('📊 [COMPLETION MULTIPLIER] Calculating:', {
+            durationCompletion: (durationCompletion * 100).toFixed(1) + '%',
+            contentCompletion: (contentCompletion * 100).toFixed(1) + '%',
+            overallCompletion: (overallCompletion * 100).toFixed(1) + '%'
+        });
+
+        // More lenient multipliers to avoid harsh penalties
         if (overallCompletion >= this.EXCELLENT_DURATION_THRESHOLD) {
             return 1.0; // Full credit
         } else if (overallCompletion >= this.GOOD_DURATION_THRESHOLD) {
-            return 0.9; // 90% credit
+            return 0.95; // 95% credit (was 0.9)
         } else if (overallCompletion >= this.IDEAL_DURATION_THRESHOLD) {
-            return 0.8; // 80% credit
+            return 0.85; // 85% credit (was 0.8)
         } else if (overallCompletion >= 0.1) { // 10% completion
-            return 0.6; // 60% credit for minimal completion
+            return 0.75; // 75% credit for minimal completion (was 0.6)
+        } else if (overallCompletion >= 0.05) { // 5% completion
+            return 0.65; // 65% credit for very brief participation (was 0.5)
         } else {
-            return 0.5; // 50% credit for very brief participation
+            return 0.5; // 50% credit for extremely brief participation
         }
     }
 
@@ -462,19 +508,28 @@ export class IntelligentGradingSystem {
      * Calculates participation quality based on multiple factors
      */
     private static calculateParticipationQuality(metrics: InterviewMetrics): number {
+        // Safety check: avoid division by zero
+        if (metrics.duration <= 0 || metrics.transcriptWords <= 0) {
+            return 0;
+        }
+
         // Factor 1: Duration quality (longer is better, but with diminishing returns)
         const durationQuality = Math.min(metrics.duration / 300, 1); // 5 minutes = 1.0
 
         // Factor 2: Content density (words per minute)
-        const wordsPerMinute = metrics.transcriptWords / (metrics.duration / 60);
+        const durationInMinutes = metrics.duration / 60;
+        const wordsPerMinute = durationInMinutes > 0 ? metrics.transcriptWords / durationInMinutes : 0;
         const contentDensity = Math.min(wordsPerMinute / 50, 1); // 50 WPM = 1.0
 
         // Factor 3: Message engagement (responses per minute)
-        const messagesPerMinute = metrics.candidateMessageCount / (metrics.duration / 60);
+        const messagesPerMinute = durationInMinutes > 0 ? metrics.candidateMessageCount / durationInMinutes : 0;
         const engagementLevel = Math.min(messagesPerMinute / 2, 1); // 2 messages/min = 1.0
 
         // Factor 4: Content quality (average word length indicates thoughtfulness)
-        const avgWordLength = metrics.transcript.split(' ').reduce((sum, word) => sum + word.length, 0) / metrics.transcriptWords;
+        const words = metrics.transcript.split(' ').filter(w => w.length > 0);
+        const avgWordLength = words.length > 0
+            ? words.reduce((sum, word) => sum + word.length, 0) / words.length
+            : 0;
         const contentQuality = Math.min(avgWordLength / 6, 1); // 6 chars/word = 1.0
 
         // Weighted combination
