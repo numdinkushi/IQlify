@@ -7,10 +7,12 @@ import { WalletTabs, WalletTabType } from './wallet/wallet-tabs';
 import { OverviewTab } from './wallet/overview-tab';
 import { TransactionsTab } from './wallet/transactions-tab';
 import { Wallet } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function WalletTab() {
     const { address, isConnected } = useAppState();
     const [activeTab, setActiveTab] = useState<WalletTabType>(WalletTabType.OVERVIEW);
+    const t = useTranslations();
 
 
 
@@ -47,7 +49,7 @@ export function WalletTab() {
             >
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-400 mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading IQlify...</p>
+                    <p className="text-muted-foreground">{t('wallet.loading')}</p>
                 </div>
             </motion.div>
         );
@@ -64,8 +66,8 @@ export function WalletTab() {
             >
                 <div className="text-center space-y-4">
                     <Wallet className="h-16 w-16 text-gold-400 mx-auto opacity-50" />
-                    <h1 className="text-2xl font-bold iqlify-gold-text">Connect Your Wallet</h1>
-                    <p className="text-muted-foreground">Connect your wallet to view your wallet information</p>
+                    <h1 className="text-2xl font-bold iqlify-gold-text">{t('wallet.connectWallet')}</h1>
+                    <p className="text-muted-foreground">{t('wallet.connectWalletDesc')}</p>
                 </div>
             </motion.div>
         );
@@ -92,8 +94,8 @@ export function WalletTab() {
             <div className="max-w-md mx-auto space-y-6">
                 {/* Header */}
                 <motion.div variants={itemVariants} className="text-center space-y-2 mb-8">
-                    <h1 className="text-2xl font-bold iqlify-gold-text">Wallet</h1>
-                    <p className="text-muted-foreground">Manage your earnings and rewards</p>
+                    <h1 className="text-2xl font-bold iqlify-gold-text">{t('wallet.title')}</h1>
+                    <p className="text-muted-foreground">{t('wallet.subtitle')}</p>
                 </motion.div>
 
                 {/* Wallet Tabs */}

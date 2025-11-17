@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { History, CheckCircle, Target, Mic, Play } from 'lucide-react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useTranslations } from 'next-intl';
 
 interface Interview {
     _id: string;
@@ -35,6 +36,7 @@ export function InterviewHistory({
 }: InterviewHistoryProps) {
     const [activeTab, setActiveTab] = useState<'recent' | 'all'>('recent');
     const [cursor, setCursor] = useState<string | null>(null);
+    const t = useTranslations();
 
     // Fetch all interviews with pagination
     const allInterviewsData = useQuery(
@@ -53,9 +55,9 @@ export function InterviewHistory({
                     <div className="w-16 h-16 bg-gray-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
                         <History className="w-8 h-8 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">No Interviews Yet</h3>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">{t('interview.noInterviews')}</h3>
                     <p className="text-muted-foreground mb-6">
-                        Start your first interview to see your history here.
+                        {t('interview.noInterviewsDesc')}
                     </p>
                     <Button
                         onClick={onStartFirstInterview}
@@ -63,7 +65,7 @@ export function InterviewHistory({
                         className="bg-gold-400 hover:bg-gold-500 text-black font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Play className="w-4 h-4 mr-2" />
-                        {!userHasId ? 'Loading User...' : 'Start Your First Interview'}
+                        {!userHasId ? t('interview.loadingUser') : t('interview.startFirst')}
                     </Button>
                 </div>
             </Card>
@@ -90,7 +92,7 @@ export function InterviewHistory({
             <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                     <History className="h-5 w-5 text-gold-400" />
-                    <h3 className="text-lg font-semibold text-foreground">Interview Records</h3>
+                    <h3 className="text-lg font-semibold text-foreground">{t('interview.records')}</h3>
                 </div>
 
                 {/* Tabs */}
@@ -102,7 +104,7 @@ export function InterviewHistory({
                             : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
-                        Recent
+                        {t('interview.recent')}
                     </button>
                     <button
                         onClick={() => handleTabChange('all')}
@@ -111,7 +113,7 @@ export function InterviewHistory({
                             : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
-                        All
+                        {t('interview.all')}
                     </button>
                 </div>
 
@@ -119,7 +121,7 @@ export function InterviewHistory({
                 {isLoadingAll && userId && !history.length ? (
                     <div className="text-center py-8">
                         <div className="w-8 h-8 border-4 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        <p className="text-muted-foreground">Loading interviews...</p>
+                        <p className="text-muted-foreground">{t('interview.loadingInterviews')}</p>
                     </div>
                 ) : (
                     <>
@@ -162,10 +164,16 @@ export function InterviewHistory({
                                         </div>
                                         <div>
                                             <div className="text-foreground font-medium capitalize">
-                                                {interview.interviewType?.replace('_', ' ') || interview.type || 'Interview'}
+                                                {interview.interviewType 
+                                                    ? t(`interview.types.${interview.interviewType}`) || interview.interviewType.replace('_', ' ')
+                                                    : interview.type 
+                                                        ? t(`interview.types.${interview.type}`) || interview.type
+                                                        : t('interview.title')}
                                             </div>
                                             <div className="text-sm text-muted-foreground">
-                                                {interview.skillLevel || 'Unknown'} • {interview.duration} min
+                                                {interview.skillLevel 
+                                                    ? t(`interview.skillLevels.${interview.skillLevel}`) || interview.skillLevel
+                                                    : 'Unknown'} • {interview.duration} {t('interview.min')}
                                             </div>
                                         </div>
                                     </div>
@@ -184,16 +192,11 @@ export function InterviewHistory({
                                         ) : interview.status === 'failed' ? (
                                             <div className="flex items-center gap-2">
                                                 <div className="text-red-400 font-medium">0%</div>
-                                                <div className="text-red-400 text-sm">Failed</div>
+                                                <div className="text-red-400 text-sm">{t('interview.statuses.failed')}</div>
                                             </div>
                                         ) : (
                                             <div className="text-muted-foreground text-sm">
-                                                {interview.status === 'in_progress' ? 'In Progress' :
-                                                    interview.status === 'grading' ? 'Grading...' :
-                                                        interview.status === 'partial' ? 'Partial' :
-                                                            interview.status === 'technical_issue' ? 'Technical Issue' :
-                                                                interview.status === 'insufficient_data' ? 'Insufficient Data' :
-                                                                    'Not Started'}
+                                                {t(`interview.statuses.${interview.status}`) || interview.status}
                                             </div>
                                         )}
                                     </div>
@@ -208,7 +211,7 @@ export function InterviewHistory({
                                     onClick={handleLoadMore}
                                     className="bg-gold-400 hover:bg-gold-500 text-black font-medium"
                                 >
-                                    Load More
+                                    {t('interview.loadMore')}
                                 </Button>
                             </div>
                         )}
@@ -217,7 +220,7 @@ export function InterviewHistory({
                         {displayedInterviews.length === 0 && (
                             <div className="text-center py-8">
                                 <History className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                                <p className="text-muted-foreground">No interviews found</p>
+                                <p className="text-muted-foreground">{t('interview.noInterviewsFound')}</p>
                             </div>
                         )}
                     </>

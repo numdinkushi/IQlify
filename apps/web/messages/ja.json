@@ -1,0 +1,181 @@
+{
+  "tabs": {
+    "home": "ホーム",
+    "interview": "面接",
+    "wallet": "ウォレット",
+    "leaderboard": "リーダーボード",
+    "settings": "設定",
+    "challenges": "チャレンジ"
+  },
+  "home": {
+    "welcome": {
+      "title": "ようこそ",
+      "tagline": "面接をマスターしながら実際のお金を稼ぐ",
+      "aiInterviews": "AI面接",
+      "earnRewards": "報酬を獲得",
+      "getBetter": "上達する",
+      "connectWallet": "ウォレットを接続",
+      "connectWalletDesc": "ウォレットを接続して残高を確認し、報酬を獲得し始めましょう！",
+      "loading": "IQlifyを読み込み中..."
+    },
+    "dashboard": {
+      "title": "ダッシュボード",
+      "subtitle": "進捗と収益を追跡",
+      "totalEarnings": "総収益",
+      "currentStreak": "現在の連続記録",
+      "days": "日",
+      "streakBonus": "連続ボーナス",
+      "earnings": "収益",
+      "keepStreak": "連続記録を維持しましょう！",
+      "quickActions": "クイックアクション",
+      "takeInterview": "面接を受ける",
+      "recentActivity": "最近の活動",
+      "noActivity": "最近の活動なし",
+      "startFirst": "最初の面接を開始して、ここで活動を確認してください",
+      "interviewCompleted": "面接完了",
+      "interviewInProgress": "面接進行中",
+      "interviewStarted": "面接開始",
+      "rewardAvailable": "CELO報酬利用可能"
+    }
+  },
+  "interview": {
+    "title": "面接",
+    "subtitle": "AIと面接を受けて報酬を獲得",
+    "connectWallet": "ウォレットを接続",
+    "connectWalletDesc": "面接にアクセスして報酬を獲得し始めるには、ウォレットを接続してください！",
+    "loadingData": "面接データを読み込み中",
+    "loadingDesc": "面接履歴と統計を取得中...",
+    "startNew": "新しい面接を開始",
+    "startNewDesc": "スキルレベル、面接タイプ、時間を選択してください。AIと面接を受けてCELO報酬を獲得します。",
+    "launchSetup": "面接セットアップを起動",
+    "starting": "開始中...",
+    "loadingUser": "ユーザーを読み込み中...",
+    "records": "面接記録",
+    "recent": "最近",
+    "all": "すべて",
+    "noInterviews": "まだ面接がありません",
+    "noInterviewsDesc": "最初の面接を開始して、ここで履歴を確認してください。",
+    "startFirst": "最初の面接を開始",
+    "loadingInterviews": "面接を読み込み中...",
+    "loadMore": "さらに読み込む",
+    "noInterviewsFound": "面接が見つかりません",
+    "types": {
+      "technical": "技術",
+      "soft_skills": "ソフトスキル",
+      "behavioral": "行動",
+      "system_design": "システム設計"
+    },
+    "skillLevels": {
+      "beginner": "初級",
+      "intermediate": "中級",
+      "advanced": "上級"
+    },
+    "statuses": {
+      "in_progress": "進行中",
+      "failed": "失敗",
+      "grading": "評価中...",
+      "partial": "部分",
+      "technical_issue": "技術的問題",
+      "insufficient_data": "データ不足",
+      "not_started": "未開始",
+      "completed": "完了"
+    },
+    "min": "分"
+  },
+  "wallet": {
+    "title": "ウォレット",
+    "subtitle": "収益と報酬を管理",
+    "connectWallet": "ウォレットを接続",
+    "connectWalletDesc": "ウォレット情報を表示するにはウォレットを接続してください",
+    "loading": "IQlifyを読み込み中...",
+    "quickActions": "クイックアクション",
+    "withdraw": "引き出す",
+    "send": "送信",
+    "earningsSummary": "収益サマリー",
+    "today": "今日",
+    "thisWeek": "今週",
+    "thisMonth": "今月",
+    "total": "合計",
+    "share": "共有"
+  },
+  "leaderboard": {
+    "title": "リーダーボード",
+    "subtitle": "面接ポイントでランク付け",
+    "yourRank": "あなたのランク",
+    "interviewPoints": "面接ポイント",
+    "keepPracticing": "ランクを上げるために練習を続けましょう！",
+    "topPerformers": "トップパフォーマー",
+    "viewAll": "すべて表示",
+    "noData": "リーダーボードデータはまだありません",
+    "startEarning": "収益を得始めてトップパフォーマーを確認しましょう！",
+    "dayStreak": "日連続",
+    "share": "共有"
+  },
+  "challenges": {
+    "title": "チャレンジ",
+    "subtitle": "競争して報酬を獲得",
+    "dailyChallenge": "デイリーチャレンジ",
+    "weeklyChallenge": "ウィークリーチャレンジ",
+    "skillChallenges": "スキルチャレンジ",
+    "entryFee": "参加費",
+    "prizePool": "賞金",
+    "participants": "参加者",
+    "timeLeft": "残り時間",
+    "joinChallenge": "チャレンジに参加",
+    "join": "参加"
+  },
+  "settings": {
+    "title": "設定",
+    "subtitle": "設定とアカウントを管理",
+    "appearance": {
+      "title": "外観",
+      "theme": "テーマ",
+      "language": "言語",
+      "change": "変更"
+    },
+    "notifications": {
+      "title": "通知",
+      "earnings": "収益通知",
+      "earningsDesc": "報酬を獲得したときに通知を受け取る",
+      "challenges": "チャレンジリマインダー",
+      "challengesDesc": "チャレンジの毎日のリマインダー",
+      "enable": "有効化"
+    },
+    "security": {
+      "title": "セキュリティ",
+      "twoFactor": "二要素認証",
+      "twoFactorDesc": "アカウントに追加のセキュリティを追加",
+      "sessions": "セッション管理",
+      "sessionsDesc": "アクティブなセッションを管理",
+      "setup": "設定",
+      "manage": "管理"
+    },
+    "about": {
+      "title": "について",
+      "version": "バージョン 1.0.0",
+      "tagline": "面接をマスターしながら実際のお金を稼ぐ"
+    },
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "support": "サポート"
+  },
+  "language": {
+    "selectTitle": "言語を選択",
+    "selectDescription": "希望する言語を選択してください。変更はすぐに適用されます。",
+    "theme": {
+      "selectTitle": "テーマを選択",
+      "selectDescription": "希望するテーマを選択してください。変更はすぐに適用されます。"
+    }
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる"
+  }
+}

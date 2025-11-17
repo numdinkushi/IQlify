@@ -15,11 +15,13 @@ import { StatsGrid } from './stats-grid';
 import { InterviewHistory } from './interview-history';
 import { GettingStarted } from './getting-started';
 import { ConnectButton } from '@/components/connect-button';
+import { useTranslations } from 'next-intl';
 
 export function InterviewTab() {
     const { address, isConnected } = useAccount();
     const [isLauncherOpen, setIsLauncherOpen] = useState(false);
     const router = useRouter();
+    const t = useTranslations();
 
     const user = useQuery(
         api.users.getUserByWallet,
@@ -113,9 +115,9 @@ export function InterviewTab() {
                     className="max-w-md mx-auto text-center space-y-6"
                 >
                     <div className="iqlify-card border-gold-400/20 p-6 space-y-4">
-                        <h2 className="text-2xl font-semibold text-gold-400">Connect Your Wallet</h2>
+                        <h2 className="text-2xl font-semibold text-gold-400">{t('interview.connectWallet')}</h2>
                         <p className="text-muted-foreground">
-                            Please connect your wallet to access interviews and start earning rewards!
+                            {t('interview.connectWalletDesc')}
                         </p>
                         <ConnectButton />
                     </div>
@@ -129,8 +131,8 @@ export function InterviewTab() {
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">Loading Interview Data</h3>
-                    <p className="text-muted-foreground">Fetching your interview history and statistics...</p>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{t('interview.loadingData')}</h3>
+                    <p className="text-muted-foreground">{t('interview.loadingDesc')}</p>
                 </div>
             </div>
         );
@@ -145,8 +147,8 @@ export function InterviewTab() {
         >
             <div className="max-w-4xl mx-auto space-y-6">
                 <motion.div variants={itemVariants} className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold iqlify-gold-text">Interview</h1>
-                    <p className="text-muted-foreground">Take interviews with AI and earn rewards</p>
+                    <h1 className="text-3xl font-bold iqlify-gold-text">{t('interview.title')}</h1>
+                    <p className="text-muted-foreground">{t('interview.subtitle')}</p>
                 </motion.div>
 
                 {error && (

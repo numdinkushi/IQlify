@@ -1,0 +1,182 @@
+{
+  "tabs": {
+    "home": "Home",
+    "interview": "Colloquio",
+    "wallet": "Portafoglio",
+    "leaderboard": "Classifica",
+    "settings": "Impostazioni",
+    "challenges": "Sfide"
+  },
+  "home": {
+    "welcome": {
+      "title": "Benvenuto su",
+      "tagline": "Padroneggia i colloqui mentre guadagni denaro reale",
+      "aiInterviews": "Colloqui IA",
+      "earnRewards": "Guadagna Ricompense",
+      "getBetter": "Migliora",
+      "connectWallet": "Connetti il tuo Portafoglio",
+      "connectWalletDesc": "Connetti il tuo portafoglio per vedere il tuo saldo e iniziare a guadagnare ricompense!",
+      "loading": "Caricamento IQlify..."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Traccia i tuoi progressi e guadagni",
+      "totalEarnings": "Guadagni Totali",
+      "currentStreak": "Serie Attuale",
+      "days": "giorni",
+      "streakBonus": "Bonus Serie",
+      "earnings": "Guadagni",
+      "keepStreak": "Mantieni la tua serie!",
+      "quickActions": "Azioni Rapide",
+      "takeInterview": "Fai un Colloquio",
+      "recentActivity": "Attività Recente",
+      "noActivity": "Nessuna attività recente",
+      "startFirst": "Inizia il tuo primo colloquio per vedere l'attività qui",
+      "interviewCompleted": "Colloquio Completato",
+      "interviewInProgress": "Colloquio in Corso",
+      "interviewStarted": "Colloquio Avviato",
+      "rewardAvailable": "ricompensa CELO disponibile"
+    }
+  },
+  "interview": {
+    "title": "Colloquio",
+    "subtitle": "Fai colloqui con l'IA e guadagna ricompense",
+    "connectWallet": "Connetti il tuo Portafoglio",
+    "connectWalletDesc": "Per favore connetti il tuo portafoglio per accedere ai colloqui e iniziare a guadagnare ricompense!",
+    "loadingData": "Caricamento Dati Colloquio",
+    "loadingDesc": "Recupero della tua cronologia colloqui e statistiche...",
+    "startNew": "Inizia Nuovo Colloquio",
+    "startNewDesc": "Scegli il tuo livello di abilità, tipo di colloquio e durata. Fai colloqui con l'IA e guadagna ricompense CELO.",
+    "launchSetup": "Avvia Configurazione Colloquio",
+    "starting": "Avvio...",
+    "loadingUser": "Caricamento Utente...",
+    "records": "Registri Colloqui",
+    "recent": "Recenti",
+    "all": "Tutti",
+    "noInterviews": "Nessun Colloquio Ancora",
+    "noInterviewsDesc": "Inizia il tuo primo colloquio per vedere la tua cronologia qui.",
+    "startFirst": "Inizia il Tuo Primo Colloquio",
+    "loadingInterviews": "Caricamento colloqui...",
+    "loadMore": "Carica Altri",
+    "noInterviewsFound": "Nessun colloquio trovato",
+    "types": {
+      "technical": "Tecnico",
+      "soft_skills": "Competenze Trasversali",
+      "behavioral": "Comportamentale",
+      "system_design": "Progettazione di Sistema"
+    },
+    "skillLevels": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzato"
+    },
+    "statuses": {
+      "in_progress": "In Corso",
+      "failed": "Fallito",
+      "grading": "Valutazione...",
+      "partial": "Parziale",
+      "technical_issue": "Problema Tecnico",
+      "insufficient_data": "Dati Insufficienti",
+      "not_started": "Non Iniziato",
+      "completed": "Completato"
+    },
+    "min": "min"
+  },
+  "wallet": {
+    "title": "Portafoglio",
+    "subtitle": "Gestisci i tuoi guadagni e ricompense",
+    "connectWallet": "Connetti il tuo Portafoglio",
+    "connectWalletDesc": "Connetti il tuo portafoglio per vedere le informazioni del tuo portafoglio",
+    "loading": "Caricamento IQlify...",
+    "quickActions": "Azioni Rapide",
+    "withdraw": "Preleva",
+    "send": "Invia",
+    "earningsSummary": "Riepilogo Guadagni",
+    "today": "Oggi",
+    "thisWeek": "Questa Settimana",
+    "thisMonth": "Questo Mese",
+    "total": "Totale",
+    "share": "Condividi"
+  },
+  "leaderboard": {
+    "title": "Classifica",
+    "subtitle": "Ordinato per punti colloquio",
+    "yourRank": "La tua Posizione",
+    "interviewPoints": "punti colloquio",
+    "keepPracticing": "Continua a praticare per salire in classifica!",
+    "topPerformers": "Migliori Prestazioni",
+    "viewAll": "Vedi Tutto",
+    "noData": "Nessun dato di classifica ancora",
+    "startEarning": "Inizia a guadagnare per vedere i migliori!",
+    "dayStreak": "giorni di serie",
+    "share": "Condividi"
+  },
+  "challenges": {
+    "title": "Sfide",
+    "subtitle": "Competi e guadagna ricompense",
+    "dailyChallenge": "Sfida Giornaliera",
+    "weeklyChallenge": "Sfida Settimanale",
+    "skillChallenges": "Sfide di Abilità",
+    "entryFee": "Quota di Iscrizione",
+    "prizePool": "Premio",
+    "participants": "Partecipanti",
+    "timeLeft": "Tempo Rimanente",
+    "joinChallenge": "Unisciti alla Sfida",
+    "join": "Unisciti"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "subtitle": "Gestisci le tue preferenze e account",
+    "appearance": {
+      "title": "Aspetto",
+      "theme": "Tema",
+      "language": "Lingua",
+      "change": "Cambia"
+    },
+    "notifications": {
+      "title": "Notifiche",
+      "earnings": "Notifiche Guadagni",
+      "earningsDesc": "Ricevi notifiche quando guadagni ricompense",
+      "challenges": "Promemoria Sfide",
+      "challengesDesc": "Promemoria giornalieri per le sfide",
+      "enable": "Abilita"
+    },
+    "security": {
+      "title": "Sicurezza",
+      "twoFactor": "Autenticazione a Due Fattori",
+      "twoFactorDesc": "Aggiungi sicurezza extra al tuo account",
+      "sessions": "Gestione Sessioni",
+      "sessionsDesc": "Gestisci sessioni attive",
+      "setup": "Configura",
+      "manage": "Gestisci"
+    },
+    "about": {
+      "title": "Informazioni",
+      "version": "Versione 1.0.0",
+      "tagline": "Padroneggia i colloqui mentre guadagni denaro reale"
+    },
+    "privacy": "Politica sulla Privacy",
+    "terms": "Termini di Servizio",
+    "support": "Supporto"
+  },
+  "language": {
+    "selectTitle": "Seleziona Lingua",
+    "selectDescription": "Scegli la tua lingua preferita. Le modifiche saranno applicate immediatamente.",
+    "theme": {
+      "selectTitle": "Seleziona Tema",
+      "selectDescription": "Scegli il tuo tema preferito. Le modifiche saranno applicate immediatamente."
+    }
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi"
+  }
+}
+

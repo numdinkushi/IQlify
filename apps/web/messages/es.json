@@ -1,0 +1,181 @@
+{
+  "tabs": {
+    "home": "Inicio",
+    "interview": "Entrevista",
+    "wallet": "Billetera",
+    "leaderboard": "Clasificación",
+    "settings": "Configuración",
+    "challenges": "Desafíos"
+  },
+  "home": {
+    "welcome": {
+      "title": "Bienvenido a",
+      "tagline": "Domina entrevistas mientras ganas dinero real",
+      "aiInterviews": "Entrevistas IA",
+      "earnRewards": "Gana Recompensas",
+      "getBetter": "Mejora",
+      "connectWallet": "Conecta tu Billetera",
+      "connectWalletDesc": "¡Conecta tu billetera para ver tu saldo y comenzar a ganar recompensas!",
+      "loading": "Cargando IQlify..."
+    },
+    "dashboard": {
+      "title": "Panel",
+      "subtitle": "Rastrea tu progreso y ganancias",
+      "totalEarnings": "Ganancias Totales",
+      "currentStreak": "Racha Actual",
+      "days": "días",
+      "streakBonus": "Bono de Racha",
+      "earnings": "Ganancias",
+      "keepStreak": "¡Mantén tu racha!",
+      "quickActions": "Acciones Rápidas",
+      "takeInterview": "Tomar Entrevista",
+      "recentActivity": "Actividad Reciente",
+      "noActivity": "No hay actividad reciente",
+      "startFirst": "Comienza tu primera entrevista para ver actividad aquí",
+      "interviewCompleted": "Entrevista Completada",
+      "interviewInProgress": "Entrevista en Progreso",
+      "interviewStarted": "Entrevista Iniciada",
+      "rewardAvailable": "recompensa CELO disponible"
+    }
+  },
+  "interview": {
+    "title": "Entrevista",
+    "subtitle": "Toma entrevistas con IA y gana recompensas",
+    "connectWallet": "Conecta tu Billetera",
+    "connectWalletDesc": "¡Por favor conecta tu billetera para acceder a entrevistas y comenzar a ganar recompensas!",
+    "loadingData": "Cargando Datos de Entrevista",
+    "loadingDesc": "Obteniendo tu historial de entrevistas y estadísticas...",
+    "startNew": "Iniciar Nueva Entrevista",
+    "startNewDesc": "Elige tu nivel de habilidad, tipo de entrevista y duración. Toma entrevistas con IA y gana recompensas CELO.",
+    "launchSetup": "Iniciar Configuración de Entrevista",
+    "starting": "Iniciando...",
+    "loadingUser": "Cargando Usuario...",
+    "records": "Registros de Entrevistas",
+    "recent": "Recientes",
+    "all": "Todas",
+    "noInterviews": "Aún No Hay Entrevistas",
+    "noInterviewsDesc": "Comienza tu primera entrevista para ver tu historial aquí.",
+    "startFirst": "Inicia Tu Primera Entrevista",
+    "loadingInterviews": "Cargando entrevistas...",
+    "loadMore": "Cargar Más",
+    "noInterviewsFound": "No se encontraron entrevistas",
+    "types": {
+      "technical": "Técnica",
+      "soft_skills": "Habilidades Blandas",
+      "behavioral": "Conductual",
+      "system_design": "Diseño de Sistemas"
+    },
+    "skillLevels": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    },
+    "statuses": {
+      "in_progress": "En Progreso",
+      "failed": "Fallida",
+      "grading": "Calificando...",
+      "partial": "Parcial",
+      "technical_issue": "Problema Técnico",
+      "insufficient_data": "Datos Insuficientes",
+      "not_started": "No Iniciada",
+      "completed": "Completada"
+    },
+    "min": "min"
+  },
+  "wallet": {
+    "title": "Billetera",
+    "subtitle": "Administra tus ganancias y recompensas",
+    "connectWallet": "Conecta tu Billetera",
+    "connectWalletDesc": "Conecta tu billetera para ver la información de tu billetera",
+    "loading": "Cargando IQlify...",
+    "quickActions": "Acciones Rápidas",
+    "withdraw": "Retirar",
+    "send": "Enviar",
+    "earningsSummary": "Resumen de Ganancias",
+    "today": "Hoy",
+    "thisWeek": "Esta Semana",
+    "thisMonth": "Este Mes",
+    "total": "Total",
+    "share": "Compartir"
+  },
+  "leaderboard": {
+    "title": "Clasificación",
+    "subtitle": "Clasificado por puntos de entrevista",
+    "yourRank": "Tu Rango",
+    "interviewPoints": "puntos de entrevista",
+    "keepPracticing": "¡Sigue practicando para subir de rango!",
+    "topPerformers": "Mejores Desempeños",
+    "viewAll": "Ver Todo",
+    "noData": "Aún no hay datos de clasificación",
+    "startEarning": "¡Comienza a ganar para ver a los mejores!",
+    "dayStreak": "días de racha",
+    "share": "Compartir"
+  },
+  "challenges": {
+    "title": "Desafíos",
+    "subtitle": "Compite y gana recompensas",
+    "dailyChallenge": "Desafío Diario",
+    "weeklyChallenge": "Desafío Semanal",
+    "skillChallenges": "Desafíos de Habilidades",
+    "entryFee": "Tarifa de Entrada",
+    "prizePool": "Premio",
+    "participants": "Participantes",
+    "timeLeft": "Tiempo Restante",
+    "joinChallenge": "Unirse al Desafío",
+    "join": "Unirse"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra tus preferencias y cuenta",
+    "appearance": {
+      "title": "Apariencia",
+      "theme": "Tema",
+      "language": "Idioma",
+      "change": "Cambiar"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "earnings": "Notificaciones de Ganancias",
+      "earningsDesc": "Recibe notificaciones cuando ganes recompensas",
+      "challenges": "Recordatorios de Desafíos",
+      "challengesDesc": "Recordatorios diarios para desafíos",
+      "enable": "Habilitar"
+    },
+    "security": {
+      "title": "Seguridad",
+      "twoFactor": "Autenticación de Dos Factores",
+      "twoFactorDesc": "Añade seguridad adicional a tu cuenta",
+      "sessions": "Gestión de Sesiones",
+      "sessionsDesc": "Administra sesiones activas",
+      "setup": "Configurar",
+      "manage": "Administrar"
+    },
+    "about": {
+      "title": "Acerca de",
+      "version": "Versión 1.0.0",
+      "tagline": "Domina entrevistas mientras ganas dinero real"
+    },
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "support": "Soporte"
+  },
+  "language": {
+    "selectTitle": "Seleccionar Idioma",
+    "selectDescription": "Elige tu idioma preferido. Los cambios se aplicarán inmediatamente.",
+    "theme": {
+      "selectTitle": "Seleccionar Tema",
+      "selectDescription": "Elige tu tema preferido. Los cambios se aplicarán inmediatamente."
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar"
+  }
+}

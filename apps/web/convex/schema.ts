@@ -14,6 +14,7 @@ export default defineSchema({
             v.literal("intermediate"),
             v.literal("advanced")
         ),
+        preferredLanguage: v.optional(v.string()),
         totalEarnings: v.number(),
         currentStreak: v.number(),
         longestStreak: v.number(),

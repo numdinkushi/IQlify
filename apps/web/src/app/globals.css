@@ -248,6 +248,19 @@
   :root:not(.dark) h6.text-white {
     color: hsl(var(--foreground)) !important;
   }
+  
+  /* Force solid black text in language selector buttons (except selected) */
+  .language-selector-wrapper button[style*="background-color: rgb(255, 255, 255)"] p,
+  .language-selector-wrapper button[style*="background-color: #FFFFFF"] p,
+  .language-selector-wrapper button[style*="background-color: rgb(255, 255, 255)"] span,
+  .language-selector-wrapper button[style*="background-color: #FFFFFF"] span {
+    color: #000000 !important;
+  }
+  
+  /* Force solid black for all unselected language text */
+  .language-selector-wrapper button:not([style*="background-color: rgb(212, 175, 55)"]):not([style*="background-color: #D4AF37"]) p {
+    color: #000000 !important;
+  }
 }
 
 @layer components {

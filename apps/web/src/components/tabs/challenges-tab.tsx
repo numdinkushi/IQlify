@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Target, Clock, Users, Trophy, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function ChallengesTab() {
+    const t = useTranslations();
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -38,8 +40,8 @@ export function ChallengesTab() {
             <div className="max-w-md mx-auto space-y-6">
                 {/* Header */}
                 <motion.div variants={itemVariants} className="text-center space-y-2">
-                    <h1 className="text-2xl font-bold iqlify-gold-text">Challenges</h1>
-                    <p className="text-muted-foreground">Compete and earn rewards</p>
+                    <h1 className="text-2xl font-bold iqlify-gold-text">{t('challenges.title')}</h1>
+                    <p className="text-muted-foreground">{t('challenges.subtitle')}</p>
                 </motion.div>
 
                 {/* Daily Challenge */}
@@ -48,28 +50,28 @@ export function ChallengesTab() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Zap className="h-5 w-5 text-gold-400" />
-                                <CardTitle className="text-gold-400">Daily Challenge</CardTitle>
+                                <CardTitle className="text-gold-400">{t('challenges.dailyChallenge')}</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Entry Fee</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.entryFee')}</span>
                                 <span className="font-semibold text-gold-400">3 CELO</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Prize Pool</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.prizePool')}</span>
                                 <span className="font-semibold text-success">240 CELO</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Participants</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.participants')}</span>
                                 <span className="font-semibold">127</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Time Left</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.timeLeft')}</span>
                                 <span className="font-semibold text-warning">14h 23m</span>
                             </div>
                             <Button className="iqlify-button-primary w-full">
-                                Join Challenge
+                                {t('challenges.joinChallenge')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -81,28 +83,28 @@ export function ChallengesTab() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <Trophy className="h-5 w-5 text-purple-400" />
-                                <CardTitle className="text-purple-400">Weekly Challenge</CardTitle>
+                                <CardTitle className="text-purple-400">{t('challenges.weeklyChallenge')}</CardTitle>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Entry Fee</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.entryFee')}</span>
                                 <span className="font-semibold text-purple-400">5 CELO</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Prize Pool</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.prizePool')}</span>
                                 <span className="font-semibold text-success">1,200 CELO</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Participants</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.participants')}</span>
                                 <span className="font-semibold">89</span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">Time Left</span>
+                                <span className="text-sm text-muted-foreground">{t('challenges.timeLeft')}</span>
                                 <span className="font-semibold text-warning">3d 14h</span>
                             </div>
                             <Button variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10 w-full">
-                                Join Challenge
+                                {t('challenges.joinChallenge')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -110,7 +112,7 @@ export function ChallengesTab() {
 
                 {/* Skill Challenges */}
                 <motion.div variants={itemVariants}>
-                    <h2 className="text-lg font-semibold text-gold-400">Skill Challenges</h2>
+                    <h2 className="text-lg font-semibold text-gold-400">{t('challenges.skillChallenges')}</h2>
                     <div className="space-y-3">
                         <Card className="iqlify-card">
                             <CardContent className="p-4">
@@ -125,7 +127,7 @@ export function ChallengesTab() {
                                         </div>
                                     </div>
                                     <Button size="sm" variant="outline" className="border-gold-400/30 text-gold-400">
-                                        Join
+                                        {t('challenges.join')}
                                     </Button>
                                 </div>
                             </CardContent>
@@ -144,7 +146,7 @@ export function ChallengesTab() {
                                         </div>
                                     </div>
                                     <Button size="sm" variant="outline" className="border-gold-400/30 text-gold-400">
-                                        Join
+                                        {t('challenges.join')}
                                     </Button>
                                 </div>
                             </CardContent>
@@ -163,7 +165,7 @@ export function ChallengesTab() {
                                         </div>
                                     </div>
                                     <Button size="sm" variant="outline" className="border-gold-400/30 text-gold-400">
-                                        Join
+                                        {t('challenges.join')}
                                     </Button>
                                 </div>
                             </CardContent>

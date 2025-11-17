@@ -1,8 +1,11 @@
 import { InterviewConfiguration } from './interview-types';
 
+import { LanguageCode } from '@/lib/language-constants';
+
 export interface VapiCallConfig {
     assistantId: string;
     duration?: number; // Duration in minutes
+    language?: LanguageCode; // Language for the interview
     onCallStart?: () => void;
     onCallEnd?: () => void;
     onError?: (error: any) => void;
@@ -102,16 +105,76 @@ export class VapiService {
                 // Don't throw error here, let VAPI handle it
             }
 
-            // Prepare assistant overrides with duration if specified
+            // Prepare assistant overrides with duration and language if specified
             const assistantOverrides: any = {};
             if (config.duration) {
                 assistantOverrides.maxDurationSeconds = config.duration * 60; // Convert minutes to seconds
                 console.log('⏱️ [VAPI] Setting call duration:', `${config.duration} minutes (${assistantOverrides.maxDurationSeconds} seconds)`);
             }
 
-            // Use the correct VAPI Web SDK method for starting web calls with duration
+            // Set language for transcriber and assistant
+            if (config.language) {
+                // Import helpers
+                const { getTranscriberConfig } = await import('@/app/vapi/config');
+                const { SUPPORTED_LANGUAGES } = await import('@/lib/language-constants');
+
+                const transcriberConfig = getTranscriberConfig(config.language);
+                const langInfo = SUPPORTED_LANGUAGES[config.language];
+
+                // Set transcriber language for speech-to-text
+                assistantOverrides.transcriber = transcriberConfig;
+                console.log('🌐 [VAPI] Setting transcriber language:', config.language, 'Config:', transcriberConfig);
+
+                // Override model to ensure AI responds in the selected language
+                // IMPORTANT: Must include provider field for VAPI validation
+                // Using OpenAI as default provider (matches assistant configuration)
+                assistantOverrides.model = {
+                    provider: 'openai',
+                    model: 'gpt-4o-mini',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `You are an expert technical interviewer for IQlify. 
+
+CRITICAL LANGUAGE REQUIREMENT: You MUST conduct this entire interview in ${langInfo.nativeName} (${langInfo.name}). 
+- All your questions must be asked in ${langInfo.nativeName}
+- All your responses and feedback must be in ${langInfo.nativeName}
+- All your evaluations and assessments must be written in ${langInfo.nativeName}
+- Do NOT switch to English or any other language at any point
+- If the candidate responds in a different language, acknowledge it but continue in ${langInfo.nativeName}
+
+Be conversational and interactive. Ask ONE question at a time and WAIT for their response. Keep your messages SHORT and conversational.`
+                        }
+                    ]
+                };
+                console.log('🌐 [VAPI] Model override configured with provider:', assistantOverrides.model.provider);
+
+                // Override first message to be in the selected language
+                const firstMessages: Record<LanguageCode, string> = {
+                    en: `Hi! I'm your technical interviewer today. What role are you applying for?`,
+                    es: `¡Hola! Soy tu entrevistador técnico hoy. ¿Para qué puesto estás aplicando?`,
+                    fr: `Bonjour ! Je suis votre intervieweur technique aujourd'hui. Pour quel poste postulez-vous ?`,
+                    pt: `Olá! Sou seu entrevistador técnico hoje. Para qual cargo você está se candidatando?`,
+                    de: `Hallo! Ich bin heute Ihr technischer Interviewer. Für welche Position bewerben Sie sich?`,
+                    it: `Ciao! Sono il tuo intervistatore tecnico oggi. Per quale ruolo ti stai candidando?`,
+                    zh: `你好！我是你今天的技術面試官。你申請的是什麼職位？`,
+                    ja: `こんにちは！今日はあなたの技術面接官です。どの役職に応募していますか？`,
+                    ko: `안녕하세요! 오늘 제가 여러분의 기술 면접관입니다. 어떤 직책에 지원하고 계신가요?`,
+                    ar: `مرحباً! أنا مقابلك التقني اليوم. ما هو المنصب الذي تتقدم له؟`
+                };
+
+                assistantOverrides.firstMessage = firstMessages[config.language] || firstMessages.en;
+                console.log('🌐 [VAPI] First message set to:', assistantOverrides.firstMessage);
+
+                console.log('🌐 [VAPI] Language configured:', config.language, `(${langInfo.nativeName})`);
+            } else {
+                console.log('🌐 [VAPI] No language specified, using default (English)');
+            }
+
+            // Use the correct VAPI Web SDK method for starting web calls with duration and language
             const startResult = await this.currentCall.start(config.assistantId, assistantOverrides);
             console.log('✅ [VAPI] Call start result:', startResult);
+            console.log('🌐 [VAPI] Final language configuration:', config.language || 'default (English)');
 
             console.log('✅ [VAPI] Call started successfully');
             return this.currentCall;

@@ -11,6 +11,7 @@ import {
 import { TabType } from '@/lib/types';
 import { TAB_CONFIGS } from '@/lib/constants';
 import { useAppState } from '@/hooks/use-app-state';
+import { useTranslations } from 'next-intl';
 
 const iconMap = {
     Home,
@@ -22,6 +23,7 @@ const iconMap = {
 
 export function BottomTabs() {
     const { currentTab, setCurrentTab } = useAppState();
+    const t = useTranslations();
 
     return (
         <motion.div
@@ -50,7 +52,7 @@ export function BottomTabs() {
                             />
                             {/* Label */}
                             <span className={`text-xs ${isActive ? 'text-gold-400' : 'text-foreground dark:text-white'}`}>
-                                {tab.label}
+                                {t(`tabs.${tab.id}`)}
                             </span>
                         </motion.div>
                     );

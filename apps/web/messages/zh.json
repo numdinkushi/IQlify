@@ -1,0 +1,182 @@
+{
+  "tabs": {
+    "home": "首页",
+    "interview": "面试",
+    "wallet": "钱包",
+    "leaderboard": "排行榜",
+    "settings": "设置",
+    "challenges": "挑战"
+  },
+  "home": {
+    "welcome": {
+      "title": "欢迎来到",
+      "tagline": "掌握面试技巧，赚取真金白银",
+      "aiInterviews": "AI面试",
+      "earnRewards": "赚取奖励",
+      "getBetter": "变得更好",
+      "connectWallet": "连接您的钱包",
+      "connectWalletDesc": "连接您的钱包以查看余额并开始赚取奖励！",
+      "loading": "正在加载 IQlify..."
+    },
+    "dashboard": {
+      "title": "仪表板",
+      "subtitle": "跟踪您的进度和收入",
+      "totalEarnings": "总收入",
+      "currentStreak": "当前连胜",
+      "days": "天",
+      "streakBonus": "连胜奖金",
+      "earnings": "收入",
+      "keepStreak": "保持您的连胜！",
+      "quickActions": "快速操作",
+      "takeInterview": "参加面试",
+      "recentActivity": "最近活动",
+      "noActivity": "没有最近的活动",
+      "startFirst": "开始您的第一次面试以查看活动",
+      "interviewCompleted": "面试已完成",
+      "interviewInProgress": "面试进行中",
+      "interviewStarted": "面试已开始",
+      "rewardAvailable": "CELO奖励可用"
+    }
+  },
+  "interview": {
+    "title": "面试",
+    "subtitle": "参加AI面试并赚取奖励",
+    "connectWallet": "连接您的钱包",
+    "connectWalletDesc": "请连接您的钱包以访问面试并开始赚取奖励！",
+    "loadingData": "正在加载面试数据",
+    "loadingDesc": "正在获取您的面试历史和统计信息...",
+    "startNew": "开始新面试",
+    "startNewDesc": "选择您的技能水平、面试类型和时长。参加AI面试并赚取CELO奖励。",
+    "launchSetup": "启动面试设置",
+    "starting": "正在启动...",
+    "loadingUser": "正在加载用户...",
+    "records": "面试记录",
+    "recent": "最近",
+    "all": "全部",
+    "noInterviews": "还没有面试",
+    "noInterviewsDesc": "开始您的第一次面试以在此处查看历史记录。",
+    "startFirst": "开始您的第一次面试",
+    "loadingInterviews": "正在加载面试...",
+    "loadMore": "加载更多",
+    "noInterviewsFound": "未找到面试",
+    "types": {
+      "technical": "技术",
+      "soft_skills": "软技能",
+      "behavioral": "行为",
+      "system_design": "系统设计"
+    },
+    "skillLevels": {
+      "beginner": "初级",
+      "intermediate": "中级",
+      "advanced": "高级"
+    },
+    "statuses": {
+      "in_progress": "进行中",
+      "failed": "失败",
+      "grading": "评分中...",
+      "partial": "部分",
+      "technical_issue": "技术问题",
+      "insufficient_data": "数据不足",
+      "not_started": "未开始",
+      "completed": "已完成"
+    },
+    "min": "分钟"
+  },
+  "wallet": {
+    "title": "钱包",
+    "subtitle": "管理您的收入和奖励",
+    "connectWallet": "连接您的钱包",
+    "connectWalletDesc": "连接您的钱包以查看钱包信息",
+    "loading": "正在加载 IQlify...",
+    "quickActions": "快速操作",
+    "withdraw": "提取",
+    "send": "发送",
+    "earningsSummary": "收入摘要",
+    "today": "今天",
+    "thisWeek": "本周",
+    "thisMonth": "本月",
+    "total": "总计",
+    "share": "分享"
+  },
+  "leaderboard": {
+    "title": "排行榜",
+    "subtitle": "按面试积分排名",
+    "yourRank": "您的排名",
+    "interviewPoints": "面试积分",
+    "keepPracticing": "继续练习以提升排名！",
+    "topPerformers": "最佳表现者",
+    "viewAll": "查看全部",
+    "noData": "暂无排行榜数据",
+    "startEarning": "开始赚取以查看最佳表现者！",
+    "dayStreak": "天连胜",
+    "share": "分享"
+  },
+  "challenges": {
+    "title": "挑战",
+    "subtitle": "竞争并赚取奖励",
+    "dailyChallenge": "每日挑战",
+    "weeklyChallenge": "每周挑战",
+    "skillChallenges": "技能挑战",
+    "entryFee": "报名费",
+    "prizePool": "奖金池",
+    "participants": "参与者",
+    "timeLeft": "剩余时间",
+    "joinChallenge": "加入挑战",
+    "join": "加入"
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "管理您的偏好和账户",
+    "appearance": {
+      "title": "外观",
+      "theme": "主题",
+      "language": "语言",
+      "change": "更改"
+    },
+    "notifications": {
+      "title": "通知",
+      "earnings": "收入通知",
+      "earningsDesc": "当您赚取奖励时收到通知",
+      "challenges": "挑战提醒",
+      "challengesDesc": "每日挑战提醒",
+      "enable": "启用"
+    },
+    "security": {
+      "title": "安全",
+      "twoFactor": "双因素认证",
+      "twoFactorDesc": "为您的账户添加额外安全保护",
+      "sessions": "会话管理",
+      "sessionsDesc": "管理活动会话",
+      "setup": "设置",
+      "manage": "管理"
+    },
+    "about": {
+      "title": "关于",
+      "version": "版本 1.0.0",
+      "tagline": "掌握面试技巧，赚取真金白银"
+    },
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "support": "支持"
+  },
+  "language": {
+    "selectTitle": "选择语言",
+    "selectDescription": "选择您的首选语言。更改将立即应用。",
+    "theme": {
+      "selectTitle": "选择主题",
+      "selectDescription": "选择您的首选主题。更改将立即应用。"
+    }
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭"
+  }
+}
+

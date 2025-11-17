@@ -1,4 +1,5 @@
 // Configuration constants for VAPI integration
+import { LanguageCode, DEFAULT_LANGUAGE } from '@/lib/language-constants';
 
 export const VAPI_CONFIG = {
     baseUrl: 'https://api.vapi.ai',
@@ -12,10 +13,21 @@ export const VAPI_CONFIG = {
     },
     defaultTranscriber: {
         model: 'nova-2',
-        language: 'en',
+        language: DEFAULT_LANGUAGE,
         provider: 'deepgram',
     },
 } as const;
+
+/**
+ * Get transcriber configuration for a specific language
+ */
+export function getTranscriberConfig(language: LanguageCode = DEFAULT_LANGUAGE) {
+    return {
+        model: 'nova-2',
+        language: language,
+        provider: 'deepgram' as const,
+    };
+}
 
 export const GEMINI_CONFIG = {
     apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || '',
