@@ -176,7 +176,167 @@
     "save": "Speichern",
     "delete": "Löschen",
     "edit": "Bearbeiten",
-    "close": "Schließen"
+    "close": "Schließen",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "start": "Starten"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "Fähigkeitsniveau Auswählen",
+        "description": "Wählen Sie Ihr Erfahrungsniveau, um passende Fragen zu erhalten"
+      },
+      "type": {
+        "title": "Interview-Typ Wählen",
+        "description": "Wählen Sie die Art des Interviews aus, die Sie üben möchten"
+      },
+      "duration": {
+        "title": "Dauer Festlegen",
+        "description": "Wie lange soll Ihr Interview dauern?"
+      },
+      "equipment": {
+        "title": "Geräteprüfung",
+        "description": "Stellen wir sicher, dass Ihre Einrichtung bereit ist"
+      },
+      "ready": {
+        "title": "Bereit zum Starten",
+        "description": "Alles sieht gut aus! Bereit, Ihr Interview zu beginnen?"
+      }
+    },
+    "skillLevel": {
+      "title": "Wählen Sie Ihr Fähigkeitsniveau",
+      "subtitle": "Wählen Sie das Niveau, das am besten zu Ihrer Erfahrung passt",
+      "beginner": {
+        "label": "Anfänger",
+        "description": "Perfekt für diejenigen, die ihre Programmierreise beginnen"
+      },
+      "intermediate": {
+        "label": "Mittelstufe",
+        "description": "Für Entwickler mit etwas Erfahrung"
+      },
+      "advanced": {
+        "label": "Fortgeschritten",
+        "description": "Für erfahrene Entwickler und Experten"
+      },
+      "baseReward": "Basisbelohnung",
+      "maxReward": "Max",
+      "levelSelected": "Niveau Ausgewählt",
+      "difficulty": "Schwierigkeit",
+      "potentialReward": "Potenzielle Belohnung"
+    },
+    "interviewType": {
+      "title": "Wählen Sie den Interview-Typ",
+      "subtitle": "Wählen Sie die Art des Interviews aus, die Sie üben möchten",
+      "technical": {
+        "label": "Technische Fähigkeiten",
+        "description": "Programmierherausforderungen, Algorithmen und technische Problemlösung"
+      },
+      "soft_skills": {
+        "label": "Soft Skills",
+        "description": "Kommunikation, Teamarbeit und berufliche Fähigkeiten"
+      },
+      "behavioral": {
+        "label": "Verhaltensbezogen",
+        "description": "Vergangene Erfahrungen, Entscheidungsfindung und situative Fragen"
+      },
+      "system_design": {
+        "label": "Systemdesign",
+        "description": "Architektur, Skalierbarkeit und Systemdesign-Herausforderungen"
+      },
+      "skillsCovered": "Abgedeckte Fähigkeiten",
+      "more": "mehr",
+      "estDuration": "Geschätzte Dauer",
+      "baseReward": "Basisbelohnung",
+      "selected": "Ausgewählt",
+      "skillsAssessed": "Fähigkeiten, in denen Sie bewertet werden:"
+    },
+    "duration": {
+      "title": "Wählen Sie die Interview-Dauer",
+      "subtitle": "Wählen Sie, wie lange Ihr Interview dauern soll",
+      "recommended": "Die empfohlenen Dauern für das Niveau {level} sind hervorgehoben",
+      "short": {
+        "label": "Schnell (5 min)",
+        "description": "Perfekt für eine schnelle Fähigkeitsbewertung"
+      },
+      "medium": {
+        "label": "Standard (10 min)",
+        "description": "Ausgewogenes Interview mit umfassenden Fragen"
+      },
+      "long": {
+        "label": "Erweitert (15 min)",
+        "description": "Tiefgreifende technische und verhaltensbezogene Bewertung"
+      },
+      "minutes": "Minuten",
+      "recommendedBadge": "Empfohlen",
+      "selected": "Ausgewählt",
+      "preparationTime": "Vorbereitungszeit enthalten:",
+      "totalSessionTime": "Gesamte Sitzungsdauer:",
+      "seconds": "Sekunden"
+    },
+    "equipment": {
+      "checking": {
+        "title": "Ihre Geräte Werden Geprüft",
+        "description": "Bitte warten Sie, während wir Ihre Einrichtung überprüfen..."
+      },
+      "failed": {
+        "title": "Geräteprüfung Fehlgeschlagen",
+        "tryAgain": "Erneut Versuchen"
+      },
+      "results": {
+        "title": "Geräteprüfungsergebnisse",
+        "allReady": "Alle Systeme sind bereit für Ihr Interview!",
+        "issuesDetected": "Einige Probleme wurden erkannt. Bitte beheben Sie diese, bevor Sie fortfahren."
+      },
+      "items": {
+        "microphone": {
+          "name": "Mikrofon",
+          "description": "Erforderlich für Sprachinteraktion"
+        },
+        "audio": {
+          "name": "Audioausgabe",
+          "description": "Lautsprecher oder Kopfhörer zum Hören"
+        },
+        "internet": {
+          "name": "Internetverbindung",
+          "description": "Stabile Verbindung erforderlich"
+        },
+        "browser": {
+          "name": "Browser-Kompatibilität",
+          "description": "Moderne Browser-Funktionen"
+        }
+      },
+      "status": {
+        "working": "Funktioniert",
+        "issueDetected": "Problem Erkannt"
+      },
+      "issues": {
+        "title": "Erkannte Probleme"
+      },
+      "recommendations": {
+        "title": "Empfehlungen"
+      },
+      "recheck": "Geräte Erneut Prüfen"
+    },
+    "ready": {
+      "configuration": {
+        "title": "Interview-Konfiguration",
+        "skillLevel": "Fähigkeitsniveau:",
+        "interviewType": "Interview-Typ:",
+        "duration": "Dauer:",
+        "equipment": "Geräte:",
+        "ready": "Bereit"
+      },
+      "startInterview": "Interview Starten"
+    },
+    "validation": {
+      "selectSkillLevel": "Bitte wählen Sie ein Fähigkeitsniveau",
+      "selectInterviewType": "Bitte wählen Sie einen Interview-Typ",
+      "selectDuration": "Bitte wählen Sie eine Dauer",
+      "equipmentCheckRequired": "Die Geräteprüfung muss bestanden werden, bevor das Interview gestartet werden kann",
+      "lowRewardWarning": "Diese Konfiguration hat ein niedriges Belohnungspotenzial",
+      "lowRewardRecommendation": "Erwägen Sie, ein höheres Fähigkeitsniveau oder einen anderen Interview-Typ zu wählen"
+    }
   }
 }
 

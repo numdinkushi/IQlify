@@ -176,7 +176,167 @@
     "save": "Salva",
     "delete": "Elimina",
     "edit": "Modifica",
-    "close": "Chiudi"
+    "close": "Chiudi",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "start": "Inizia"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "Seleziona Livello di Abilità",
+        "description": "Scegli il tuo livello di esperienza per ottenere domande appropriate"
+      },
+      "type": {
+        "title": "Scegli Tipo di Colloquio",
+        "description": "Seleziona il tipo di colloquio che vuoi praticare"
+      },
+      "duration": {
+        "title": "Imposta Durata",
+        "description": "Quanto vuoi che duri il tuo colloquio?"
+      },
+      "equipment": {
+        "title": "Controllo Attrezzatura",
+        "description": "Assicuriamoci che la tua configurazione sia pronta"
+      },
+      "ready": {
+        "title": "Pronto per Iniziare",
+        "description": "Tutto sembra a posto! Pronto per iniziare il tuo colloquio?"
+      }
+    },
+    "skillLevel": {
+      "title": "Scegli il Tuo Livello di Abilità",
+      "subtitle": "Seleziona il livello che meglio corrisponde alla tua esperienza",
+      "beginner": {
+        "label": "Principiante",
+        "description": "Perfetto per chi sta iniziando il proprio percorso di programmazione"
+      },
+      "intermediate": {
+        "label": "Intermedio",
+        "description": "Per sviluppatori con qualche esperienza"
+      },
+      "advanced": {
+        "label": "Avanzato",
+        "description": "Per sviluppatori esperti e professionisti"
+      },
+      "baseReward": "Ricompensa Base",
+      "maxReward": "Max",
+      "levelSelected": "Livello Selezionato",
+      "difficulty": "Difficoltà",
+      "potentialReward": "Ricompensa Potenziale"
+    },
+    "interviewType": {
+      "title": "Scegli Tipo di Colloquio",
+      "subtitle": "Seleziona il tipo di colloquio che vuoi praticare",
+      "technical": {
+        "label": "Competenze Tecniche",
+        "description": "Sfide di programmazione, algoritmi e problem-solving tecnico"
+      },
+      "soft_skills": {
+        "label": "Competenze Trasversali",
+        "description": "Comunicazione, lavoro di squadra e competenze professionali"
+      },
+      "behavioral": {
+        "label": "Comportamentale",
+        "description": "Esperienze passate, processo decisionale e domande situazionali"
+      },
+      "system_design": {
+        "label": "Progettazione di Sistema",
+        "description": "Architettura, scalabilità e sfide di progettazione di sistema"
+      },
+      "skillsCovered": "Competenze Coperte",
+      "more": "altre",
+      "estDuration": "Durata Stimata",
+      "baseReward": "Ricompensa Base",
+      "selected": "Selezionato",
+      "skillsAssessed": "Competenze su cui sarai valutato:"
+    },
+    "duration": {
+      "title": "Scegli Durata del Colloquio",
+      "subtitle": "Seleziona quanto vuoi che duri il tuo colloquio",
+      "recommended": "Le durate consigliate per il livello {level} sono evidenziate",
+      "short": {
+        "label": "Rapido (5 min)",
+        "description": "Perfetto per una rapida valutazione delle competenze"
+      },
+      "medium": {
+        "label": "Standard (10 min)",
+        "description": "Colloquio bilanciato con domande complete"
+      },
+      "long": {
+        "label": "Esteso (15 min)",
+        "description": "Valutazione tecnica e comportamentale approfondita"
+      },
+      "minutes": "minuti",
+      "recommendedBadge": "Consigliato",
+      "selected": "Selezionato",
+      "preparationTime": "Tempo di preparazione incluso:",
+      "totalSessionTime": "Tempo totale della sessione:",
+      "seconds": "secondi"
+    },
+    "equipment": {
+      "checking": {
+        "title": "Controllo della Tua Attrezzatura",
+        "description": "Attendere mentre verifichiamo la tua configurazione..."
+      },
+      "failed": {
+        "title": "Controllo Attrezzatura Fallito",
+        "tryAgain": "Riprova"
+      },
+      "results": {
+        "title": "Risultati Controllo Attrezzatura",
+        "allReady": "Tutti i sistemi sono pronti per il tuo colloquio!",
+        "issuesDetected": "Sono stati rilevati alcuni problemi. Si prega di risolverli prima di procedere."
+      },
+      "items": {
+        "microphone": {
+          "name": "Microfono",
+          "description": "Richiesto per l'interazione vocale"
+        },
+        "audio": {
+          "name": "Uscita Audio",
+          "description": "Altoparlanti o cuffie per l'ascolto"
+        },
+        "internet": {
+          "name": "Connessione Internet",
+          "description": "Connessione stabile richiesta"
+        },
+        "browser": {
+          "name": "Compatibilità Browser",
+          "description": "Funzionalità del browser moderno"
+        }
+      },
+      "status": {
+        "working": "Funzionante",
+        "issueDetected": "Problema Rilevato"
+      },
+      "issues": {
+        "title": "Problemi Rilevati"
+      },
+      "recommendations": {
+        "title": "Raccomandazioni"
+      },
+      "recheck": "Ricontrolla Attrezzatura"
+    },
+    "ready": {
+      "configuration": {
+        "title": "Configurazione Colloquio",
+        "skillLevel": "Livello di Abilità:",
+        "interviewType": "Tipo di Colloquio:",
+        "duration": "Durata:",
+        "equipment": "Attrezzatura:",
+        "ready": "Pronto"
+      },
+      "startInterview": "Inizia Colloquio"
+    },
+    "validation": {
+      "selectSkillLevel": "Si prega di selezionare un livello di abilità",
+      "selectInterviewType": "Si prega di selezionare un tipo di colloquio",
+      "selectDuration": "Si prega di selezionare una durata",
+      "equipmentCheckRequired": "Il controllo dell'attrezzatura deve essere superato prima di iniziare il colloquio",
+      "lowRewardWarning": "Questa configurazione ha un potenziale di ricompensa basso",
+      "lowRewardRecommendation": "Considera di selezionare un livello di abilità più alto o un tipo di colloquio diverso"
+    }
   }
 }
 

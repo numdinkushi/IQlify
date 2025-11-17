@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { SkillLevel } from '@/lib/interview-types';
 import { SKILL_LEVEL_CONFIGS, getSkillLevelConfig } from '@/lib/interview-config';
 import { Button } from '@/components/ui/button';
@@ -57,6 +58,7 @@ export const SkillLevelSelector = ({
     onLevelSelect,
     className = ''
 }: SkillLevelSelectorProps) => {
+    const t = useTranslations();
     const [hoveredLevel, setHoveredLevel] = useState<SkillLevel | null>(null);
 
     const handleLevelClick = (level: SkillLevel) => {
@@ -81,10 +83,10 @@ export const SkillLevelSelector = ({
         <div className="space-y-4">
             <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-white mb-2">
-                    Choose Your Skill Level
+                    {t('interviewFlow.skillLevel.title')}
                 </h3>
                 <p className="text-gray-400 text-sm">
-                    Select the level that best matches your experience
+                    {t('interviewFlow.skillLevel.subtitle')}
                 </p>
             </div>
 
@@ -110,23 +112,23 @@ export const SkillLevelSelector = ({
                                 {/* Level Info */}
                                 <div className="space-y-1">
                                     <h4 className="font-semibold text-white">
-                                        {config.label}
+                                        {t(`interviewFlow.skillLevel.${level.toLowerCase()}.label`)}
                                     </h4>
                                     <p className="text-sm text-gray-400">
-                                        {config.description}
+                                        {t(`interviewFlow.skillLevel.${level.toLowerCase()}.description`)}
                                     </p>
                                 </div>
 
                                 {/* Reward Info */}
                                 <div className="space-y-1">
                                     <div className="text-xs text-gray-500">
-                                        Base Reward
+                                        {t('interviewFlow.skillLevel.baseReward')}
                                     </div>
                                     <div className="text-sm font-medium text-gold-400">
                                         {config.baseReward} CELO
                                     </div>
                                     <div className="text-xs text-gray-500">
-                                        Max: {config.maxReward} CELO
+                                        {t('interviewFlow.skillLevel.maxReward')}: {config.maxReward} CELO
                                     </div>
                                 </div>
 
@@ -161,10 +163,10 @@ export const SkillLevelSelector = ({
                     <div className="flex items-center justify-between">
                         <div>
                             <h4 className="font-medium text-white">
-                                {getSkillLevelConfig(selectedLevel).label} Level Selected
+                                {t(`interviewFlow.skillLevel.${selectedLevel.toLowerCase()}.label`)} {t('interviewFlow.skillLevel.levelSelected')}
                             </h4>
                             <p className="text-sm text-gray-400">
-                                Difficulty: {getSkillLevelConfig(selectedLevel).difficulty}/10
+                                {t('interviewFlow.skillLevel.difficulty')}: {getSkillLevelConfig(selectedLevel).difficulty}/10
                             </p>
                         </div>
                         <div className="text-right">
@@ -172,7 +174,7 @@ export const SkillLevelSelector = ({
                                 {getSkillLevelConfig(selectedLevel).baseReward} - {getSkillLevelConfig(selectedLevel).maxReward} CELO
                             </div>
                             <div className="text-xs text-gray-500">
-                                Potential Reward
+                                {t('interviewFlow.skillLevel.potentialReward')}
                             </div>
                         </div>
                     </div>

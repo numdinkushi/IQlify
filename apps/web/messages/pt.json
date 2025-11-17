@@ -176,7 +176,167 @@
     "save": "Salvar",
     "delete": "Excluir",
     "edit": "Editar",
-    "close": "Fechar"
+    "close": "Fechar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "start": "Iniciar"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "Selecionar Nível de Habilidade",
+        "description": "Escolha seu nível de experiência para obter perguntas apropriadas"
+      },
+      "type": {
+        "title": "Escolher Tipo de Entrevista",
+        "description": "Selecione o tipo de entrevista que deseja praticar"
+      },
+      "duration": {
+        "title": "Definir Duração",
+        "description": "Quanto tempo você quer que sua entrevista dure?"
+      },
+      "equipment": {
+        "title": "Verificação de Equipamento",
+        "description": "Vamos garantir que sua configuração está pronta"
+      },
+      "ready": {
+        "title": "Pronto para Começar",
+        "description": "Tudo parece bom! Pronto para começar sua entrevista?"
+      }
+    },
+    "skillLevel": {
+      "title": "Escolha seu Nível de Habilidade",
+      "subtitle": "Selecione o nível que melhor corresponde à sua experiência",
+      "beginner": {
+        "label": "Iniciante",
+        "description": "Perfeito para quem está começando sua jornada de programação"
+      },
+      "intermediate": {
+        "label": "Intermediário",
+        "description": "Para desenvolvedores com alguma experiência"
+      },
+      "advanced": {
+        "label": "Avançado",
+        "description": "Para desenvolvedores experientes e especialistas"
+      },
+      "baseReward": "Recompensa Base",
+      "maxReward": "Máx",
+      "levelSelected": "Nível Selecionado",
+      "difficulty": "Dificuldade",
+      "potentialReward": "Recompensa Potencial"
+    },
+    "interviewType": {
+      "title": "Escolha o Tipo de Entrevista",
+      "subtitle": "Selecione o tipo de entrevista que deseja praticar",
+      "technical": {
+        "label": "Habilidades Técnicas",
+        "description": "Desafios de programação, algoritmos e resolução de problemas técnicos"
+      },
+      "soft_skills": {
+        "label": "Habilidades Interpessoais",
+        "description": "Comunicação, trabalho em equipe e habilidades profissionais"
+      },
+      "behavioral": {
+        "label": "Comportamental",
+        "description": "Experiências passadas, tomada de decisão e perguntas situacionais"
+      },
+      "system_design": {
+        "label": "Design de Sistema",
+        "description": "Arquitetura, escalabilidade e desafios de design de sistema"
+      },
+      "skillsCovered": "Habilidades Cobertas",
+      "more": "mais",
+      "estDuration": "Duração Est.",
+      "baseReward": "Recompensa Base",
+      "selected": "Selecionado",
+      "skillsAssessed": "Habilidades em que você será avaliado:"
+    },
+    "duration": {
+      "title": "Escolha a Duração da Entrevista",
+      "subtitle": "Selecione quanto tempo você quer que sua entrevista dure",
+      "recommended": "As durações recomendadas para o nível {level} estão destacadas",
+      "short": {
+        "label": "Rápida (5 min)",
+        "description": "Perfeita para uma avaliação rápida de habilidades"
+      },
+      "medium": {
+        "label": "Padrão (10 min)",
+        "description": "Entrevista equilibrada com perguntas abrangentes"
+      },
+      "long": {
+        "label": "Estendida (15 min)",
+        "description": "Avaliação técnica e comportamental aprofundada"
+      },
+      "minutes": "minutos",
+      "recommendedBadge": "Recomendado",
+      "selected": "Selecionado",
+      "preparationTime": "Tempo de preparação incluído:",
+      "totalSessionTime": "Tempo total da sessão:",
+      "seconds": "segundos"
+    },
+    "equipment": {
+      "checking": {
+        "title": "Verificando seu Equipamento",
+        "description": "Por favor, aguarde enquanto verificamos sua configuração..."
+      },
+      "failed": {
+        "title": "Verificação de Equipamento Falhou",
+        "tryAgain": "Tentar Novamente"
+      },
+      "results": {
+        "title": "Resultados da Verificação de Equipamento",
+        "allReady": "Todos os sistemas estão prontos para sua entrevista!",
+        "issuesDetected": "Alguns problemas foram detectados. Por favor, resolva-os antes de continuar."
+      },
+      "items": {
+        "microphone": {
+          "name": "Microfone",
+          "description": "Necessário para interação por voz"
+        },
+        "audio": {
+          "name": "Saída de Áudio",
+          "description": "Alto-falantes ou fones de ouvido para ouvir"
+        },
+        "internet": {
+          "name": "Conexão com Internet",
+          "description": "Conexão estável necessária"
+        },
+        "browser": {
+          "name": "Compatibilidade do Navegador",
+          "description": "Recursos do navegador moderno"
+        }
+      },
+      "status": {
+        "working": "Funcionando",
+        "issueDetected": "Problema Detectado"
+      },
+      "issues": {
+        "title": "Problemas Detectados"
+      },
+      "recommendations": {
+        "title": "Recomendações"
+      },
+      "recheck": "Reverificar Equipamento"
+    },
+    "ready": {
+      "configuration": {
+        "title": "Configuração da Entrevista",
+        "skillLevel": "Nível de Habilidade:",
+        "interviewType": "Tipo de Entrevista:",
+        "duration": "Duração:",
+        "equipment": "Equipamento:",
+        "ready": "Pronto"
+      },
+      "startInterview": "Iniciar Entrevista"
+    },
+    "validation": {
+      "selectSkillLevel": "Por favor, selecione um nível de habilidade",
+      "selectInterviewType": "Por favor, selecione um tipo de entrevista",
+      "selectDuration": "Por favor, selecione uma duração",
+      "equipmentCheckRequired": "A verificação do equipamento deve ser aprovada antes de iniciar a entrevista",
+      "lowRewardWarning": "Esta configuração tem um potencial de recompensa baixo",
+      "lowRewardRecommendation": "Considere selecionar um nível de habilidade mais alto ou um tipo de entrevista diferente"
+    }
   }
 }
 

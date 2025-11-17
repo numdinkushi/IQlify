@@ -176,7 +176,167 @@
     "save": "保存",
     "delete": "删除",
     "edit": "编辑",
-    "close": "关闭"
+    "close": "关闭",
+    "next": "下一步",
+    "previous": "上一步",
+    "start": "开始"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "选择技能水平",
+        "description": "选择您的经验水平以获得合适的问题"
+      },
+      "type": {
+        "title": "选择面试类型",
+        "description": "选择您想要练习的面试类型"
+      },
+      "duration": {
+        "title": "设置时长",
+        "description": "您希望面试持续多长时间？"
+      },
+      "equipment": {
+        "title": "设备检查",
+        "description": "让我们确保您的设置已准备就绪"
+      },
+      "ready": {
+        "title": "准备开始",
+        "description": "一切看起来都很好！准备好开始您的面试了吗？"
+      }
+    },
+    "skillLevel": {
+      "title": "选择您的技能水平",
+      "subtitle": "选择最符合您经验的水平",
+      "beginner": {
+        "label": "初级",
+        "description": "非常适合刚开始编程之旅的人"
+      },
+      "intermediate": {
+        "label": "中级",
+        "description": "适合有一定经验的开发者"
+      },
+      "advanced": {
+        "label": "高级",
+        "description": "适合经验丰富的开发者和专家"
+      },
+      "baseReward": "基础奖励",
+      "maxReward": "最大",
+      "levelSelected": "已选择水平",
+      "difficulty": "难度",
+      "potentialReward": "潜在奖励"
+    },
+    "interviewType": {
+      "title": "选择面试类型",
+      "subtitle": "选择您想要练习的面试类型",
+      "technical": {
+        "label": "技术技能",
+        "description": "编程挑战、算法和技术问题解决"
+      },
+      "soft_skills": {
+        "label": "软技能",
+        "description": "沟通、团队合作和专业技能"
+      },
+      "behavioral": {
+        "label": "行为面试",
+        "description": "过往经历、决策制定和情境问题"
+      },
+      "system_design": {
+        "label": "系统设计",
+        "description": "架构、可扩展性和系统设计挑战"
+      },
+      "skillsCovered": "涵盖技能",
+      "more": "更多",
+      "estDuration": "预计时长",
+      "baseReward": "基础奖励",
+      "selected": "已选择",
+      "skillsAssessed": "您将被评估的技能："
+    },
+    "duration": {
+      "title": "选择面试时长",
+      "subtitle": "选择您希望面试持续多长时间",
+      "recommended": "{level}级别的推荐时长已突出显示",
+      "short": {
+        "label": "快速（5分钟）",
+        "description": "非常适合快速技能评估"
+      },
+      "medium": {
+        "label": "标准（10分钟）",
+        "description": "包含全面问题的平衡面试"
+      },
+      "long": {
+        "label": "延长（15分钟）",
+        "description": "深入的技术和行为评估"
+      },
+      "minutes": "分钟",
+      "recommendedBadge": "推荐",
+      "selected": "已选择",
+      "preparationTime": "包含准备时间：",
+      "totalSessionTime": "会话总时长：",
+      "seconds": "秒"
+    },
+    "equipment": {
+      "checking": {
+        "title": "正在检查您的设备",
+        "description": "请稍候，我们正在验证您的设置..."
+      },
+      "failed": {
+        "title": "设备检查失败",
+        "tryAgain": "重试"
+      },
+      "results": {
+        "title": "设备检查结果",
+        "allReady": "所有系统已准备好进行面试！",
+        "issuesDetected": "检测到一些问题。请在继续之前解决它们。"
+      },
+      "items": {
+        "microphone": {
+          "name": "麦克风",
+          "description": "语音交互所需"
+        },
+        "audio": {
+          "name": "音频输出",
+          "description": "用于聆听的扬声器或耳机"
+        },
+        "internet": {
+          "name": "互联网连接",
+          "description": "需要稳定连接"
+        },
+        "browser": {
+          "name": "浏览器兼容性",
+          "description": "现代浏览器功能"
+        }
+      },
+      "status": {
+        "working": "正常工作",
+        "issueDetected": "检测到问题"
+      },
+      "issues": {
+        "title": "检测到的问题"
+      },
+      "recommendations": {
+        "title": "建议"
+      },
+      "recheck": "重新检查设备"
+    },
+    "ready": {
+      "configuration": {
+        "title": "面试配置",
+        "skillLevel": "技能水平：",
+        "interviewType": "面试类型：",
+        "duration": "时长：",
+        "equipment": "设备：",
+        "ready": "就绪"
+      },
+      "startInterview": "开始面试"
+    },
+    "validation": {
+      "selectSkillLevel": "请选择技能水平",
+      "selectInterviewType": "请选择面试类型",
+      "selectDuration": "请选择时长",
+      "equipmentCheckRequired": "在开始面试之前必须通过设备检查",
+      "lowRewardWarning": "此配置的奖励潜力较低",
+      "lowRewardRecommendation": "考虑选择更高的技能水平或不同的面试类型"
+    }
   }
 }
 

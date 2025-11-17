@@ -176,6 +176,166 @@
     "save": "حفظ",
     "delete": "حذف",
     "edit": "تعديل",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "next": "التالي",
+    "previous": "السابق",
+    "start": "بدء"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "اختر مستوى المهارة",
+        "description": "اختر مستوى خبرتك للحصول على أسئلة مناسبة"
+      },
+      "type": {
+        "title": "اختر نوع المقابلة",
+        "description": "حدد نوع المقابلة التي تريد التدرب عليها"
+      },
+      "duration": {
+        "title": "تعيين المدة",
+        "description": "كم تريد أن تستمر مقابلتك؟"
+      },
+      "equipment": {
+        "title": "فحص المعدات",
+        "description": "دعنا نتأكد من أن إعداداتك جاهزة"
+      },
+      "ready": {
+        "title": "جاهز للبدء",
+        "description": "كل شيء يبدو جيدًا! هل أنت مستعد لبدء مقابلتك؟"
+      }
+    },
+    "skillLevel": {
+      "title": "اختر مستوى مهارتك",
+      "subtitle": "حدد المستوى الذي يناسب خبرتك بشكل أفضل",
+      "beginner": {
+        "label": "مبتدئ",
+        "description": "مثالي لأولئك الذين يبدأون رحلتهم في البرمجة"
+      },
+      "intermediate": {
+        "label": "متوسط",
+        "description": "للمطورين الذين لديهم بعض الخبرة"
+      },
+      "advanced": {
+        "label": "متقدم",
+        "description": "للمطورين ذوي الخبرة والخبراء"
+      },
+      "baseReward": "المكافأة الأساسية",
+      "maxReward": "الحد الأقصى",
+      "levelSelected": "المستوى المحدد",
+      "difficulty": "الصعوبة",
+      "potentialReward": "المكافأة المحتملة"
+    },
+    "interviewType": {
+      "title": "اختر نوع المقابلة",
+      "subtitle": "حدد نوع المقابلة التي تريد التدرب عليها",
+      "technical": {
+        "label": "المهارات التقنية",
+        "description": "تحديات البرمجة والخوارزميات وحل المشكلات التقنية"
+      },
+      "soft_skills": {
+        "label": "المهارات الشخصية",
+        "description": "التواصل والعمل الجماعي والمهارات المهنية"
+      },
+      "behavioral": {
+        "label": "السلوكي",
+        "description": "التجارب السابقة واتخاذ القرار والأسئلة الوضعية"
+      },
+      "system_design": {
+        "label": "تصميم النظام",
+        "description": "الهندسة المعمارية والقابلية للتوسع وتحديات تصميم النظام"
+      },
+      "skillsCovered": "المهارات المغطاة",
+      "more": "المزيد",
+      "estDuration": "المدة المقدرة",
+      "baseReward": "المكافأة الأساسية",
+      "selected": "محدد",
+      "skillsAssessed": "المهارات التي سيتم تقييمك فيها:"
+    },
+    "duration": {
+      "title": "اختر مدة المقابلة",
+      "subtitle": "حدد المدة التي تريد أن تستمر مقابلتك",
+      "recommended": "المدد الموصى بها للمستوى {level} مميزة",
+      "short": {
+        "label": "سريع (5 دقائق)",
+        "description": "مثالي للتقييم السريع للمهارات"
+      },
+      "medium": {
+        "label": "قياسي (10 دقائق)",
+        "description": "مقابلة متوازنة مع أسئلة شاملة"
+      },
+      "long": {
+        "label": "ممتد (15 دقيقة)",
+        "description": "تقييم تقني وسلوكي متعمق"
+      },
+      "minutes": "دقائق",
+      "recommendedBadge": "موصى به",
+      "selected": "محدد",
+      "preparationTime": "وقت التحضير متضمن:",
+      "totalSessionTime": "الوقت الإجمالي للجلسة:",
+      "seconds": "ثواني"
+    },
+    "equipment": {
+      "checking": {
+        "title": "فحص معداتك",
+        "description": "يرجى الانتظار بينما نتحقق من إعداداتك..."
+      },
+      "failed": {
+        "title": "فشل فحص المعدات",
+        "tryAgain": "حاول مرة أخرى"
+      },
+      "results": {
+        "title": "نتائج فحص المعدات",
+        "allReady": "جميع الأنظمة جاهزة لمقابلتك!",
+        "issuesDetected": "تم اكتشاف بعض المشاكل. يرجى حلها قبل المتابعة."
+      },
+      "items": {
+        "microphone": {
+          "name": "الميكروفون",
+          "description": "مطلوب للتفاعل الصوتي"
+        },
+        "audio": {
+          "name": "إخراج الصوت",
+          "description": "مكبرات الصوت أو سماعات الرأس للاستماع"
+        },
+        "internet": {
+          "name": "اتصال الإنترنت",
+          "description": "اتصال مستقر مطلوب"
+        },
+        "browser": {
+          "name": "توافق المتصفح",
+          "description": "ميزات المتصفح الحديث"
+        }
+      },
+      "status": {
+        "working": "يعمل",
+        "issueDetected": "تم اكتشاف مشكلة"
+      },
+      "issues": {
+        "title": "المشاكل المكتشفة"
+      },
+      "recommendations": {
+        "title": "التوصيات"
+      },
+      "recheck": "إعادة فحص المعدات"
+    },
+    "ready": {
+      "configuration": {
+        "title": "إعدادات المقابلة",
+        "skillLevel": "مستوى المهارة:",
+        "interviewType": "نوع المقابلة:",
+        "duration": "المدة:",
+        "equipment": "المعدات:",
+        "ready": "جاهز"
+      },
+      "startInterview": "بدء المقابلة"
+    },
+    "validation": {
+      "selectSkillLevel": "يرجى اختيار مستوى مهارة",
+      "selectInterviewType": "يرجى اختيار نوع مقابلة",
+      "selectDuration": "يرجى اختيار مدة",
+      "equipmentCheckRequired": "يجب اجتياز فحص المعدات قبل بدء المقابلة",
+      "lowRewardWarning": "هذا الإعداد لديه إمكانية مكافأة منخفضة",
+      "lowRewardRecommendation": "فكر في اختيار مستوى مهارة أعلى أو نوع مقابلة مختلف"
+    }
   }
 }

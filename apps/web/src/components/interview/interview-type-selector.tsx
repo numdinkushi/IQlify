@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { InterviewType } from '@/lib/interview-types';
 import { INTERVIEW_TYPE_CONFIGS, getInterviewTypeConfig } from '@/lib/interview-config';
 import { Card } from '@/components/ui/card';
@@ -62,6 +63,7 @@ export const InterviewTypeSelector = ({
     onTypeSelect,
     className = ''
 }: InterviewTypeSelectorProps) => {
+    const t = useTranslations();
     const [hoveredType, setHoveredType] = useState<InterviewType | null>(null);
 
     const handleTypeClick = (type: InterviewType) => {
@@ -86,10 +88,10 @@ export const InterviewTypeSelector = ({
         <div className="space-y-4">
             <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-white mb-2">
-                    Choose Interview Type
+                    {t('interviewFlow.interviewType.title')}
                 </h3>
                 <p className="text-gray-400 text-sm">
-                    Select the type of interview you want to practice
+                    {t('interviewFlow.interviewType.subtitle')}
                 </p>
             </div>
 
@@ -116,7 +118,7 @@ export const InterviewTypeSelector = ({
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-2">
                                         <h4 className="font-semibold text-white">
-                                            {config.label}
+                                            {t(`interviewFlow.interviewType.${type.toLowerCase()}.label`)}
                                         </h4>
                                         <div className="text-sm font-medium text-gold-400">
                                             {config.baseReward} CELO
@@ -124,13 +126,13 @@ export const InterviewTypeSelector = ({
                                     </div>
 
                                     <p className="text-sm text-gray-400 mb-3">
-                                        {config.description}
+                                        {t(`interviewFlow.interviewType.${type.toLowerCase()}.description`)}
                                     </p>
 
                                     {/* Skills */}
                                     <div className="space-y-2">
                                         <div className="text-xs text-gray-500">
-                                            Skills Covered:
+                                            {t('interviewFlow.interviewType.skillsCovered')}:
                                         </div>
                                         <div className="flex flex-wrap gap-1">
                                             {config.skills.slice(0, 3).map((skill, index) => (
@@ -143,7 +145,7 @@ export const InterviewTypeSelector = ({
                                             ))}
                                             {config.skills.length > 3 && (
                                                 <span className="px-2 py-1 text-xs bg-gray-700/50 text-gray-300 rounded">
-                                                    +{config.skills.length - 3} more
+                                                    +{config.skills.length - 3} {t('interviewFlow.interviewType.more')}
                                                 </span>
                                             )}
                                         </div>
@@ -152,10 +154,10 @@ export const InterviewTypeSelector = ({
                                     {/* Duration */}
                                     <div className="mt-3 flex items-center justify-between">
                                         <div className="text-xs text-gray-500">
-                                            Est. Duration: {config.estimatedDuration} min
+                                            {t('interviewFlow.interviewType.estDuration')}: {config.estimatedDuration} min
                                         </div>
                                         <div className="text-xs text-gray-500">
-                                            Base Reward: {config.baseReward} CELO
+                                            {t('interviewFlow.interviewType.baseReward')}: {config.baseReward} CELO
                                         </div>
                                     </div>
                                 </div>
@@ -178,10 +180,10 @@ export const InterviewTypeSelector = ({
                     <div className="flex items-center justify-between">
                         <div>
                             <h4 className="font-medium text-white">
-                                {getInterviewTypeConfig(selectedType).label} Selected
+                                {t(`interviewFlow.interviewType.${selectedType.toLowerCase()}.label`)} {t('interviewFlow.interviewType.selected')}
                             </h4>
                             <p className="text-sm text-gray-400">
-                                {getInterviewTypeConfig(selectedType).description}
+                                {t(`interviewFlow.interviewType.${selectedType.toLowerCase()}.description`)}
                             </p>
                         </div>
                         <div className="text-right">
@@ -189,7 +191,7 @@ export const InterviewTypeSelector = ({
                                 {getInterviewTypeConfig(selectedType).baseReward} CELO
                             </div>
                             <div className="text-xs text-gray-500">
-                                Base Reward
+                                {t('interviewFlow.interviewType.baseReward')}
                             </div>
                         </div>
                     </div>
@@ -197,7 +199,7 @@ export const InterviewTypeSelector = ({
                     {/* Skills List */}
                     <div className="mt-3">
                         <div className="text-xs text-gray-500 mb-2">
-                            Skills you'll be assessed on:
+                            {t('interviewFlow.interviewType.skillsAssessed')}
                         </div>
                         <div className="flex flex-wrap gap-1">
                             {getInterviewTypeConfig(selectedType).skills.map((skill, index) => (

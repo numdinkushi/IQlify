@@ -176,7 +176,167 @@
     "save": "Enregistrer",
     "delete": "Supprimer",
     "edit": "Modifier",
-    "close": "Fermer"
+    "close": "Fermer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "start": "Démarrer"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "Sélectionner le Niveau de Compétence",
+        "description": "Choisissez votre niveau d'expérience pour obtenir des questions appropriées"
+      },
+      "type": {
+        "title": "Choisir le Type d'Entretien",
+        "description": "Sélectionnez le type d'entretien que vous souhaitez pratiquer"
+      },
+      "duration": {
+        "title": "Définir la Durée",
+        "description": "Combien de temps voulez-vous que dure votre entretien ?"
+      },
+      "equipment": {
+        "title": "Vérification de l'Équipement",
+        "description": "Assurons-nous que votre configuration est prête"
+      },
+      "ready": {
+        "title": "Prêt à Commencer",
+        "description": "Tout semble bon ! Prêt à commencer votre entretien ?"
+      }
+    },
+    "skillLevel": {
+      "title": "Choisissez votre Niveau de Compétence",
+      "subtitle": "Sélectionnez le niveau qui correspond le mieux à votre expérience",
+      "beginner": {
+        "label": "Débutant",
+        "description": "Parfait pour ceux qui commencent leur parcours de programmation"
+      },
+      "intermediate": {
+        "label": "Intermédiaire",
+        "description": "Pour les développeurs avec une certaine expérience"
+      },
+      "advanced": {
+        "label": "Avancé",
+        "description": "Pour les développeurs expérimentés et les experts"
+      },
+      "baseReward": "Récompense de Base",
+      "maxReward": "Max",
+      "levelSelected": "Niveau Sélectionné",
+      "difficulty": "Difficulté",
+      "potentialReward": "Récompense Potentielle"
+    },
+    "interviewType": {
+      "title": "Choisissez le Type d'Entretien",
+      "subtitle": "Sélectionnez le type d'entretien que vous souhaitez pratiquer",
+      "technical": {
+        "label": "Compétences Techniques",
+        "description": "Défis de programmation, algorithmes et résolution de problèmes techniques"
+      },
+      "soft_skills": {
+        "label": "Compétences Générales",
+        "description": "Communication, travail d'équipe et compétences professionnelles"
+      },
+      "behavioral": {
+        "label": "Comportemental",
+        "description": "Expériences passées, prise de décision et questions situationnelles"
+      },
+      "system_design": {
+        "label": "Conception de Système",
+        "description": "Architecture, évolutivité et défis de conception de système"
+      },
+      "skillsCovered": "Compétences Couvertes",
+      "more": "de plus",
+      "estDuration": "Durée Est.",
+      "baseReward": "Récompense de Base",
+      "selected": "Sélectionné",
+      "skillsAssessed": "Compétences sur lesquelles vous serez évalué :"
+    },
+    "duration": {
+      "title": "Choisissez la Durée de l'Entretien",
+      "subtitle": "Sélectionnez combien de temps vous voulez que dure votre entretien",
+      "recommended": "Les durées recommandées pour le niveau {level} sont mises en évidence",
+      "short": {
+        "label": "Rapide (5 min)",
+        "description": "Parfait pour une évaluation rapide des compétences"
+      },
+      "medium": {
+        "label": "Standard (10 min)",
+        "description": "Entretien équilibré avec des questions complètes"
+      },
+      "long": {
+        "label": "Étendu (15 min)",
+        "description": "Évaluation technique et comportementale approfondie"
+      },
+      "minutes": "minutes",
+      "recommendedBadge": "Recommandé",
+      "selected": "Sélectionné",
+      "preparationTime": "Temps de préparation inclus :",
+      "totalSessionTime": "Temps total de la session :",
+      "seconds": "secondes"
+    },
+    "equipment": {
+      "checking": {
+        "title": "Vérification de votre Équipement",
+        "description": "Veuillez patienter pendant que nous vérifions votre configuration..."
+      },
+      "failed": {
+        "title": "Vérification de l'Équipement Échouée",
+        "tryAgain": "Réessayer"
+      },
+      "results": {
+        "title": "Résultats de la Vérification de l'Équipement",
+        "allReady": "Tous les systèmes sont prêts pour votre entretien !",
+        "issuesDetected": "Certains problèmes ont été détectés. Veuillez les résoudre avant de continuer."
+      },
+      "items": {
+        "microphone": {
+          "name": "Microphone",
+          "description": "Requis pour l'interaction vocale"
+        },
+        "audio": {
+          "name": "Sortie Audio",
+          "description": "Haut-parleurs ou écouteurs pour écouter"
+        },
+        "internet": {
+          "name": "Connexion Internet",
+          "description": "Connexion stable requise"
+        },
+        "browser": {
+          "name": "Compatibilité du Navigateur",
+          "description": "Fonctionnalités du navigateur moderne"
+        }
+      },
+      "status": {
+        "working": "Fonctionnel",
+        "issueDetected": "Problème Détecté"
+      },
+      "issues": {
+        "title": "Problèmes Détectés"
+      },
+      "recommendations": {
+        "title": "Recommandations"
+      },
+      "recheck": "Revérifier l'Équipement"
+    },
+    "ready": {
+      "configuration": {
+        "title": "Configuration de l'Entretien",
+        "skillLevel": "Niveau de Compétence :",
+        "interviewType": "Type d'Entretien :",
+        "duration": "Durée :",
+        "equipment": "Équipement :",
+        "ready": "Prêt"
+      },
+      "startInterview": "Démarrer l'Entretien"
+    },
+    "validation": {
+      "selectSkillLevel": "Veuillez sélectionner un niveau de compétence",
+      "selectInterviewType": "Veuillez sélectionner un type d'entretien",
+      "selectDuration": "Veuillez sélectionner une durée",
+      "equipmentCheckRequired": "La vérification de l'équipement doit être réussie avant de démarrer l'entretien",
+      "lowRewardWarning": "Cette configuration a un potentiel de récompense faible",
+      "lowRewardRecommendation": "Envisagez de sélectionner un niveau de compétence plus élevé ou un type d'entretien différent"
+    }
   }
 }
 

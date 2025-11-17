@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { InterviewDuration, SkillLevel } from '@/lib/interview-types';
 import { DURATION_CONFIGS, getDurationConfig } from '@/lib/interview-config';
 import { Card } from '@/components/ui/card';
@@ -59,12 +60,27 @@ const isRecommendedForSkillLevel = (duration: InterviewDuration, skillLevel?: Sk
     return config.recommendedFor.includes(skillLevel);
 };
 
+// Helper function to convert duration enum to translation key
+const getDurationKey = (duration: InterviewDuration): string => {
+    switch (duration) {
+        case InterviewDuration.SHORT:
+            return 'short';
+        case InterviewDuration.MEDIUM:
+            return 'medium';
+        case InterviewDuration.LONG:
+            return 'long';
+        default:
+            return 'medium';
+    }
+};
+
 export const DurationSelector = ({
     selectedDuration,
     skillLevel,
     onDurationSelect,
     className = ''
 }: DurationSelectorProps) => {
+    const t = useTranslations();
     const [hoveredDuration, setHoveredDuration] = useState<InterviewDuration | null>(null);
 
     const handleDurationClick = (duration: InterviewDuration) => {
@@ -92,14 +108,14 @@ export const DurationSelector = ({
         <div className="space-y-4">
             <div className="text-center mb-6">
                 <h3 className="text-xl font-semibold text-white mb-2">
-                    Choose Interview Duration
+                    {t('interviewFlow.duration.title')}
                 </h3>
                 <p className="text-gray-400 text-sm">
-                    Select how long you want your interview to be
+                    {t('interviewFlow.duration.subtitle')}
                 </p>
                 {skillLevel && (
                     <p className="text-xs text-gold-400 mt-1">
-                        Recommended durations for {skillLevel} level are highlighted
+                        {t('interviewFlow.duration.recommended', { level: skillLevel })}
                     </p>
                 )}
             </div>
@@ -131,10 +147,10 @@ export const DurationSelector = ({
                                 {/* Duration Info */}
                                 <div className="space-y-1">
                                     <h4 className="font-semibold text-white">
-                                        {config.label}
+                                        {t(`interviewFlow.duration.${getDurationKey(duration)}.label`)}
                                     </h4>
                                     <p className="text-sm text-gray-400">
-                                        {config.description}
+                                        {t(`interviewFlow.duration.${getDurationKey(duration)}.description`)}
                                     </p>
                                 </div>
 
@@ -144,14 +160,14 @@ export const DurationSelector = ({
                                         {config.timeInMinutes}
                                     </div>
                                     <div className="text-xs text-gray-500">
-                                        minutes
+                                        {t('interviewFlow.duration.minutes')}
                                     </div>
                                 </div>
 
                                 {/* Recommendation Badge */}
                                 {isRecommended && (
                                     <div className="px-2 py-1 text-xs bg-gold-400/20 text-gold-400 rounded border border-gold-400/30">
-                                        Recommended
+                                        {t('interviewFlow.duration.recommendedBadge')}
                                     </div>
                                 )}
 
@@ -173,10 +189,10 @@ export const DurationSelector = ({
                     <div className="flex items-center justify-between">
                         <div>
                             <h4 className="font-medium text-white">
-                                {getDurationConfig(selectedDuration).label} Selected
+                                {t(`interviewFlow.duration.${getDurationKey(selectedDuration)}.label`)} {t('interviewFlow.duration.selected')}
                             </h4>
                             <p className="text-sm text-gray-400">
-                                {getDurationConfig(selectedDuration).description}
+                                {t(`interviewFlow.duration.${getDurationKey(selectedDuration)}.description`)}
                             </p>
                         </div>
                         <div className="text-right">
@@ -184,7 +200,7 @@ export const DurationSelector = ({
                                 {getDurationConfig(selectedDuration).timeInMinutes}
                             </div>
                             <div className="text-xs text-gray-500">
-                                minutes
+                                {t('interviewFlow.duration.minutes')}
                             </div>
                         </div>
                     </div>
@@ -193,18 +209,18 @@ export const DurationSelector = ({
                     <div className="mt-3 pt-3 border-t border-gray-600/30">
                         <div className="flex items-center justify-between">
                             <div className="text-sm text-gray-400">
-                                Preparation time included:
+                                {t('interviewFlow.duration.preparationTime')}
                             </div>
                             <div className="text-sm font-medium text-white">
-                                15 seconds
+                                15 {t('interviewFlow.duration.seconds')}
                             </div>
                         </div>
                         <div className="flex items-center justify-between mt-1">
                             <div className="text-sm text-gray-400">
-                                Total session time:
+                                {t('interviewFlow.duration.totalSessionTime')}:
                             </div>
                             <div className="text-sm font-medium text-gold-400">
-                                {getDurationConfig(selectedDuration).timeInMinutes} minutes
+                                {getDurationConfig(selectedDuration).timeInMinutes} {t('interviewFlow.duration.minutes')}
                             </div>
                         </div>
                     </div>
