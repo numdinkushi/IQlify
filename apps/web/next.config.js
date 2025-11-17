@@ -1,3 +1,4 @@
+const path = require('path');
 const createNextIntlPlugin = require('next-intl/plugin');
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
@@ -19,10 +20,13 @@ const nextConfig = {
         tls: false,
       };
       
-      // Ignore React Native async-storage (only needed for mobile, not web)
+      // Alias React Native async-storage to a no-op web shim (MetaMask SDK optional dep)
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@react-native-async-storage/async-storage': false,
+        '@react-native-async-storage/async-storage': path.resolve(
+          __dirname,
+          'src/shims/async-storage.ts'
+        ),
       };
     }
     
