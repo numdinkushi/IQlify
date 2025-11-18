@@ -13,7 +13,7 @@
 
 ⚡ AI-powered interview practice platform with cryptocurrency rewards
 
-**Built for MiniPay** - Optimized for Opera MiniPay wallet with seamless Web3 integration
+**Built for MiniPay** - Optimized for Opera MiniPay wallet with seamless Web3 integration. Also works in standard web browsers with any Web3 wallet.
 
 </div>
 
@@ -43,7 +43,7 @@
 
 ## 🎯 Overview
 
-IQlify is a cutting-edge, AI-powered interview practice platform that helps users master technical and behavioral interviews while earning real cryptocurrency rewards. Built specifically for **MiniPay** and the Celo blockchain, IQlify combines gamified learning with instant cUSD and CELO token payments, making interview preparation both engaging and rewarding.
+IQlify is a cutting-edge, AI-powered interview practice platform that helps users master technical and behavioral interviews while earning real cryptocurrency rewards. **Primarily built for MiniPay** and the Celo blockchain, IQlify combines gamified learning with instant cUSD and CELO token payments, making interview preparation both engaging and rewarding. While optimized for MiniPay, IQlify also works seamlessly in standard web browsers with any Web3 wallet via RainbowKit.
 
 ### What Makes IQlify Unique?
 
@@ -53,7 +53,8 @@ IQlify is a cutting-edge, AI-powered interview practice platform that helps user
 - 📊 **Intelligent Grading**: Comprehensive AI-based evaluation with detailed feedback and recommendations
 - 🎮 **Gamified Experience**: Streaks, leaderboards, and challenges to keep you motivated
 - 🔒 **Web3 Native**: Built on Celo blockchain with MiniPay wallet integration via RainbowKit
-- 📱 **MiniPay Optimized**: Seamless integration with Opera MiniPay for instant payments and simplified user experience
+- 📱 **MiniPay Optimized**: Seamless integration with Opera MiniPay for instant payments and simplified user experience (primary platform)
+- 🌐 **Browser Compatible**: Also works in standard web browsers with MetaMask, WalletConnect, and other Web3 wallets
 
 ---
 
@@ -73,14 +74,15 @@ IQlify is a cutting-edge, AI-powered interview practice platform that helps user
 - **Profile Customization**: Update profile information anytime
 
 ### 🔗 Wallet Connection & Blockchain Integration
-- **MiniPay Integration**: Native support for Opera MiniPay wallet
-- **Automatic Connection**: Seamless wallet connection when running in MiniPay
-- **RainbowKit Integration**: Universal wallet support for other Web3 wallets
+- **MiniPay Integration** (Primary): Native support for Opera MiniPay wallet with automatic connection
+- **Browser Wallet Support**: Works with MetaMask, WalletConnect, and other Web3 wallets in standard browsers
+- **RainbowKit Integration**: Universal wallet support framework for seamless wallet management
 - **CELO Blockchain**: Native support for Celo and Celo Sepolia Testnet
-- **Stablecoin Support**: cUSD, USDC, and USDT support via MiniPay
+- **Stablecoin Support**: cUSD, USDC, and USDT support (optimized for MiniPay, compatible with other wallets)
 - **Real-time Balance**: Display wallet balance and transaction history
 - **Secure Transactions**: Web3 wallet security standards with fee abstraction
-- **Phone Number Integration**: Optional phone number access from MiniPay for user profiles
+- **Phone Number Integration**: Optional phone number access from MiniPay for user profiles (MiniPay only)
+- **Smart UI Adaptation**: Automatically hides "Connect Wallet" button in MiniPay, shows it in browsers
 
 ### 📊 Home Dashboard
 - **Total Earnings Display**: Track your CELO rewards
@@ -196,7 +198,7 @@ IQlify is a cutting-edge, AI-powered interview practice platform that helps user
 
 ## 📱 MiniPay Integration
 
-IQlify is built specifically for **MiniPay**, Opera's mobile-first wallet that makes digital payments simple and accessible. The app is optimized to work seamlessly within the MiniPay environment.
+IQlify is **primarily built for MiniPay**, Opera's mobile-first wallet that makes digital payments simple and accessible. The app is optimized to work seamlessly within the MiniPay environment, but also functions perfectly in standard web browsers with any Web3 wallet.
 
 ### MiniPay Features
 
@@ -265,6 +267,51 @@ if (window.ethereum?.isMiniPay) {
 - Gracefully handles when API is unavailable
 
 For more details, see the [MiniPay Quickstart Guide](https://docs.celo.org/build-on-celo/build-on-minipay/quickstart).
+
+### Browser Compatibility
+
+While IQlify is optimized for MiniPay, it also works seamlessly in standard web browsers:
+
+#### Supported Browsers
+- **Chrome/Edge**: Full support with MetaMask, WalletConnect, and other Web3 wallets
+- **Firefox**: Full support with Web3 wallet extensions
+- **Safari**: Full support with WalletConnect
+- **Opera**: Full support with built-in wallet or extensions
+
+#### Browser Usage
+
+1. **Open IQlify in your browser**
+   - Navigate to [https://iqlify.vercel.app/](https://iqlify.vercel.app/)
+   - Or run locally at `http://localhost:3000`
+
+2. **Connect your Web3 wallet**
+   - Click the "Connect Wallet" button
+   - Select from supported wallets:
+     - MetaMask
+     - WalletConnect
+     - Coinbase Wallet
+     - Any other Web3 wallet compatible with RainbowKit
+
+3. **Switch to Celo network**
+   - Ensure your wallet is connected to Celo Mainnet or Celo Alfajores Testnet
+   - Add Celo network if not already added:
+     - **Celo Mainnet**: Chain ID 42220
+     - **Celo Alfajores Testnet**: Chain ID 44787
+
+4. **Start using IQlify**
+   - All features work the same as in MiniPay
+   - Some MiniPay-specific features (like phone number access) won't be available
+   - Wallet connection is manual (click "Connect Wallet" button)
+
+#### Differences: MiniPay vs Browser
+
+| Feature | MiniPay | Browser |
+|---------|---------|---------|
+| Wallet Connection | Automatic | Manual (via Connect button) |
+| Phone Number Access | Available | Not available |
+| Fee Abstraction | Native support | Depends on wallet |
+| UI Adaptation | Connect button hidden | Connect button shown |
+| Mobile Optimization | Full | Responsive design |
 
 ---
 
@@ -336,7 +383,8 @@ Before you begin, ensure you have the following installed:
    ```
 
 5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   - **For MiniPay**: Follow the [Testing with MiniPay](#testing-with-minipay) instructions below
+   - **For standard browser**: Navigate to [http://localhost:3000](http://localhost:3000) and connect your Web3 wallet
 
 ### Testing with MiniPay
 
@@ -485,6 +533,10 @@ cd apps/web
 pnpm dev:webhook
 ```
 
+**Access the application:**
+- **In MiniPay**: See [Testing with MiniPay](#testing-with-minipay) section below
+- **In Browser**: Open [http://localhost:3000](http://localhost:3000) and connect your Web3 wallet
+
 #### Production Build
 
 ```bash
@@ -494,6 +546,10 @@ pnpm build
 # Start production server
 pnpm start
 ```
+
+**Access the application:**
+- **In MiniPay**: Load the production URL in MiniPay Developer Settings
+- **In Browser**: Open [https://iqlify.vercel.app/](https://iqlify.vercel.app/) and connect your Web3 wallet
 
 ---
 
