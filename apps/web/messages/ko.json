@@ -176,7 +176,168 @@
     "save": "저장",
     "delete": "삭제",
     "edit": "편집",
-    "close": "닫기"
+    "close": "닫기",
+    "next": "다음",
+    "previous": "이전",
+    "start": "시작",
+    "connectWallet": "지갑 연결"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "스킬 레벨 선택",
+        "description": "적절한 질문을 받기 위해 경험 수준을 선택하세요"
+      },
+      "type": {
+        "title": "면접 유형 선택",
+        "description": "연습하고 싶은 면접 유형을 선택하세요"
+      },
+      "duration": {
+        "title": "시간 설정",
+        "description": "면접 시간을 얼마나 하시겠습니까?"
+      },
+      "equipment": {
+        "title": "장비 확인",
+        "description": "설정이 준비되었는지 확인하겠습니다"
+      },
+      "ready": {
+        "title": "시작 준비 완료",
+        "description": "모든 것이 준비되었습니다! 면접을 시작할 준비가 되셨나요?"
+      }
+    },
+    "skillLevel": {
+      "title": "스킬 레벨 선택",
+      "subtitle": "경험에 가장 적합한 레벨을 선택하세요",
+      "beginner": {
+        "label": "초급",
+        "description": "코딩 여정을 시작하는 분들에게 완벽합니다"
+      },
+      "intermediate": {
+        "label": "중급",
+        "description": "어느 정도 경험이 있는 개발자용"
+      },
+      "advanced": {
+        "label": "고급",
+        "description": "경험이 풍부한 개발자 및 전문가용"
+      },
+      "baseReward": "기본 보상",
+      "maxReward": "최대",
+      "levelSelected": "선택된 레벨",
+      "difficulty": "난이도",
+      "potentialReward": "잠재적 보상"
+    },
+    "interviewType": {
+      "title": "면접 유형 선택",
+      "subtitle": "연습하고 싶은 면접 유형을 선택하세요",
+      "technical": {
+        "label": "기술 스킬",
+        "description": "코딩 챌린지, 알고리즘 및 기술적 문제 해결"
+      },
+      "soft_skills": {
+        "label": "소프트 스킬",
+        "description": "커뮤니케이션, 팀워크 및 전문 스킬"
+      },
+      "behavioral": {
+        "label": "행동 면접",
+        "description": "과거 경험, 의사 결정 및 상황별 질문"
+      },
+      "system_design": {
+        "label": "시스템 설계",
+        "description": "아키텍처, 확장성 및 시스템 설계 과제"
+      },
+      "skillsCovered": "다루는 스킬",
+      "more": "더 보기",
+      "estDuration": "예상 시간",
+      "baseReward": "기본 보상",
+      "selected": "선택됨",
+      "skillsAssessed": "평가될 스킬:"
+    },
+    "duration": {
+      "title": "면접 시간 선택",
+      "subtitle": "면접 시간을 얼마나 하시겠습니까",
+      "recommended": "{level} 레벨의 권장 시간이 강조 표시됩니다",
+      "short": {
+        "label": "빠른 (5분)",
+        "description": "빠른 스킬 평가에 완벽합니다"
+      },
+      "medium": {
+        "label": "표준 (10분)",
+        "description": "포괄적인 질문이 포함된 균형 잡힌 면접"
+      },
+      "long": {
+        "label": "연장 (15분)",
+        "description": "심층적인 기술 및 행동 평가"
+      },
+      "minutes": "분",
+      "recommendedBadge": "권장",
+      "selected": "선택됨",
+      "preparationTime": "준비 시간 포함:",
+      "totalSessionTime": "세션 총 시간:",
+      "seconds": "초"
+    },
+    "equipment": {
+      "checking": {
+        "title": "장비 확인 중",
+        "description": "설정을 확인하는 동안 기다려 주세요..."
+      },
+      "failed": {
+        "title": "장비 확인 실패",
+        "tryAgain": "다시 시도"
+      },
+      "results": {
+        "title": "장비 확인 결과",
+        "allReady": "모든 시스템이 면접 준비가 완료되었습니다!",
+        "issuesDetected": "일부 문제가 감지되었습니다. 계속하기 전에 해결해 주세요."
+      },
+      "items": {
+        "microphone": {
+          "name": "마이크",
+          "description": "음성 상호작용에 필요"
+        },
+        "audio": {
+          "name": "오디오 출력",
+          "description": "듣기 위한 스피커 또는 헤드폰"
+        },
+        "internet": {
+          "name": "인터넷 연결",
+          "description": "안정적인 연결 필요"
+        },
+        "browser": {
+          "name": "브라우저 호환성",
+          "description": "최신 브라우저 기능"
+        }
+      },
+      "status": {
+        "working": "작동 중",
+        "issueDetected": "문제 감지"
+      },
+      "issues": {
+        "title": "감지된 문제"
+      },
+      "recommendations": {
+        "title": "권장 사항"
+      },
+      "recheck": "장비 다시 확인"
+    },
+    "ready": {
+      "configuration": {
+        "title": "면접 설정",
+        "skillLevel": "스킬 레벨:",
+        "interviewType": "면접 유형:",
+        "duration": "시간:",
+        "equipment": "장비:",
+        "ready": "준비 완료"
+      },
+      "startInterview": "면접 시작"
+    },
+    "validation": {
+      "selectSkillLevel": "스킬 레벨을 선택해 주세요",
+      "selectInterviewType": "면접 유형을 선택해 주세요",
+      "selectDuration": "시간을 선택해 주세요",
+      "equipmentCheckRequired": "면접을 시작하기 전에 장비 확인을 통과해야 합니다",
+      "lowRewardWarning": "이 설정은 보상 잠재력이 낮습니다",
+      "lowRewardRecommendation": "더 높은 스킬 레벨 또는 다른 면접 유형 선택을 고려하세요"
+    }
   }
 }
 

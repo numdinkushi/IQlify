@@ -176,6 +176,167 @@
     "save": "Guardar",
     "delete": "Eliminar",
     "edit": "Editar",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "start": "Iniciar",
+    "connectWallet": "Conectar Billetera"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "Seleccionar Nivel de Habilidad",
+        "description": "Elige tu nivel de experiencia para obtener preguntas apropiadas"
+      },
+      "type": {
+        "title": "Elegir Tipo de Entrevista",
+        "description": "Selecciona el tipo de entrevista que quieres practicar"
+      },
+      "duration": {
+        "title": "Establecer Duración",
+        "description": "¿Cuánto quieres que dure tu entrevista?"
+      },
+      "equipment": {
+        "title": "Verificación de Equipamiento",
+        "description": "Asegurémonos de que tu configuración esté lista"
+      },
+      "ready": {
+        "title": "Listo para Comenzar",
+        "description": "¡Todo se ve bien! ¿Listo para comenzar tu entrevista?"
+      }
+    },
+    "skillLevel": {
+      "title": "Elige tu Nivel de Habilidad",
+      "subtitle": "Selecciona el nivel que mejor coincida con tu experiencia",
+      "beginner": {
+        "label": "Principiante",
+        "description": "Perfecto para quienes están comenzando su viaje de programación"
+      },
+      "intermediate": {
+        "label": "Intermedio",
+        "description": "Para desarrolladores con algo de experiencia"
+      },
+      "advanced": {
+        "label": "Avanzado",
+        "description": "Para desarrolladores experimentados y expertos"
+      },
+      "baseReward": "Recompensa Base",
+      "maxReward": "Máx",
+      "levelSelected": "Nivel Seleccionado",
+      "difficulty": "Dificultad",
+      "potentialReward": "Recompensa Potencial"
+    },
+    "interviewType": {
+      "title": "Elige Tipo de Entrevista",
+      "subtitle": "Selecciona el tipo de entrevista que quieres practicar",
+      "technical": {
+        "label": "Habilidades Técnicas",
+        "description": "Desafíos de programación, algoritmos y resolución de problemas técnicos"
+      },
+      "soft_skills": {
+        "label": "Habilidades Blandas",
+        "description": "Comunicación, trabajo en equipo y habilidades profesionales"
+      },
+      "behavioral": {
+        "label": "Conductual",
+        "description": "Experiencias pasadas, toma de decisiones y preguntas situacionales"
+      },
+      "system_design": {
+        "label": "Diseño de Sistemas",
+        "description": "Arquitectura, escalabilidad y desafíos de diseño de sistemas"
+      },
+      "skillsCovered": "Habilidades Cubiertas",
+      "more": "más",
+      "estDuration": "Duración Est.",
+      "baseReward": "Recompensa Base",
+      "selected": "Seleccionado",
+      "skillsAssessed": "Habilidades en las que serás evaluado:"
+    },
+    "duration": {
+      "title": "Elige Duración de la Entrevista",
+      "subtitle": "Selecciona cuánto quieres que dure tu entrevista",
+      "recommended": "Las duraciones recomendadas para el nivel {level} están resaltadas",
+      "short": {
+        "label": "Rápida (5 min)",
+        "description": "Perfecta para una evaluación rápida de habilidades"
+      },
+      "medium": {
+        "label": "Estándar (10 min)",
+        "description": "Entrevista equilibrada con preguntas completas"
+      },
+      "long": {
+        "label": "Extendida (15 min)",
+        "description": "Evaluación técnica y conductual en profundidad"
+      },
+      "minutes": "minutos",
+      "recommendedBadge": "Recomendado",
+      "selected": "Seleccionado",
+      "preparationTime": "Tiempo de preparación incluido:",
+      "totalSessionTime": "Tiempo total de la sesión:",
+      "seconds": "segundos"
+    },
+    "equipment": {
+      "checking": {
+        "title": "Verificando tu Equipamiento",
+        "description": "Por favor espera mientras verificamos tu configuración..."
+      },
+      "failed": {
+        "title": "Verificación de Equipamiento Fallida",
+        "tryAgain": "Intentar de Nuevo"
+      },
+      "results": {
+        "title": "Resultados de Verificación de Equipamiento",
+        "allReady": "¡Todos los sistemas están listos para tu entrevista!",
+        "issuesDetected": "Se detectaron algunos problemas. Por favor resuélvelos antes de continuar."
+      },
+      "items": {
+        "microphone": {
+          "name": "Micrófono",
+          "description": "Requerido para interacción de voz"
+        },
+        "audio": {
+          "name": "Salida de Audio",
+          "description": "Altavoces o auriculares para escuchar"
+        },
+        "internet": {
+          "name": "Conexión a Internet",
+          "description": "Conexión estable requerida"
+        },
+        "browser": {
+          "name": "Compatibilidad del Navegador",
+          "description": "Características del navegador moderno"
+        }
+      },
+      "status": {
+        "working": "Funcionando",
+        "issueDetected": "Problema Detectado"
+      },
+      "issues": {
+        "title": "Problemas Detectados"
+      },
+      "recommendations": {
+        "title": "Recomendaciones"
+      },
+      "recheck": "Revisar Equipamiento"
+    },
+    "ready": {
+      "configuration": {
+        "title": "Configuración de Entrevista",
+        "skillLevel": "Nivel de Habilidad:",
+        "interviewType": "Tipo de Entrevista:",
+        "duration": "Duración:",
+        "equipment": "Equipamiento:",
+        "ready": "Listo"
+      },
+      "startInterview": "Iniciar Entrevista"
+    },
+    "validation": {
+      "selectSkillLevel": "Por favor selecciona un nivel de habilidad",
+      "selectInterviewType": "Por favor selecciona un tipo de entrevista",
+      "selectDuration": "Por favor selecciona una duración",
+      "equipmentCheckRequired": "La verificación del equipamiento debe pasar antes de iniciar la entrevista",
+      "lowRewardWarning": "Esta configuración tiene un potencial de recompensa bajo",
+      "lowRewardRecommendation": "Considera seleccionar un nivel de habilidad más alto o un tipo de entrevista diferente"
+    }
   }
 }

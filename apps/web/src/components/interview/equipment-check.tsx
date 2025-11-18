@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { EquipmentCheckService } from '@/lib/equipment-check';
 import { EquipmentStatus, EquipmentCheckResult } from '@/lib/interview-types';
 import { Card } from '@/components/ui/card';
@@ -34,19 +35,20 @@ const getStatusColor = (status: boolean) => {
     return status ? 'text-green-400' : 'text-red-400';
 };
 
-const getStatusText = (status: boolean) => {
-    return status ? 'Working' : 'Issue Detected';
-};
-
 export const EquipmentCheck = ({
     onCheckComplete,
     onRetry,
     className = ''
 }: EquipmentCheckProps) => {
+    const t = useTranslations();
     const [isChecking, setIsChecking] = useState(false);
     const [equipmentStatus, setEquipmentStatus] = useState<EquipmentStatus | null>(null);
     const [checkResult, setCheckResult] = useState<EquipmentCheckResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const getStatusText = (status: boolean) => {
+        return status ? t('interviewFlow.equipment.status.working') : t('interviewFlow.equipment.status.issueDetected');
+    };
 
     const equipmentCheckService = EquipmentCheckService.getInstance();
 
@@ -84,10 +86,10 @@ export const EquipmentCheck = ({
             <div className={`space-y-4 ${className}`}>
                 <div className="text-center">
                     <h3 className="text-xl font-semibold text-white mb-2">
-                        Checking Your Equipment
+                        {t('interviewFlow.equipment.checking.title')}
                     </h3>
                     <p className="text-gray-400 text-sm">
-                        Please wait while we verify your setup...
+                        {t('interviewFlow.equipment.checking.description')}
                     </p>
                 </div>
 
@@ -103,7 +105,7 @@ export const EquipmentCheck = ({
             <div className={`space-y-4 ${className}`}>
                 <div className="text-center">
                     <h3 className="text-xl font-semibold text-white mb-2">
-                        Equipment Check Failed
+                        {t('interviewFlow.equipment.failed.title')}
                     </h3>
                     <p className="text-red-400 text-sm">
                         {error}
@@ -117,7 +119,7 @@ export const EquipmentCheck = ({
                         className="bg-gold-400/20 border-gold-400/50 text-gold-400 hover:bg-gold-400/30"
                     >
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        Try Again
+                        {t('interviewFlow.equipment.failed.tryAgain')}
                     </Button>
                 </div>
             </div>
@@ -130,28 +132,28 @@ export const EquipmentCheck = ({
 
     const equipmentItems = [
         {
-            name: 'Microphone',
+            name: t('interviewFlow.equipment.items.microphone.name'),
             status: equipmentStatus.microphone,
             icon: <Mic className="w-5 h-5" />,
-            description: 'Required for voice interaction'
+            description: t('interviewFlow.equipment.items.microphone.description')
         },
         {
-            name: 'Audio Output',
+            name: t('interviewFlow.equipment.items.audio.name'),
             status: equipmentStatus.audio,
             icon: <Volume2 className="w-5 h-5" />,
-            description: 'Speakers or headphones for hearing'
+            description: t('interviewFlow.equipment.items.audio.description')
         },
         {
-            name: 'Internet Connection',
+            name: t('interviewFlow.equipment.items.internet.name'),
             status: equipmentStatus.internet,
             icon: <Wifi className="w-5 h-5" />,
-            description: 'Stable connection required'
+            description: t('interviewFlow.equipment.items.internet.description')
         },
         {
-            name: 'Browser Compatibility',
+            name: t('interviewFlow.equipment.items.browser.name'),
             status: equipmentStatus.browser,
             icon: <Monitor className="w-5 h-5" />,
-            description: 'Modern browser features'
+            description: t('interviewFlow.equipment.items.browser.description')
         }
     ];
 
@@ -159,12 +161,12 @@ export const EquipmentCheck = ({
         <div className={`space-y-4 ${className}`}>
             <div className="text-center">
                 <h3 className="text-xl font-semibold text-white mb-2">
-                    Equipment Check Results
+                    {t('interviewFlow.equipment.results.title')}
                 </h3>
                 <p className="text-gray-400 text-sm">
                     {checkResult.canProceed
-                        ? 'All systems are ready for your interview!'
-                        : 'Some issues were detected. Please resolve them before proceeding.'
+                        ? t('interviewFlow.equipment.results.allReady')
+                        : t('interviewFlow.equipment.results.issuesDetected')
                     }
                 </p>
             </div>
@@ -211,7 +213,7 @@ export const EquipmentCheck = ({
                         <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
                             <h4 className="font-medium text-red-400 mb-2">
-                                Issues Detected
+                                {t('interviewFlow.equipment.issues.title')}
                             </h4>
                             <ul className="space-y-1">
                                 {checkResult.issues.map((issue, index) => (
@@ -231,7 +233,7 @@ export const EquipmentCheck = ({
                         <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
                             <h4 className="font-medium text-yellow-400 mb-2">
-                                Recommendations
+                                {t('interviewFlow.equipment.recommendations.title')}
                             </h4>
                             <ul className="space-y-1">
                                 {checkResult.recommendations.map((recommendation, index) => (
@@ -253,7 +255,7 @@ export const EquipmentCheck = ({
                     className="bg-gray-600/20 border-gray-500/50 text-gray-300 hover:bg-gray-600/30"
                 >
                     <RefreshCw className="w-4 h-4 mr-2" />
-                    Recheck Equipment
+                    {t('interviewFlow.equipment.recheck')}
                 </Button>
 
                

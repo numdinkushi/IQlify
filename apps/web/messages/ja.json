@@ -176,6 +176,167 @@
     "save": "保存",
     "delete": "削除",
     "edit": "編集",
-    "close": "閉じる"
+    "close": "閉じる",
+    "next": "次へ",
+    "previous": "前へ",
+    "start": "開始",
+    "connectWallet": "ウォレットを接続"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "スキルレベルを選択",
+        "description": "適切な質問を得るために経験レベルを選択してください"
+      },
+      "type": {
+        "title": "面接タイプを選択",
+        "description": "練習したい面接のタイプを選択してください"
+      },
+      "duration": {
+        "title": "時間を設定",
+        "description": "面接の時間をどのくらいにしますか？"
+      },
+      "equipment": {
+        "title": "機器チェック",
+        "description": "設定が準備できているか確認しましょう"
+      },
+      "ready": {
+        "title": "開始準備完了",
+        "description": "すべて問題ありません！面接を開始する準備はできていますか？"
+      }
+    },
+    "skillLevel": {
+      "title": "スキルレベルを選択",
+      "subtitle": "あなたの経験に最も適したレベルを選択してください",
+      "beginner": {
+        "label": "初級",
+        "description": "プログラミングの旅を始める方に最適"
+      },
+      "intermediate": {
+        "label": "中級",
+        "description": "ある程度の経験を持つ開発者向け"
+      },
+      "advanced": {
+        "label": "上級",
+        "description": "経験豊富な開発者と専門家向け"
+      },
+      "baseReward": "基本報酬",
+      "maxReward": "最大",
+      "levelSelected": "選択されたレベル",
+      "difficulty": "難易度",
+      "potentialReward": "潜在的な報酬"
+    },
+    "interviewType": {
+      "title": "面接タイプを選択",
+      "subtitle": "練習したい面接のタイプを選択してください",
+      "technical": {
+        "label": "技術スキル",
+        "description": "コーディングチャレンジ、アルゴリズム、技術的問題解決"
+      },
+      "soft_skills": {
+        "label": "ソフトスキル",
+        "description": "コミュニケーション、チームワーク、専門スキル"
+      },
+      "behavioral": {
+        "label": "行動面接",
+        "description": "過去の経験、意思決定、状況に応じた質問"
+      },
+      "system_design": {
+        "label": "システム設計",
+        "description": "アーキテクチャ、スケーラビリティ、システム設計の課題"
+      },
+      "skillsCovered": "対象スキル",
+      "more": "さらに",
+      "estDuration": "推定時間",
+      "baseReward": "基本報酬",
+      "selected": "選択済み",
+      "skillsAssessed": "評価されるスキル："
+    },
+    "duration": {
+      "title": "面接時間を選択",
+      "subtitle": "面接の時間をどのくらいにしますか",
+      "recommended": "{level}レベルの推奨時間が強調表示されています",
+      "short": {
+        "label": "短時間（5分）",
+        "description": "迅速なスキル評価に最適"
+      },
+      "medium": {
+        "label": "標準（10分）",
+        "description": "包括的な質問を含むバランスの取れた面接"
+      },
+      "long": {
+        "label": "長時間（15分）",
+        "description": "技術的および行動的な詳細評価"
+      },
+      "minutes": "分",
+      "recommendedBadge": "推奨",
+      "selected": "選択済み",
+      "preparationTime": "準備時間を含む：",
+      "totalSessionTime": "セッション合計時間：",
+      "seconds": "秒"
+    },
+    "equipment": {
+      "checking": {
+        "title": "機器を確認中",
+        "description": "設定を確認しています。お待ちください..."
+      },
+      "failed": {
+        "title": "機器チェック失敗",
+        "tryAgain": "再試行"
+      },
+      "results": {
+        "title": "機器チェック結果",
+        "allReady": "すべてのシステムが面接の準備ができています！",
+        "issuesDetected": "いくつかの問題が検出されました。続行する前に解決してください。"
+      },
+      "items": {
+        "microphone": {
+          "name": "マイク",
+          "description": "音声対話に必要"
+        },
+        "audio": {
+          "name": "音声出力",
+          "description": "聞くためのスピーカーまたはヘッドフォン"
+        },
+        "internet": {
+          "name": "インターネット接続",
+          "description": "安定した接続が必要"
+        },
+        "browser": {
+          "name": "ブラウザ互換性",
+          "description": "モダンブラウザの機能"
+        }
+      },
+      "status": {
+        "working": "動作中",
+        "issueDetected": "問題検出"
+      },
+      "issues": {
+        "title": "検出された問題"
+      },
+      "recommendations": {
+        "title": "推奨事項"
+      },
+      "recheck": "機器を再確認"
+    },
+    "ready": {
+      "configuration": {
+        "title": "面接設定",
+        "skillLevel": "スキルレベル：",
+        "interviewType": "面接タイプ：",
+        "duration": "時間：",
+        "equipment": "機器：",
+        "ready": "準備完了"
+      },
+      "startInterview": "面接を開始"
+    },
+    "validation": {
+      "selectSkillLevel": "スキルレベルを選択してください",
+      "selectInterviewType": "面接タイプを選択してください",
+      "selectDuration": "時間を選択してください",
+      "equipmentCheckRequired": "面接を開始する前に機器チェックを通過する必要があります",
+      "lowRewardWarning": "この設定は報酬の可能性が低いです",
+      "lowRewardRecommendation": "より高いスキルレベルまたは異なる面接タイプの選択を検討してください"
+    }
   }
 }

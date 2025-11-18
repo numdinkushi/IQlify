@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import {
     SkillLevel,
     InterviewType,
@@ -38,6 +39,7 @@ export const PreInterviewLauncher = ({
     onCancel,
     className = ''
 }: PreInterviewLauncherProps) => {
+    const t = useTranslations();
     const [currentStep, setCurrentStep] = useState<SetupStep>('skill');
     const [selectedSkillLevel, setSelectedSkillLevel] = useState<SkillLevel | undefined>();
     const [selectedInterviewType, setSelectedInterviewType] = useState<InterviewType | undefined>();
@@ -88,26 +90,26 @@ export const PreInterviewLauncher = ({
         const recommendations: string[] = [];
 
         if (!selectedSkillLevel) {
-            errors.push('Please select a skill level');
+            errors.push(t('interviewFlow.validation.selectSkillLevel'));
         }
 
         if (!selectedInterviewType) {
-            errors.push('Please select an interview type');
+            errors.push(t('interviewFlow.validation.selectInterviewType'));
         }
 
         if (!selectedDuration) {
-            errors.push('Please select a duration');
+            errors.push(t('interviewFlow.validation.selectDuration'));
         }
 
         if (!equipmentResult?.canProceed) {
-            errors.push('Equipment check must pass before starting interview');
+            errors.push(t('interviewFlow.validation.equipmentCheckRequired'));
         }
 
         if (selectedSkillLevel && selectedInterviewType && selectedDuration) {
             const potentialReward = calculatePotentialReward(selectedSkillLevel, selectedInterviewType);
             if (potentialReward < 0.1) {
-                warnings.push('This configuration has a low reward potential');
-                recommendations.push('Consider selecting a higher skill level or different interview type');
+                warnings.push(t('interviewFlow.validation.lowRewardWarning'));
+                recommendations.push(t('interviewFlow.validation.lowRewardRecommendation'));
             }
         }
 
@@ -142,25 +144,11 @@ export const PreInterviewLauncher = ({
         : 0;
 
     const getStepTitle = (step: SetupStep) => {
-        const titles: Record<SetupStep, string> = {
-            'skill': 'Select Skill Level',
-            'type': 'Choose Interview Type',
-            'duration': 'Set Duration',
-            'equipment': 'Equipment Check',
-            'ready': 'Ready to Start'
-        };
-        return titles[step] || 'Interview Setup';
+        return t(`interviewFlow.steps.${step}.title`);
     };
 
     const getStepDescription = (step: SetupStep) => {
-        const descriptions: Record<SetupStep, string> = {
-            'skill': 'Choose your experience level to get appropriate questions',
-            'type': 'Select what type of interview you want to practice',
-            'duration': 'How long do you want your interview to be?',
-            'equipment': 'Let\'s make sure your setup is ready',
-            'ready': 'Everything looks good! Ready to start your interview?'
-        };
-        return descriptions[step] || '';
+        return t(`interviewFlow.steps.${step}.description`);
     };
 
     return (
@@ -227,7 +215,7 @@ export const PreInterviewLauncher = ({
                     className="bg-gray-600/20 border-gray-500/50 text-gray-300 hover:bg-gray-600/30"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    {currentStepIndex === 0 ? 'Cancel' : 'Previous'}
+                    {currentStepIndex === 0 ? t('common.cancel') : t('common.previous')}
                 </Button>
 
                 {currentStep === 'ready' ? (
@@ -237,7 +225,7 @@ export const PreInterviewLauncher = ({
                         className="bg-gold-400 hover:bg-gold-500 text-black font-medium"
                     >
                         <Play className="w-4 h-4 mr-2" />
-                        Start Interview
+                        {t('interviewFlow.ready.startInterview')}
                     </Button>
                 ) : (
                     <Button
@@ -245,7 +233,7 @@ export const PreInterviewLauncher = ({
                         disabled={!canProceedToNext()}
                         className="bg-gold-400 hover:bg-gold-500 text-black font-medium"
                     >
-                        Next
+                        {t('common.next')}
                         <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                 )}

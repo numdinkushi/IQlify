@@ -37,32 +37,26 @@ export function ThemeSelector() {
                     <motion.button
                         key={themeOption.id}
                         onClick={() => setTheme(themeOption.id)}
-                        className={`w-full flex items-center justify-between p-4 rounded-lg border-2 transition-all ${
-                            isSelected
-                                ? 'border-gold-400 bg-gold-400/10'
-                                : 'border-border hover:border-gold-400/50 bg-card'
-                        }`}
+                        className={`w-full flex items-center justify-between p-4 rounded-lg border-2 transition-all ${isSelected
+                            ? 'border-gold-400 text-black bg-gold-400/10'
+                            : 'border-border hover:border-gold-400/50 bg-card text-black'
+                            }`}
                         whileTap={{ scale: 0.98 }}
                     >
                         <div className="flex items-center gap-3">
                             <div
-                                className={`p-2 rounded-lg ${
-                                    isSelected
-                                        ? 'bg-gold-400/20 text-gold-400'
-                                        : 'bg-muted text-muted-foreground'
-                                }`}
+                                className={`p-2 rounded-lg ${isSelected
+                                    ? 'bg-gold-400/20 text-gold-400'
+                                    : 'bg-muted text-muted-foreground'
+                                    }`}
                             >
                                 <Icon className="h-5 w-5" />
                             </div>
                             <div className="text-left">
-                                <p
-                                    className={`font-medium ${
-                                        isSelected ? 'text-gold-400' : 'text-foreground'
-                                    }`}
-                                >
+                                <p className="font-medium text-black dark:text-black">
                                     {themeOption.name}
                                 </p>
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-xs text-black/70 dark:text-black/70">
                                     {themeOption.description}
                                 </p>
                             </div>

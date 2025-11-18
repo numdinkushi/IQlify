@@ -112,7 +112,13 @@ async function generateFinalGrading(callId: string, assistantId: string) {
         let aiScore: number | undefined;
         try {
             if (transcriptWords >= 50 && candidateMessageCount >= 2) {
-                console.log('🤖 Getting AI analysis for sufficient content...');
+                console.log('🤖 [GEMINI] Getting AI analysis for sufficient content...');
+                console.log('🤖 [GEMINI] Transcript stats:', {
+                    transcriptWords,
+                    candidateMessageCount,
+                    transcriptLength: transcript.length
+                });
+                
                 const geminiService = new GeminiService();
                 const role = callData.assistant?.name || 'Software Engineer';
                 const level = 'Mid-level';
@@ -124,11 +130,29 @@ async function generateFinalGrading(callId: string, assistantId: string) {
                     level,
                     techstack
                 );
-                aiScore = aiGrading.overallScore;
-                console.log('✅ AI analysis completed:', { aiScore });
+                
+                // Validate AI score
+                if (aiGrading && typeof aiGrading.overallScore === 'number' && !isNaN(aiGrading.overallScore)) {
+                    aiScore = Math.max(0, Math.min(10, aiGrading.overallScore)); // Clamp to 0-10
+                    console.log('✅ [GEMINI] AI analysis completed successfully:', { 
+                        aiScore,
+                        recommendation: aiGrading.recommendation,
+                        summary: aiGrading.summary?.substring(0, 100) + '...'
+                    });
+                } else {
+                    console.warn('⚠️ [GEMINI] Invalid AI score received:', aiGrading.overallScore);
+                }
+            } else {
+                console.log('⚠️ [GEMINI] Insufficient content for AI analysis:', {
+                    transcriptWords,
+                    candidateMessageCount,
+                    requiredWords: 50,
+                    requiredMessages: 2
+                });
             }
         } catch (error) {
-            console.log('⚠️ AI analysis failed, proceeding with intelligent grading only:', error);
+            console.error('❌ [GEMINI] AI analysis failed, proceeding with intelligent grading only:', error);
+            // Don't fail the entire grading if AI analysis fails
         }
 
         // 4. Apply intelligent grading
@@ -184,10 +208,20 @@ async function generateFinalGrading(callId: string, assistantId: string) {
             }
         };
 
+        // Convert intelligent grading score (0-100) to 0-10 scale for compatibility with frontend
+        // The frontend expects 0-10 scale and will convert back to 0-100 for display
+        const scoreOn10Scale = intelligentResult.score / 10;
+        
+        console.log('🎯 [WEBHOOK] Final score conversion:', {
+            intelligentScore: intelligentResult.score,
+            scoreOn10Scale: scoreOn10Scale.toFixed(2),
+            status: intelligentResult.status
+        });
+
         return {
             callId,
             assistantId,
-            overallScore: intelligentResult.score / 10, // Convert to 0-10 scale for compatibility
+            overallScore: scoreOn10Scale, // 0-10 scale for compatibility
             sections,
             recommendation: intelligentResult.recommendation,
             summary: intelligentResult.feedback,

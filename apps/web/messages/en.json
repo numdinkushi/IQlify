@@ -176,7 +176,168 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
-    "close": "Close"
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "start": "Start",
+    "connectWallet": "Connect Wallet"
+  },
+  "interviewFlow": {
+    "steps": {
+      "skill": {
+        "title": "Select Skill Level",
+        "description": "Choose your experience level to get appropriate questions"
+      },
+      "type": {
+        "title": "Choose Interview Type",
+        "description": "Select what type of interview you want to practice"
+      },
+      "duration": {
+        "title": "Set Duration",
+        "description": "How long do you want your interview to be?"
+      },
+      "equipment": {
+        "title": "Equipment Check",
+        "description": "Let's make sure your setup is ready"
+      },
+      "ready": {
+        "title": "Ready to Start",
+        "description": "Everything looks good! Ready to start your interview?"
+      }
+    },
+    "skillLevel": {
+      "title": "Choose Your Skill Level",
+      "subtitle": "Select the level that best matches your experience",
+      "beginner": {
+        "label": "Beginner",
+        "description": "Perfect for those starting their coding journey"
+      },
+      "intermediate": {
+        "label": "Intermediate",
+        "description": "For developers with some experience"
+      },
+      "advanced": {
+        "label": "Advanced",
+        "description": "For experienced developers and experts"
+      },
+      "baseReward": "Base Reward",
+      "maxReward": "Max",
+      "levelSelected": "Level Selected",
+      "difficulty": "Difficulty",
+      "potentialReward": "Potential Reward"
+    },
+    "interviewType": {
+      "title": "Choose Interview Type",
+      "subtitle": "Select the type of interview you want to practice",
+      "technical": {
+        "label": "Technical Skills",
+        "description": "Coding challenges, algorithms, and technical problem-solving"
+      },
+      "soft_skills": {
+        "label": "Soft Skills",
+        "description": "Communication, teamwork, and professional skills"
+      },
+      "behavioral": {
+        "label": "Behavioral",
+        "description": "Past experiences, decision-making, and situational questions"
+      },
+      "system_design": {
+        "label": "System Design",
+        "description": "Architecture, scalability, and system design challenges"
+      },
+      "skillsCovered": "Skills Covered",
+      "more": "more",
+      "estDuration": "Est. Duration",
+      "baseReward": "Base Reward",
+      "selected": "Selected",
+      "skillsAssessed": "Skills you'll be assessed on:"
+    },
+    "duration": {
+      "title": "Choose Interview Duration",
+      "subtitle": "Select how long you want your interview to be",
+      "recommended": "Recommended durations for {level} level are highlighted",
+      "short": {
+        "label": "Quick (5 min)",
+        "description": "Perfect for quick skill assessment"
+      },
+      "medium": {
+        "label": "Standard (10 min)",
+        "description": "Balanced interview with comprehensive questions"
+      },
+      "long": {
+        "label": "Extended (15 min)",
+        "description": "In-depth technical and behavioral assessment"
+      },
+      "minutes": "minutes",
+      "recommendedBadge": "Recommended",
+      "selected": "Selected",
+      "preparationTime": "Preparation time included:",
+      "totalSessionTime": "Total session time:",
+      "seconds": "seconds"
+    },
+    "equipment": {
+      "checking": {
+        "title": "Checking Your Equipment",
+        "description": "Please wait while we verify your setup..."
+      },
+      "failed": {
+        "title": "Equipment Check Failed",
+        "tryAgain": "Try Again"
+      },
+      "results": {
+        "title": "Equipment Check Results",
+        "allReady": "All systems are ready for your interview!",
+        "issuesDetected": "Some issues were detected. Please resolve them before proceeding."
+      },
+      "items": {
+        "microphone": {
+          "name": "Microphone",
+          "description": "Required for voice interaction"
+        },
+        "audio": {
+          "name": "Audio Output",
+          "description": "Speakers or headphones for hearing"
+        },
+        "internet": {
+          "name": "Internet Connection",
+          "description": "Stable connection required"
+        },
+        "browser": {
+          "name": "Browser Compatibility",
+          "description": "Modern browser features"
+        }
+      },
+      "status": {
+        "working": "Working",
+        "issueDetected": "Issue Detected"
+      },
+      "issues": {
+        "title": "Issues Detected"
+      },
+      "recommendations": {
+        "title": "Recommendations"
+      },
+      "recheck": "Recheck Equipment"
+    },
+    "ready": {
+      "configuration": {
+        "title": "Interview Configuration",
+        "skillLevel": "Skill Level:",
+        "interviewType": "Interview Type:",
+        "duration": "Duration:",
+        "equipment": "Equipment:",
+        "ready": "Ready"
+      },
+      "startInterview": "Start Interview"
+    },
+    "validation": {
+      "selectSkillLevel": "Please select a skill level",
+      "selectInterviewType": "Please select an interview type",
+      "selectDuration": "Please select a duration",
+      "equipmentCheckRequired": "Equipment check must pass before starting interview",
+      "lowRewardWarning": "This configuration has a low reward potential",
+      "lowRewardRecommendation": "Consider selecting a higher skill level or different interview type"
+    }
   }
 }
 
