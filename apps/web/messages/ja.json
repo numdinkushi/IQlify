@@ -179,7 +179,8 @@
     "close": "閉じる",
     "next": "次へ",
     "previous": "前へ",
-    "start": "開始"
+    "start": "開始",
+    "connectWallet": "ウォレットを接続"
   },
   "interviewFlow": {
     "steps": {

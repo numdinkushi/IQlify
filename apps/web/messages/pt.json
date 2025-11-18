@@ -179,7 +179,8 @@
     "close": "Fechar",
     "next": "Próximo",
     "previous": "Anterior",
-    "start": "Iniciar"
+    "start": "Iniciar",
+    "connectWallet": "Conectar Carteira"
   },
   "interviewFlow": {
     "steps": {

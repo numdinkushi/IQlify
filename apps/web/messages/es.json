@@ -179,7 +179,8 @@
     "close": "Cerrar",
     "next": "Siguiente",
     "previous": "Anterior",
-    "start": "Iniciar"
+    "start": "Iniciar",
+    "connectWallet": "Conectar Billetera"
   },
   "interviewFlow": {
     "steps": {

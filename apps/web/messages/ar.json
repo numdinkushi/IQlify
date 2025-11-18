@@ -179,7 +179,8 @@
     "close": "إغلاق",
     "next": "التالي",
     "previous": "السابق",
-    "start": "بدء"
+    "start": "بدء",
+    "connectWallet": "ربط المحفظة"
   },
   "interviewFlow": {
     "steps": {

@@ -179,7 +179,8 @@
     "close": "Fermer",
     "next": "Suivant",
     "previous": "Précédent",
-    "start": "Démarrer"
+    "start": "Démarrer",
+    "connectWallet": "Connecter le Portefeuille"
   },
   "interviewFlow": {
     "steps": {

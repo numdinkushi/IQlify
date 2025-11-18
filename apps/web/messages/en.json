@@ -179,7 +179,8 @@
     "close": "Close",
     "next": "Next",
     "previous": "Previous",
-    "start": "Start"
+    "start": "Start",
+    "connectWallet": "Connect Wallet"
   },
   "interviewFlow": {
     "steps": {
