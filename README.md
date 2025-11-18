@@ -9,8 +9,11 @@
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-iqlify.vercel.app-brightgreen)](https://iqlify.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/numdinkushi/IQlify)
 [![Built on Celo](https://img.shields.io/badge/Built%20on-Celo-35D07F)](https://celo.org/)
+[![MiniPay Compatible](https://img.shields.io/badge/MiniPay-Compatible-FF6B35)](https://docs.celo.org/build-on-celo/build-on-minipay/quickstart)
 
 ⚡ AI-powered interview practice platform with cryptocurrency rewards
+
+**Built for MiniPay** - Optimized for Opera MiniPay wallet with seamless Web3 integration
 
 </div>
 
@@ -20,12 +23,14 @@
 
 - [Overview](#overview)
 - [Features](#features)
+- [MiniPay Integration](#minipay-integration)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Environment Variables](#environment-variables)
   - [Running the Application](#running-the-application)
+  - [Testing with MiniPay](#testing-with-minipay)
 - [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
 - [Key Features Breakdown](#key-features-breakdown)
@@ -38,16 +43,17 @@
 
 ## 🎯 Overview
 
-IQlify is a cutting-edge, AI-powered interview practice platform that helps users master technical and behavioral interviews while earning real cryptocurrency rewards. Built on the Celo blockchain, IQlify combines gamified learning with instant CELO token payments, making interview preparation both engaging and rewarding.
+IQlify is a cutting-edge, AI-powered interview practice platform that helps users master technical and behavioral interviews while earning real cryptocurrency rewards. Built specifically for **MiniPay** and the Celo blockchain, IQlify combines gamified learning with instant cUSD and CELO token payments, making interview preparation both engaging and rewarding.
 
 ### What Makes IQlify Unique?
 
 - 🤖 **AI-Powered Interviews**: Real-time conversations with advanced AI interviewers powered by VAPI and Google Gemini
-- 💰 **Earn While Learning**: Get paid in CELO tokens for completing interviews and challenges
+- 💰 **Earn While Learning**: Get paid in CELO tokens and stablecoins (cUSD, USDC, USDT) for completing interviews and challenges
 - 🌍 **Global Accessibility**: Full support for 10 languages (English, Spanish, French, Italian, Portuguese, German, Japanese, Korean, Chinese, Arabic)
 - 📊 **Intelligent Grading**: Comprehensive AI-based evaluation with detailed feedback and recommendations
 - 🎮 **Gamified Experience**: Streaks, leaderboards, and challenges to keep you motivated
-- 🔒 **Web3 Native**: Built on Celo blockchain with wallet integration via RainbowKit
+- 🔒 **Web3 Native**: Built on Celo blockchain with MiniPay wallet integration via RainbowKit
+- 📱 **MiniPay Optimized**: Seamless integration with Opera MiniPay for instant payments and simplified user experience
 
 ---
 
@@ -67,10 +73,14 @@ IQlify is a cutting-edge, AI-powered interview practice platform that helps user
 - **Profile Customization**: Update profile information anytime
 
 ### 🔗 Wallet Connection & Blockchain Integration
-- **RainbowKit Integration**: Seamless wallet connection
-- **CELO Blockchain**: Native support for CELO network
+- **MiniPay Integration**: Native support for Opera MiniPay wallet
+- **Automatic Connection**: Seamless wallet connection when running in MiniPay
+- **RainbowKit Integration**: Universal wallet support for other Web3 wallets
+- **CELO Blockchain**: Native support for Celo and Celo Sepolia Testnet
+- **Stablecoin Support**: cUSD, USDC, and USDT support via MiniPay
 - **Real-time Balance**: Display wallet balance and transaction history
-- **Secure Transactions**: Web3 wallet security standards
+- **Secure Transactions**: Web3 wallet security standards with fee abstraction
+- **Phone Number Integration**: Optional phone number access from MiniPay for user profiles
 
 ### 📊 Home Dashboard
 - **Total Earnings Display**: Track your CELO rewards
@@ -184,6 +194,80 @@ IQlify is a cutting-edge, AI-powered interview practice platform that helps user
 
 ---
 
+## 📱 MiniPay Integration
+
+IQlify is built specifically for **MiniPay**, Opera's mobile-first wallet that makes digital payments simple and accessible. The app is optimized to work seamlessly within the MiniPay environment.
+
+### MiniPay Features
+
+#### Key MiniPay Capabilities
+- **Currency Display**: Balances appear in your local currency
+- **Stablecoin Support**: Native support for cUSD, USDC, and USDT
+- **Simple Swaps**: Easy swaps between stablecoins via MiniPay's pocket swap feature
+- **Fee Abstraction**: Custom fee abstraction based transactions (feeCurrency support)
+- **Implicit Wallet Connection**: Automatic connection when running in MiniPay
+- **Phone Number Access**: Optional access to user's phone number for profile setup
+
+#### MiniPay Compatibility
+
+IQlify is fully compatible with MiniPay and includes:
+
+- **Automatic Detection**: Detects MiniPay environment via `window.ethereum.isMiniPay`
+- **Smart UI Adaptation**: Hides "Connect Wallet" button when running in MiniPay (wallet is already connected)
+- **Fee Currency Support**: Uses `feeCurrency` property for cUSD transactions
+- **Legacy Transaction Support**: Compatible with MiniPay's current transaction format
+- **Mobile-First Design**: Optimized UI for mobile devices running MiniPay
+
+### How to Access MiniPay
+
+MiniPay is available on:
+
+- **[Opera Mini Browser](https://www.opera.com/pl/products/minipay)** (Android)
+- **[Standalone App Android](https://play.google.com/store/apps/details?id=com.opera.minipay)**
+- **[Standalone App iOS](https://apps.apple.com/de/app/minipay-easy-global-wallet/id6504087257?l=en-GB)**
+
+### MiniPay Setup
+
+1. **Install MiniPay**
+   - Download the [MiniPay Standalone App](https://play.google.com/store/apps/details?id=com.opera.minipay) for Android or iOS
+   - Or use Opera Mini Browser with MiniPay built-in
+
+2. **Create an Account**
+   - Sign up using your Google account and phone number
+   - Complete the wallet setup process
+
+3. **Get Testnet Tokens** (for testing)
+   - Request CELO testnet tokens from the [Celo faucet](https://faucet.celo.org/celo-sepolia/)
+   - Exchange CELO for stablecoins (cUSD, USDT, USDC) in the [Mento app](https://app.mento.org/)
+
+### Technical Implementation
+
+IQlify uses the following MiniPay-specific implementations:
+
+#### Wallet Detection
+```typescript
+// Automatic MiniPay detection
+if (window.ethereum?.isMiniPay) {
+  // Hide Connect Wallet button
+  // Auto-connect wallet
+  // Access MiniPay-specific features
+}
+```
+
+#### Fee Currency Support
+- Uses Viem/Wagmi for native fee currency support
+- Transactions use `feeCurrency` property for cUSD
+- Compatible with MiniPay's fee abstraction system
+
+#### Phone Number Integration
+- Optional phone number access via `window.ethereum.minipay.getPhoneNumber()`
+- Used for user profile pre-filling
+- Gracefully handles when API is unavailable
+
+For more details, see the [MiniPay Quickstart Guide](https://docs.celo.org/build-on-celo/build-on-minipay/quickstart).
+
+---
+
 ## 🛠 Tech Stack
 
 ### Frontend
@@ -196,10 +280,12 @@ IQlify is a cutting-edge, AI-powered interview practice platform that helps user
 - **State Management**: React Query (TanStack Query)
 
 ### Blockchain & Web3
-- **Blockchain**: Celo
-- **Wallet Integration**: RainbowKit
-- **Web3 Library**: Wagmi & Viem
+- **Blockchain**: Celo (Mainnet & Sepolia Testnet)
+- **Wallet Integration**: RainbowKit with MiniPay support
+- **Primary Wallet**: Opera MiniPay (optimized)
+- **Web3 Library**: Wagmi & Viem (with fee currency support)
 - **Smart Contracts**: Hardhat
+- **Fee Abstraction**: Custom fee abstraction for stablecoin transactions
 
 ### AI & Voice
 - **Voice AI**: VAPI
@@ -251,6 +337,82 @@ Before you begin, ensure you have the following installed:
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Testing with MiniPay
+
+To test IQlify in the MiniPay environment:
+
+#### Enable Developer Mode in MiniPay
+
+1. **Open MiniPay App** on your mobile device
+   - ⚠️ **Note**: You cannot test MiniPay using Android Studio Emulator. Use a physical Android or iOS device.
+
+2. **Navigate to Settings**
+   - Open the MiniPay app
+   - Go to Settings
+
+3. **Activate Developer Mode**
+   - In the **About** section, tap the **Version** number repeatedly
+   - Wait for the confirmation message
+
+4. **Enable Developer Settings**
+   - Return to Settings
+   - Select **Developer Settings**
+   - Enable **Developer Mode**
+   - Toggle **Use Testnet** to connect to Celo Sepolia Testnet
+
+5. **Load Your Mini App**
+   - In Developer Settings, tap **Load Test Page**
+   - Enter your Mini App URL:
+     - **For local development**: Use ngrok (see below)
+     - **For production**: Use your deployed URL (e.g., `https://iqlify.vercel.app`)
+
+#### Testing Local Development with MiniPay
+
+Since MiniPay requires a publicly accessible URL, use **ngrok** to tunnel your localhost:
+
+1. **Install ngrok**
+   ```bash
+   # Download from https://ngrok.com/download
+   # Or install via package manager
+   brew install ngrok  # macOS
+   ```
+
+2. **Start your local server**
+   ```bash
+   pnpm dev
+   # Server runs on http://localhost:3000
+   ```
+
+3. **Start ngrok tunnel**
+   ```bash
+   ngrok http 3000
+   ```
+
+4. **Copy the ngrok URL**
+   - ngrok will provide a public URL like: `https://abc123.ngrok.io`
+   - Copy this HTTPS URL
+
+5. **Update environment variables** (if needed)
+   ```env
+   NEXT_PUBLIC_WEBHOOK_URL=https://abc123.ngrok.io
+   ```
+
+6. **Load in MiniPay**
+   - In MiniPay Developer Settings → Load Test Page
+   - Enter: `https://abc123.ngrok.io`
+   - Click **Go** to launch your app
+
+#### Important Notes for MiniPay Testing
+
+- ⚠️ **ngrok URLs are temporary**: You'll get a new URL every time you restart ngrok
+- ⚠️ **Use testnet for testing**: Enable "Use Testnet" in MiniPay Developer Settings
+- ⚠️ **Physical device required**: Android Studio Emulator is not supported
+- ✅ **Automatic wallet connection**: Wallet connects automatically in MiniPay
+- ✅ **Fee currency support**: Transactions use cUSD via fee abstraction
+- ✅ **Phone number access**: Optional phone number can be accessed for profiles
+
+For more detailed MiniPay setup instructions, see the [official MiniPay Quickstart Guide](https://docs.celo.org/build-on-celo/build-on-minipay/quickstart).
 
 ### Environment Variables
 
@@ -504,16 +666,23 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Documentation
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Celo Documentation](https://docs.celo.org/)
+- [MiniPay Quickstart Guide](https://docs.celo.org/build-on-celo/build-on-minipay/quickstart) - **Essential for MiniPay integration**
+- [MiniPay Documentation](https://docs.celo.org/build-on-celo/build-on-minipay)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [shadcn/ui Documentation](https://ui.shadcn.com/)
 - [VAPI Documentation](https://docs.vapi.ai/)
 - [Google Gemini Documentation](https://ai.google.dev/docs)
 - [Convex Documentation](https://docs.convex.dev/)
+- [RainbowKit Documentation](https://www.rainbowkit.com/docs/introduction)
+- [Wagmi Documentation](https://wagmi.sh/)
 
 ### Links
 - **Live Demo**: [https://iqlify.vercel.app/](https://iqlify.vercel.app/)
 - **GitHub Repository**: [https://github.com/numdinkushi/IQlify](https://github.com/numdinkushi/IQlify)
 - **Celo Network**: [https://celo.org/](https://celo.org/)
+- **MiniPay**: [Opera MiniPay](https://www.opera.com/pl/products/minipay)
+- **Celo Faucet**: [Get Testnet Tokens](https://faucet.celo.org/celo-sepolia/)
+- **Mento App**: [Swap Stablecoins](https://app.mento.org/)
 
 ### Support
 - **Issues**: [GitHub Issues](https://github.com/numdinkushi/IQlify/issues)
@@ -529,8 +698,8 @@ This project is licensed under the MIT License.
 
 <div align="center">
 
-**Built with ❤️ on Celo**
+**Built with ❤️ on Celo for MiniPay**
 
-[⭐ Star on GitHub](https://github.com/numdinkushi/IQlify) | [🌐 Live Demo](https://iqlify.vercel.app/) | [📖 Documentation](./docs)
+[⭐ Star on GitHub](https://github.com/numdinkushi/IQlify) | [🌐 Live Demo](https://iqlify.vercel.app/) | [📖 Documentation](./docs) | [📱 MiniPay Guide](https://docs.celo.org/build-on-celo/build-on-minipay/quickstart)
 
 </div>
