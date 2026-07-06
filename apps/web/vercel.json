@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm run build:production",
-  "installCommand": "cd ../.. && pnpm install --filter web",
+  "installCommand": "cd ../.. && npm install -g pnpm@8.10.0 && pnpm install --filter web",
   "env": {
     "NODE_ENV": "production"
   }

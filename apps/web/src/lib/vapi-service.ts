@@ -40,9 +40,16 @@ export class VapiService {
             }
             console.log('✅ [VAPI] Assistant ID validated:', config.assistantId);
 
-            // Check API key - for client-side, we need the public key
-            const apiKey = process.env.NEXT_PUBLIC_VAPI_API_KEY || 'ba249413-c68b-41ee-8e0e-d91ca6ff3e25';
-            console.log('🔑 [VAPI] Using public API key for client-side calls:', apiKey ? `${apiKey.substring(0, 8)}...` : 'NOT SET');
+            // Client-side calls use the public web token (not the private API key)
+            const apiKey =
+                process.env.NEXT_PUBLIC_VAPI_WEBTOKEN ||
+                process.env.NEXT_PUBLIC_VAPI_API_KEY;
+            if (!apiKey) {
+                throw new Error(
+                    'VAPI public key is required. Set NEXT_PUBLIC_VAPI_WEBTOKEN in your environment.'
+                );
+            }
+            console.log('🔑 [VAPI] Using public API key for client-side calls:', `${apiKey.substring(0, 8)}...`);
 
             // Import VAPI SDK dynamically
             console.log('📦 [VAPI] Importing VAPI SDK...');
